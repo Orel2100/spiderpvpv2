@@ -1,0 +1,52 @@
+package com.jules.kitpvp.kits.classes;
+
+import com.jules.kitpvp.abilities.Ability;
+import com.jules.kitpvp.abilities.CannonFire;
+import com.jules.kitpvp.kits.KitClass;
+import com.jules.kitpvp.kits.Upgrade;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Pirate extends KitClass {
+
+    public Pirate() {
+        super("Pirate", "A swashbuckling class with a cannon.", new ItemStack(Material.TNT),
+                new ArrayList<>(Collections.singletonList(new CannonFire())), new ArrayList<>());
+    }
+
+    @Override
+    public void applyKit(Player player) {
+        player.getInventory().clear();
+        player.getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET));
+        player.getInventory().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
+        player.getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
+        player.getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
+        player.getInventory().addItem(new ItemStack(Material.IRON_SWORD));
+    }
+
+    @Override
+    public void triggerAbility(Player player) {
+        getAbilities().get(0).execute(player);
+    }
+
+    @Override
+    public void onKill(Player killer, Player victim) {
+        // No action on kill
+    }
+
+    @Override
+    public void onDeath(Player player) {
+        // No action on death
+    }
+
+    public void passive(Player player) {
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60, 0)); // Speed for 3 seconds
+    }
+}

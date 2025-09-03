@@ -1,0 +1,23 @@
+name: KitPVP
+version: 1.0
+main: com.jules.kitpvp.KitPVP
+author: Jules
+description: A KitPVP plugin with custom kits, abilities, and more.
+api-version: 1.16
+commands:
+  arena:
+    description: Arena commands
+    usage: /arena <subcommand>
+  class:
+    description: Opens the class selection GUI
+    usage: /class
+  coins:
+    description: Checks your coin balance
+    usage: /coins
+  booster:
+    description: Activates a coin booster
+    usage: /booster <multiplier> <duration>
+    permission: kitpvp.booster
+  1v1:
+    description: Duel another player
+    usage: /1v1 <player|accept|deny>

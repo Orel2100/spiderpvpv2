@@ -10,7 +10,12 @@ import com.jules.kitpvp.duel.DuelManager;
 import com.jules.kitpvp.player.PlayerManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+
 public class KitPVP extends JavaPlugin {
+
+    private static KitPVP instance;
+    private static ArrayList<String> playing = new ArrayList<>();
 
     private Configuration configuration;
     private ArenaManager arenaManager;
@@ -23,12 +28,15 @@ public class KitPVP extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        instance = this;
         this.configuration = new Configuration(this);
         this.configuration.load();
 
         this.playerManager = new PlayerManager();
         this.arenaManager = new ArenaManager();
         this.classManager = new ClassManager();
+        new com.jules.kitpvp.player.MPlayerManager(playerManager);
+        ClassManager.registerClasses();
         this.coinManager = new CoinManager(playerManager);
         this.boosterManager = new BoosterManager();
         this.upgradeManager = new UpgradeManager();
@@ -55,5 +63,13 @@ public class KitPVP extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("KitPVP has been disabled!");
+    }
+
+    public static KitPVP getInstance() {
+        return instance;
+    }
+
+    public static ArrayList<String> getPlaying() {
+        return playing;
     }
 }

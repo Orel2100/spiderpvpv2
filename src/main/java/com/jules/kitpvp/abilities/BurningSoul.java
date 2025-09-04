@@ -1,22 +1,95 @@
 package com.jules.kitpvp.abilities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.jules.kitpvp.KitPVP;
+import com.jules.kitpvp.util.EffectUtils;
+import com.jules.kitpvp.util.Utils;
+import com.jules.kitpvp.team.TeamManager;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
-public class BurningSoul implements Ability {
 
-    @Override
-    public String getName() {
-        return "Burning Soul";
+public class BurningSoul {
+
+    public static List<Entity> getNearbyEntites(Location l, int size) {
+        List<Entity> entities = new ArrayList<Entity>();
+
+        for(Entity ent : l.getWorld().getEntities()) {
+            if(ent == null) continue;
+            if(ent.isDead()) continue;
+            if(!(ent instanceof LivingEntity)) continue;
+            if(!ent.getWorld().equals(l.getWorld())) continue;
+            if(l.distance(ent.getLocation()) <= size) {
+                entities.add(ent);
+
+            }
+        }
+        return entities;
     }
 
-    @Override
-    public String getDescription() {
-        return "Unleashes a wave of fire around you.";
+    public static void spawnBubble(final Player p, final double damage, final int seconds, double Sseconds) {
+        p.setLevel(0);
+        p.setExp(0);
+        final Location loc = p.getLocation();
+        EffectUtils.createSphere(p,loc, 5, 20*seconds);
+        double time = 20 * Sseconds;
+        p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,(int) time,0));
+        p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,(int) time,10));
+        new BukkitRunnable() {
+
+            int i = seconds+1;
+            @Override
+            public void run() {
+                if(!KitPVP.getPlaying().contains(p.getName())) {
+                    cancel();
+                    return;
+                }
+                i--;
+                if(i == 0) {
+                    cancel();
+                    return;
+                }
+                for(Entity ent : getNearbyEntites(loc, 5)) {
+                    if(ent == p) continue;
+                    if(ent instanceof LivingEntity){
+                        if(TeamManager.getTeamByPlayer(p) != null) {
+                            if(TeamManager.getTeamByPlayer(p).getPlayers().contains(ent)) {
+                                continue;
+                            }
+                        }
+                        Utils.realDamage(ent, p, damage);
+                    }
+                }
+            }
+        }.runTaskTimer(KitPVP.getInstance(), 0, 20);
     }
 
-    @Override
-    public void execute(Player player) {
-        // Placeholder for burning soul logic
-        player.sendMessage("You unleash your burning soul!");
+    public static void use(Player p, int upgrade) {
+        double damage = 0.875;
+        double Sseconds = 0.875;
+        int seconds = 3;
+        for(int i = 0; i < upgrade; i++) {
+            damage += 0.125;
+            Sseconds += 0.125;
+        }
+        if(upgrade < 5) {
+            seconds = 3;
+        }
+        if(upgrade < 9 && upgrade >= 5) {
+            seconds = 4;
+        }
+        if(upgrade == 9) {
+            seconds = 5;
+        }
+        spawnBubble(p, damage, seconds, Sseconds);
     }
+
 }

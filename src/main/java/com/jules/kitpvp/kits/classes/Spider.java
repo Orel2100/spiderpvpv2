@@ -1,46 +1,132 @@
 package com.jules.kitpvp.kits.classes;
 
-import com.jules.kitpvp.abilities.Ability;
-import com.jules.kitpvp.abilities.Leap;
+import com.jules.kitpvp.kits.ClassType;
+import com.jules.kitpvp.kits.HitType;
 import com.jules.kitpvp.kits.KitClass;
-import com.jules.kitpvp.kits.Upgrade;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import java.util.ArrayList;
 
 public class Spider extends KitClass {
 
-    public Spider() {
-        super("Spider", "An agile class that can leap and deal damage on landing.", new ItemStack(Material.SPIDER_EYE),
-                new ArrayList<>(Collections.singletonList(new Leap())), new ArrayList<>());
+    public static ArrayList<String> cd = new ArrayList<>();
+
+    @Override
+    public String getName() {
+        return "Spider";
+    }
+
+    @EventHandler
+    public void ability(EntityDamageEvent e) {
+        if(!(e.getEntity() instanceof Player)) return;
+        if(e.getCause() != EntityDamageEvent.DamageCause.FALL) return;
+        Player p = (Player)e.getEntity();
+        if(!com.jules.kitpvp.KitPVP.getPlaying().contains(p.getName())) return;
+        if(com.jules.kitpvp.player.MPlayerManager.getMPlayer(p.getName()).getCurrentClass() != this) return;
+        if(!cd.contains(p.getName())) return;
+        cd.remove(p.getName());
+        //Upgrade upgrade = new Upgrade(p, this, UpgradeType.ABILITY);
+        double damage = 2.75;
+        //for(int i = 0; i<upgrade.getCurrentUpgrade(); i++) {
+        //    damage+=0.25;
+        //}
+        for(Entity ent : p.getNearbyEntities(damage, damage, damage)) {
+            if(ent == p) continue;
+            //if(TeamManager.getTeamByPlayer(p) != null) {
+            //    if(TeamManager.getTeamByPlayer(p).getPlayers().contains(ent)) continue;
+            //}
+            if(ent instanceof LivingEntity && !ent.isDead()) {
+                ((LivingEntity)ent).addPotionEffect(new PotionEffect(PotionEffectType.SLOW,20*4,1));
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent e){
+        Player p = e.getPlayer();
+        if(e.getAction().name().contains("RIGHT") == false) return;
+        if(p.getItemInHand() == null) return;
+        if(p.getItemInHand().getItemMeta() == null) return;
+        if(p.getItemInHand().getItemMeta().getDisplayName() == null) return;
+        if(com.jules.kitpvp.player.MPlayerManager.getMPlayer(p.getName()).getCurrentClass() != this) return;
+        if(!com.jules.kitpvp.util.Utils.isUsingSword(p.getItemInHand())) return;
+        if(p.getLevel() < 100) return;
+        com.jules.kitpvp.abilities.Leap.use(p);
+        cd.add(p.getName());
+        p.setLevel(0);
+        p.setExp(0);
     }
 
     @Override
-    public void applyKit(Player player) {
-        player.getInventory().clear();
-        player.getInventory().setHelmet(new ItemStack(Material.CHAINMAIL_HELMET));
-        player.getInventory().setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
-        player.getInventory().setLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS));
-        player.getInventory().setBoots(new ItemStack(Material.CHAINMAIL_BOOTS));
-        player.getInventory().addItem(new ItemStack(Material.IRON_SWORD));
+    public List<String> getDescription() {
+        return Arrays.asList("An agile class that can leap and","deal damage on landing.");
     }
 
     @Override
-    public void triggerAbility(Player player) {
-        getAbilities().get(0).execute(player);
+    public ClassType getType() {
+        return ClassType.NORMAL;
     }
 
     @Override
-    public void onKill(Player killer, Player victim) {
-        // No action on kill
+    public ItemStack getIcon() {
+        return new ItemStack(Material.SPIDER_EYE);
     }
 
     @Override
-    public void onDeath(Player player) {
-        // No action on death
+    public int getPrice() {
+        return 500;
+    }
+
+    @Override
+    public HashMap<Integer, ItemStack> getStartingItems(int upgrade) {
+        HashMap<Integer, ItemStack> items = new HashMap<>();
+        ItemStack sword = new ItemStack(Material.IRON_SWORD);
+        items.put(0, sword);
+        return items;
+    }
+
+    @Override
+    public int getXPPerHit() {
+        return 10;
+    }
+
+    @Override
+    public int getUpgradePrice(int level) {
+        return 100 * level;
+    }
+
+    @Override
+    public String getAbilityName() {
+        return "Leap";
+    }
+
+    @Override
+    public HitType getHitType() {
+        return HitType.MELEE;
+    }
+
+    @Override
+    public List<String> getAbilityDescription(int upgrade) {
+        return Arrays.asList("§7Leap forward, dealing damage","§7to enemies upon landing.");
+    }
+
+    @Override
+    public String getAbilityReadyName() {
+        return getAbilityName();
     }
 }

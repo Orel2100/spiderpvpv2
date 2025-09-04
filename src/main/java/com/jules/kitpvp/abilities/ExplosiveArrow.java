@@ -1,23 +1,34 @@
 package com.jules.kitpvp.abilities;
 
+import java.util.HashMap;
+
+import com.jules.kitpvp.KitPVP;
+import org.bukkit.Particle;
+
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
-public class ExplosiveArrow implements Ability {
 
-    @Override
-    public String getName() {
-        return "Explosive Arrow";
+public class ExplosiveArrow {
+
+    public static HashMap<Arrow, Player> exArrow = new HashMap<>();
+
+    public static void use(final Player p, final int upgrade) {
+        final Arrow a = p.launchProjectile(Arrow.class);
+        a.setVelocity(p.getEyeLocation().getDirection().multiply(2.5));
+        a.setShooter(p);
+        exArrow.put(a, p);
+        new BukkitRunnable() {
+            public void run() {
+                if(a.isDead() || a == null){ cancel(); return;}
+                if(a.isOnGround() || a.isInsideVehicle() || a.isCritical() || a.isDead()) {
+                    cancel();
+                    return;
+                }
+                a.getWorld().spawnParticle(Particle.CRIT_MAGIC, a.getLocation(), 50, 0, 0, 0, 15);
+            }
+        }.runTaskTimer(KitPVP.getInstance(), 0, 1);
     }
 
-    @Override
-    public String getDescription() {
-        return "Your next arrow explodes on impact.";
-    }
-
-    @Override
-    public void execute(Player player) {
-        // This will be implemented more thoroughly later.
-        // For now, it's a placeholder.
-        player.sendMessage("Your next arrow will be explosive!");
-    }
 }

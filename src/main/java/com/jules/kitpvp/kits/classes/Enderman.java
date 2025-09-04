@@ -1,49 +1,96 @@
 package com.jules.kitpvp.kits.classes;
 
-import com.jules.kitpvp.abilities.Ability;
-import com.jules.kitpvp.abilities.Teleport;
+import com.jules.kitpvp.kits.ClassType;
+import com.jules.kitpvp.kits.HitType;
 import com.jules.kitpvp.kits.KitClass;
-import com.jules.kitpvp.kits.Upgrade;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.util.Vector;
+
 public class Enderman extends KitClass {
+    @Override
+    public String getName() {
+        return "Enderman";
+    }
 
-    public Enderman() {
-        super("Enderman", "A mobile class that teleports to enemies.", new ItemStack(Material.ENDER_PEARL),
-                new ArrayList<>(Collections.singletonList(new Teleport())), new ArrayList<>());
+    @EventHandler
+    public void onInteract(PlayerInteractEvent e){
+        final Player p = e.getPlayer();
+        if(e.getAction().name().contains("RIGHT") == false) return;
+        if(p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
+        if(com.jules.kitpvp.player.MPlayerManager.getMPlayer(p.getName()).getCurrentClass() != this) return;
+        if(!com.jules.kitpvp.util.Utils.isUsingSword(p.getItemInHand())) return;
+        if(p.getLevel() < 100) return;
+        com.jules.kitpvp.kits.Upgrade upgrade = new com.jules.kitpvp.kits.Upgrade(p, this, com.jules.kitpvp.kits.UpgradeType.ABILITY);
+        com.jules.kitpvp.abilities.Teleport.use(p, upgrade.getCurrentUpgrade());
     }
 
     @Override
-    public void applyKit(Player player) {
-        player.getInventory().clear();
-        player.getInventory().setHelmet(new ItemStack(Material.DIAMOND_HELMET));
-        player.getInventory().setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
-        player.getInventory().setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS));
-        player.getInventory().setBoots(new ItemStack(Material.DIAMOND_BOOTS));
-        player.getInventory().addItem(new ItemStack(Material.DIAMOND_SWORD));
+    public List<String> getDescription() {
+        return Arrays.asList("The Enderman class is a master","of teleportation and surprise","attacks.");
     }
 
     @Override
-    public void triggerAbility(Player player) {
-        getAbilities().get(0).execute(player);
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1)); // Speed for 5 seconds
+    public ClassType getType() {
+        return ClassType.NORMAL;
     }
 
     @Override
-    public void onKill(Player killer, Player victim) {
-        // No action on kill
+    public ItemStack getIcon() {
+        return new ItemStack(Material.ENDER_PEARL);
     }
 
     @Override
-    public void onDeath(Player player) {
-        // No action on death
+    public int getPrice() {
+        return 1000;
+    }
+
+    @Override
+    public HashMap<Integer, ItemStack> getStartingItems(int upgrade) {
+        HashMap<Integer, ItemStack> items = new HashMap<>();
+        ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
+        sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+        items.put(0, sword);
+        items.put(1, new ItemStack(Material.ENDER_PEARL, 16));
+        return items;
+    }
+
+    @Override
+    public int getXPPerHit() {
+        return 15;
+    }
+
+    @Override
+    public int getUpgradePrice(int level) {
+        return 150 * level;
+    }
+
+    @Override
+    public String getAbilityName() {
+        return "Teleport";
+    }
+
+    @Override
+    public HitType getHitType() {
+        return HitType.MELEE;
+    }
+
+    @Override
+    public List<String> getAbilityDescription(int upgrade) {
+        return Arrays.asList("§7Instantly teleport a short","§7distance.");
+    }
+
+    @Override
+    public String getAbilityReadyName() {
+        return getAbilityName();
     }
 }

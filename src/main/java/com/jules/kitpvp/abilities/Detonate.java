@@ -1,22 +1,82 @@
 package com.jules.kitpvp.abilities;
 
+import com.jules.kitpvp.KitPVP;
+import com.jules.kitpvp.player.MPlayer;
+import com.jules.kitpvp.player.MPlayerManager;
+import com.jules.kitpvp.team.TeamManager;
+import com.jules.kitpvp.util.Utils;
+import net.md_5.bungee.api.ChatColor;
+
+import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
-public class Detonate implements Ability {
+public class Detonate {
 
-    @Override
-    public String getName() {
-        return "Detonate";
+    public static void use(final Player p, final int upgrade) {
+        new BukkitRunnable() {
+
+            int i = 4;
+            double damage = 1.25;
+            @Override
+            public void run() {
+                if(!KitPVP.getPlaying().contains(p.getName())) {
+                    cancel();
+                    return;
+                }
+                p.playSound(p.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 5, 5);
+                for(Entity ps : p.getNearbyEntities(10, 10, 10)) {
+                    if(ps == p) continue;
+                    if(ps instanceof Player) {
+                        ((Player) ps).playSound(p.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 5, 5);
+                    }
+                }
+                i--;
+                if(i == 0) {
+                    for(int i = 0; i < upgrade; i++) {
+                        damage += 0.75;
+                    }
+                    p.playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 5, 5);
+                    for(Entity ps : p.getNearbyEntities(10, 10, 10)) {
+                        if(ps == p) continue;
+                        if(ps instanceof Player) {
+                            ((Player) ps).playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 5, 5);
+                        }
+                    }
+                    for(Entity ent : p.getNearbyEntities(3, 3, 3)) {
+                        if(ent instanceof LivingEntity) {
+                            if(ent == p) continue;
+                            if(TeamManager.getTeamByPlayer(p) != null) {
+                                if(TeamManager.getTeamByPlayer(p).getPlayers().contains(ent)) {
+                                    continue;
+                                }
+                            }
+                            if(ent instanceof Player) {
+                                Player enp = (Player)ent;
+                                MPlayer player = MPlayerManager.getMPlayer(enp.getName());
+                                if(player.getCurrentClass().getName().equalsIgnoreCase("Creeper")) {
+                                    Utils.realDamage(ent, p, damage/3);
+                                    continue;
+                                }
+                                if(player.getCurrentClass().getName().equalsIgnoreCase("Arcanist")) {
+                                    Utils.realDamage(ent, p, damage/2);
+                                    continue;
+                                }
+                            }
+                            Utils.realDamage(ent, p, damage);
+                        }
+                    }
+                    //Break some near blocks
+                    p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "BOOM!");
+                    cancel();
+                    return;
+                }
+                p.getWorld().spawnParticle(org.bukkit.Particle.VILLAGER_ANGRY, p.getLocation(), 100, 0, 0, 0, 3);
+                p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You gonna explode in " + i + " seconds!");
+            }
+        }.runTaskTimer(KitPVP.getInstance(), 0, 20);
     }
 
-    @Override
-    public String getDescription() {
-        return "Explodes around you.";
-    }
-
-    @Override
-    public void execute(Player player) {
-        // Placeholder for detonation logic
-        player.sendMessage("You detonate!");
-    }
 }

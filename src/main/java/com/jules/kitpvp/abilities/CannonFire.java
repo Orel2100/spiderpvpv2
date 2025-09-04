@@ -1,22 +1,15 @@
 package com.jules.kitpvp.abilities;
 
 import org.bukkit.entity.Player;
+import org.bukkit.entity.WitherSkull;
 
-public class CannonFire implements Ability {
 
-    @Override
-    public String getName() {
-        return "Cannon Fire";
+public class CannonFire {
+
+    public static void use(Player p) {
+        WitherSkull ws = p.launchProjectile(WitherSkull.class);
+        ws.setShooter(p);
+        ws.setVelocity(p.getEyeLocation().getDirection().multiply(1));
     }
 
-    @Override
-    public String getDescription() {
-        return "Fires a TNT cannon shot.";
-    }
-
-    @Override
-    public void execute(Player player) {
-        // Placeholder for cannon fire logic
-        player.sendMessage("You fire a cannon!");
-    }
 }

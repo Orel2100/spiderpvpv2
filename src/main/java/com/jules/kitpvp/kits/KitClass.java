@@ -15,6 +15,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class KitClass implements Listener {
 
@@ -51,8 +52,8 @@ public abstract class KitClass implements Listener {
         return null;
     }
 
-    public void autoArmor(Player p, Upgrade upgrade) {
-        for(ItemStack item : getStartingItems(upgrade.getCurrentUpgrade()).values()) {
+    public void autoArmor(Player p) {
+        for(ItemStack item : p.getInventory().getContents()) {
             if(item == null || item.getType() == Material.AIR) continue;
             if(item.getType().toString().contains("HELMET")) {
                 p.getInventory().setHelmet(item);
@@ -112,12 +113,18 @@ public abstract class KitClass implements Listener {
         p.getInventory().clear();
         p.getInventory().setArmorContents(null);
         for(PotionEffect potion : p.getActivePotionEffects()) p.removePotionEffect(potion.getType());
-        if(new Upgrade(p, this, UpgradeType.KIT).hasPrestige()) {
+
+        Upgrade upgrade = new Upgrade(p, this, UpgradeType.KIT);
+        for(Map.Entry<Integer, ItemStack> entry : getStartingItems(upgrade.getCurrentUpgrade()).entrySet()) {
+            p.getInventory().setItem(entry.getKey(), entry.getValue());
+        }
+
+        if(upgrade.hasPrestige()) {
             p.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST,100000,5));
         } else {
             p.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST,100000,4));
         }
         p.addPotionEffect(new PotionEffect(PotionEffectType.HEAL,1,5));
-        autoArmor(p,new Upgrade(p, this,UpgradeType.KIT));
+        autoArmor(p);
     }
 }

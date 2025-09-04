@@ -13,4 +13,8 @@ public class MPlayer {
     public KitClass getCurrentClass() {
         return playerData.getKit();
     }
+
+    public PlayerData getPlayerData() {
+        return playerData;
+    }
 }

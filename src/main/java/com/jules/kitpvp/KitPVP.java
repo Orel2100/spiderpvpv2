@@ -72,4 +72,8 @@ public class KitPVP extends JavaPlugin {
     public static ArrayList<String> getPlaying() {
         return playing;
     }
+
+    public ArenaManager getArenaManager() {
+        return arenaManager;
+    }
 }

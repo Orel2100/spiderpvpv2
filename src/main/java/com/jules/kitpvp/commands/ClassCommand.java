@@ -1,20 +1,13 @@
 package com.jules.kitpvp.commands;
 
-import com.jules.kitpvp.KitPVP;
 import com.jules.kitpvp.gui.ClassSelectorGUI;
-import com.jules.kitpvp.kits.ClassManager;
+import com.jules.kitpvp.kits.ClassType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class ClassCommand implements CommandExecutor {
-
-    private final ClassManager classManager;
-
-    public ClassCommand(ClassManager classManager) {
-        this.classManager = classManager;
-    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -24,7 +17,7 @@ public class ClassCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        ClassSelectorGUI gui = new ClassSelectorGUI(classManager);
+        ClassSelectorGUI gui = new ClassSelectorGUI(ClassType.NORMAL);
         gui.open(player);
 
         return true;

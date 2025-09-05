@@ -1,195 +1,139 @@
 package com.jules.kitpvp.kits.classes;
 
-import com.jules.kitpvp.KitPVP;
-import com.jules.kitpvp.kits.ClassType;
-import com.jules.kitpvp.kits.HitType;
+import com.jules.kitpvp.abilities.IronPunch;
+import com.jules.kitpvp.kits.Kit;
 import com.jules.kitpvp.kits.KitClass;
 import com.jules.kitpvp.kits.Upgrade;
 import com.jules.kitpvp.kits.UpgradeType;
 import com.jules.kitpvp.player.MPlayer;
-import com.jules.kitpvp.player.MPlayerManager;
 import com.jules.kitpvp.util.ItemStackCreator;
-import com.jules.kitpvp.util.Utils;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 public class Golem extends KitClass {
 
-    public ArrayList<String> cd = new ArrayList<>();
-
-    @Override
-    public String getName() {
-        return "Golem";
+    public Golem() {
+        super(
+                "Golem",
+                new String[] {
+                        "A very tanky kit.",
+                        "Use your ability to deal",
+                        "damage to nearby enemies."
+                },
+                3000,
+                new ItemStackCreator(Material.IRON_BLOCK, "§bGolem").build(),
+                new Upgrade(UpgradeType.SWORD, 3),
+                new Upgrade(UpgradeType.HELMET, 3),
+                new Upgrade(UpgradeType.CHESTPLATE, 3),
+                new Upgrade(UpgradeType.LEGGINGS, 3),
+                new Upgrade(UpgradeType.BOOTS, 3),
+                new Upgrade(UpgradeType.GOLDEN_APPLE, 2),
+                new Upgrade(UpgradeType.ABILITY, 3)
+        );
     }
 
     @Override
-    public List<String> getDescription() {
-        return Arrays.asList("The Golem class uses the", "all mighty powers of the ", "iron god.");
+    public void onDamage(EntityDamageEvent event) {
+        if(!(event.getEntity() instanceof Player)) return;
+        Player p = (Player) event.getEntity();
+
+        if(event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+            MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+            int level = mPlayer.getUpgradeLevel(UpgradeType.ABILITY);
+            if(level > 0) {
+                p.setExp(p.getExp() + (float) (event.getDamage() / 10));
+                if(p.getExp() >= 1) {
+                    IronPunch.use(p, level);
+                }
+            }
+        }
     }
 
     @Override
-    public ClassType getType() {
-        return ClassType.HERO;
-    }
+    public List<ItemStack> getStartingItems(Player p) {
+        List<ItemStack> items = new ArrayList<>();
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
 
-    @Override
-    public ItemStack getIcon() {
-        return new ItemStack(Material.IRON_CHESTPLATE);
-    }
-
-    @Override
-    public HashMap<Integer, ItemStack> getStartingItems(int upgrade) {
-        HashMap<Integer, ItemStack> items = new HashMap<>();
-
-        ItemStack sword = new ItemStack(Material.STONE_SWORD);
-        if (upgrade >= 6) sword.setType(Material.IRON_SWORD);
-        sword.addEnchantment(Enchantment.DURABILITY, 3);
-        items.put(0, ItemStackCreator.createItem(sword, ChatColor.AQUA + getName() + " Sword", 1, getSwordLore(upgrade)));
-
-        int steakAmount = 1;
-        if (upgrade >= 2) steakAmount = 2;
-        if (upgrade >= 6) steakAmount = 3;
-        items.put(1, Utils.getSteaks(steakAmount, getName()));
-
-        if (upgrade >= 3) {
-            int regenPotionLevel = 1;
-            if (upgrade >= 4) regenPotionLevel = 2;
-            // Assuming Utils.getPotionRegeneration exists. If not, this needs to be created.
-            // items.put(2, Utils.getPotionRegeneration(regenPotionLevel, getName()));
+        // Sword
+        int swordLevel = mPlayer.getUpgradeLevel(UpgradeType.SWORD);
+        if (swordLevel == 1) {
+            items.add(new ItemStack(Material.IRON_SWORD));
+        } else if (swordLevel == 2) {
+            items.add(new ItemStack(Material.DIAMOND_SWORD));
+        } else if (swordLevel == 3) {
+            items.add(new ItemStackCreator(Material.DIAMOND_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 1).build());
         }
 
-        if (upgrade >= 9) {
-            ItemStack slowpot = new ItemStack(Material.POTION, 1, (short) 16426);
-            items.put(3, slowpot);
+        // Helmet
+        int helmetLevel = mPlayer.getUpgradeLevel(UpgradeType.HELMET);
+        if (helmetLevel == 1) {
+            items.add(new ItemStack(Material.IRON_HELMET));
+        } else if (helmetLevel == 2) {
+            items.add(new ItemStack(Material.DIAMOND_HELMET));
+        } else if (helmetLevel == 3) {
+            items.add(new ItemStackCreator(Material.DIAMOND_HELMET).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1).build());
         }
 
-        if (upgrade >= 2) {
-            ItemStack chestplate = new ItemStack(Material.IRON_CHESTPLATE);
-            if (upgrade >= 7) chestplate.setType(Material.DIAMOND_CHESTPLATE);
-            HashMap<Enchantment, Integer> enchants = new HashMap<>();
-            enchants.put(Enchantment.DURABILITY, 3);
-            if (upgrade >= 8) enchants.put(Enchantment.PROTECTION_EXPLOSIONS, 1);
-            if (upgrade >= 9) enchants.put(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-            items.put(4, ItemStackCreator.createItemStack(chestplate, 1, ChatColor.AQUA + getName() + " Chestplate", null, enchants));
+        // Chestplate
+        int chestplateLevel = mPlayer.getUpgradeLevel(UpgradeType.CHESTPLATE);
+        if (chestplateLevel == 1) {
+            items.add(new ItemStack(Material.IRON_CHESTPLATE));
+        } else if (chestplateLevel == 2) {
+            items.add(new ItemStack(Material.DIAMOND_CHESTPLATE));
+        } else if (chestplateLevel == 3) {
+            items.add(new ItemStackCreator(Material.DIAMOND_CHESTPLATE).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1).build());
         }
 
-        ItemStack boots = new ItemStack(Material.IRON_BOOTS);
-        if (upgrade >= 5) boots.setType(Material.DIAMOND_BOOTS);
-        HashMap<Enchantment, Integer> enchants = new HashMap<>();
-        enchants.put(Enchantment.DURABILITY, 3);
-        if (upgrade >= 9) enchants.put(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-        items.put(5, ItemStackCreator.createItemStack(boots, 1, ChatColor.AQUA + getName() + " Boots", null, enchants));
+        // Leggings
+        int leggingsLevel = mPlayer.getUpgradeLevel(UpgradeType.LEGGINGS);
+        if (leggingsLevel == 1) {
+            items.add(new ItemStack(Material.IRON_LEGGINGS));
+        } else if (leggingsLevel == 2) {
+            items.add(new ItemStack(Material.DIAMOND_LEGGINGS));
+        } else if (leggingsLevel == 3) {
+            items.add(new ItemStackCreator(Material.DIAMOND_LEGGINGS).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1).build());
+        }
+
+        // Boots
+        int bootsLevel = mPlayer.getUpgradeLevel(UpgradeType.BOOTS);
+        if (bootsLevel == 1) {
+            items.add(new ItemStack(Material.IRON_BOOTS));
+        } else if (bootsLevel == 2) {
+            items.add(new ItemStack(Material.DIAMOND_BOOTS));
+        } else if (bootsLevel == 3) {
+            items.add(new ItemStackCreator(Material.DIAMOND_BOOTS).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1).build());
+        }
+
+        // Golden Apples
+        int gappleLevel = mPlayer.getUpgradeLevel(UpgradeType.GOLDEN_APPLE);
+        if (gappleLevel == 1) {
+            items.add(new ItemStack(Material.GOLDEN_APPLE, 2));
+        } else if (gappleLevel == 2) {
+            items.add(new ItemStack(Material.GOLDEN_APPLE, 3));
+        }
 
         return items;
     }
 
     @Override
-    public int getPrice() {
-        return 10000;
+    public List<PotionEffect> getPassiveEffects(Player p) {
+        List<PotionEffect> effects = new ArrayList<>();
+        effects.add(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0));
+        effects.add(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0));
+        return effects;
     }
 
     @Override
-    public int getUpgradePrice(int level) {
-        switch (level) {
-            case 1: return 0;
-            case 2: return 200;
-            case 3: return 500;
-            case 4: return 1200;
-            case 5: return 2400;
-            case 6: return 7000;
-            case 7: return 13000;
-            case 8: return 17000;
-            case 9: return 28000;
-            default: return 28000;
-        }
-    }
-
-    @Override
-    public String getAbilityName() {
-        return "Iron Punch";
-    }
-
-    @Override
-    public int getXPPerHit() {
-        return 10;
-    }
-
-    @Override
-    public List<String> getAbilityDescription(int upgrade) {
-        double damage = 0.5 + (0.5 * upgrade);
-        return Arrays.asList("§7Cast a hexagon causing §c" + damage, "§7damage in 5 blocks radius.");
-    }
-
-    @Override
-    public HitType getHitType() {
-        return HitType.MELEE;
-    }
-
-    @Override
-    public String getAbilityReadyName() {
-        return getAbilityName();
-    }
-
-    @EventHandler
-    public void onKill(PlayerDeathEvent e) {
-        if (e.getEntity().getKiller() == null) return;
-
-        final Player killer = e.getEntity().getKiller();
-        MPlayer player = MPlayerManager.getMPlayer(killer.getName());
-        if (player.getCurrentClass() != this) return;
-
-        if (cd.contains(killer.getName())) return;
-
-        // Skill: Iron Heart
-        Upgrade upgrade = new Upgrade(killer, this, null);
-        double duration = 1.75 + (1.25 * upgrade.getCurrentUpgrade());
-
-        cd.add(killer.getName());
-        killer.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, (int) (20 * duration), 1));
-        Bukkit.getScheduler().runTaskLater(KitPVP.getInstance(), () -> cd.remove(killer.getName()), 20 * 45);
-    }
-
-    @EventHandler
-    public void onArrowHit(EntityDamageByEntityEvent e) {
-        if (!(e.getEntity() instanceof Player) || !(e.getDamager() instanceof Arrow)) return;
-
-        Player p = (Player) e.getEntity();
-        MPlayer player = MPlayerManager.getMPlayer(p.getName());
-        if (player.getCurrentClass() != this) return;
-
-        // Skill: Momentum
-        Upgrade upgrade = new Upgrade(p, this, null);
-        double duration = 1.0 + (1.0 * upgrade.getCurrentUpgrade());
-
-        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (int) (20 * duration), 0));
-    }
-
-    @EventHandler
-    public void onInteract(PlayerInteractEvent e) {
-        Player p = e.getPlayer();
-        if (!e.getAction().name().contains("RIGHT")) return;
-        if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
-        if (MPlayerManager.getMPlayer(p.getName()).getCurrentClass() != this) return;
-        if (!Utils.isUsingSword(p.getItemInHand())) return;
-        if (p.getLevel() < 100) return;
-
-        Upgrade upgrade = new Upgrade(p, this, UpgradeType.ABILITY);
-        com.jules.kitpvp.abilities.IronPunch.use(p, upgrade.getCurrentUpgrade());
+    public Kit getKit() {
+        return Kit.GOLEM;
     }
 }

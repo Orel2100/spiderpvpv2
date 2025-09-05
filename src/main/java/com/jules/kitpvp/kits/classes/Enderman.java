@@ -1,173 +1,111 @@
 package com.jules.kitpvp.kits.classes;
 
 import com.jules.kitpvp.KitPVP;
-import com.jules.kitpvp.kits.ClassType;
-import com.jules.kitpvp.kits.HitType;
+import com.jules.kitpvp.kits.Kit;
 import com.jules.kitpvp.kits.KitClass;
 import com.jules.kitpvp.kits.Upgrade;
 import com.jules.kitpvp.kits.UpgradeType;
 import com.jules.kitpvp.player.MPlayer;
-import com.jules.kitpvp.player.MPlayerManager;
 import com.jules.kitpvp.util.ItemStackCreator;
 import com.jules.kitpvp.util.Utils;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
-import java.util.Arrays;
-import java.util.HashMap;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Enderman extends KitClass {
 
-    @Override
-    public String getName() {
-        return "Enderman";
+    public Enderman() {
+        super(
+                "Enderman",
+                new String[]{"The Enderman class has", "special teleportation", "powers and endurance."},
+                900,
+                new ItemStackCreator(Material.ENDER_CHEST, "§bEnderman").build(),
+                new Upgrade(UpgradeType.SWORD, 4),
+                new Upgrade(UpgradeType.BOOTS, 6),
+                new Upgrade(UpgradeType.POTION, 4),
+                new Upgrade(UpgradeType.ABILITY, 5)
+        );
     }
 
     @Override
-    public List<String> getDescription() {
-        return Arrays.asList("The Enderman class has", "special teleportation", "powers and endurance.");
-    }
+    public List<ItemStack> getStartingItems(Player p) {
+        List<ItemStack> items = new ArrayList<>();
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
 
-    @Override
-    public ClassType getType() {
-        return ClassType.NORMAL;
-    }
+        // Sword
+        int swordLevel = mPlayer.getUpgradeLevel(UpgradeType.SWORD);
+        if (swordLevel == 1) items.add(new ItemStack(Material.WOODEN_SWORD));
+        else if (swordLevel == 2) items.add(new ItemStack(Material.STONE_SWORD));
+        else if (swordLevel == 3) items.add(new ItemStack(Material.IRON_SWORD));
+        else items.add(new ItemStack(Material.DIAMOND_SWORD));
 
-    @Override
-    public ItemStack getIcon() {
-        return new ItemStack(Material.ENDER_CHEST);
-    }
+        // Boots
+        int bootsLevel = mPlayer.getUpgradeLevel(UpgradeType.BOOTS);
+        ItemStackCreator boots = new ItemStackCreator(Material.CHAINMAIL_BOOTS);
+        if (bootsLevel >= 2) boots = new ItemStackCreator(Material.IRON_BOOTS);
+        if (bootsLevel >= 6) boots = new ItemStackCreator(Material.DIAMOND_BOOTS);
 
-    @Override
-    public HashMap<Integer, ItemStack> getStartingItems(int upgrade) {
-        HashMap<Integer, ItemStack> items = new HashMap<>();
+        int featherFalling = 0;
+        if (bootsLevel == 1) featherFalling = 1;
+        else if (bootsLevel == 3) featherFalling = 2;
+        else if (bootsLevel == 4) featherFalling = 3;
+        else if (bootsLevel >= 5) featherFalling = 4;
 
-        ItemStack sword = new ItemStack(Material.WOOD_SWORD);
-        if (upgrade >= 5) sword.setType(Material.STONE_SWORD);
-        if (upgrade >= 8) sword.setType(Material.IRON_SWORD);
-        if (upgrade >= 9) sword.setType(Material.DIAMOND_SWORD);
-        sword.addEnchantment(Enchantment.DURABILITY, 3);
-        items.put(0, ItemStackCreator.createItem(sword, ChatColor.AQUA + getName() + " Sword", 1, getSwordLore(upgrade)));
+        if (featherFalling > 0) boots.addEnchantment(Enchantment.PROTECTION_FALL, featherFalling);
+        items.add(boots.build());
 
-        int steakAmount = 1;
-        if (upgrade >= 2) steakAmount = 2;
-        if (upgrade >= 4) steakAmount = 3;
-        items.put(1, Utils.getSteaks(steakAmount, getName()));
-
-        if (upgrade >= 4) {
-            int potionHealLevel = 1;
-            if (upgrade >= 9) potionHealLevel = 2;
-            items.put(2, Utils.getPotionHeal(8, potionHealLevel));
-        }
-
-        if (upgrade >= 5) {
-            int potionSpeedLevel = 1;
-            if (upgrade >= 8) potionSpeedLevel = 2;
-            items.put(3, Utils.getPotionSpeed(potionSpeedLevel));
-        }
-
-        ItemStack boots = new ItemStack(Material.CHAINMAIL_BOOTS);
-        if (upgrade >= 2) boots.setType(Material.IRON_BOOTS);
-        if (upgrade >= 9) boots.setType(Material.DIAMOND_BOOTS);
-
-        HashMap<Enchantment, Integer> enchants = new HashMap<>();
-        int fallProt = 1;
-        if (upgrade >= 3) fallProt = 2;
-        if (upgrade >= 6) fallProt = 3;
-        if (upgrade >= 7) fallProt = 4;
-        enchants.put(Enchantment.PROTECTION_FALL, fallProt);
-        items.put(4, ItemStackCreator.createItemStack(boots, 1, ChatColor.AQUA + getName() + " Boots", null, enchants));
+        // Consumables
+        items.add(new ItemStack(Material.COOKED_BEEF, 3));
+        int potionLevel = mPlayer.getUpgradeLevel(UpgradeType.POTION);
+        if (potionLevel >= 1) items.add(Utils.getPotionHeal(8, 1));
+        if (potionLevel >= 2) items.add(Utils.getPotionSpeed(1));
+        if (potionLevel >= 3) items.add(Utils.getPotionSpeed(2));
+        if (potionLevel >= 4) items.add(Utils.getPotionHeal(8, 2));
 
         return items;
     }
 
     @Override
-    public int getPrice() {
-        return 900;
+    public List<PotionEffect> getPassiveEffects(Player p) {
+        return new ArrayList<>();
     }
 
     @Override
-    public int getUpgradePrice(int level) {
-        switch (level) {
-            case 1: return 0;
-            case 2: return 50;
-            case 3: return 125;
-            case 4: return 300;
-            case 5: return 600;
-            case 6: return 3500;
-            case 7: return 6500;
-            case 8: return 8500;
-            case 9: return 14000;
-            default: return 14000;
-        }
+    public Kit getKit() {
+        return Kit.ENDERMAN;
     }
 
     @Override
-    public String getAbilityName() {
-        return "Enderman Teleport";
-    }
-
-    @Override
-    public int getXPPerHit() {
-        return 20;
-    }
-
-    @Override
-    public List<String> getAbilityDescription(int upgrade) {
-        double distance = 10.0 + (2.0 * (upgrade -1));
-        if(upgrade > 1) distance--;
-        int speed = 1;
-        if(upgrade >= 4) speed = 2;
-        if(upgrade >= 9) speed = 3;
-
-        return Arrays.asList("§7Teleports you §c" + distance, "§7blocks towards the nearest", "§7player and gain Speed", "§c" + speed + "§7 for 5 seconds.");
-    }
-
-    @Override
-    public HitType getHitType() {
-        return HitType.MELEE;
-    }
-
-    @Override
-    public String getAbilityReadyName() {
-        return "Teleport";
-    }
-
-    @EventHandler
-    public void onEntityDamage(EntityDamageByEntityEvent e) {
-        if (!(e.getEntity() instanceof Player)) return;
-
-        final Player p = (Player) e.getEntity();
-        MPlayer player = MPlayerManager.getMPlayer(p.getName());
-        if (player.getCurrentClass() != this) return;
-
-        // Skill: Soul Destroyer
-        double chance = (7 + (3 * new Upgrade(p, this, null).getCurrentUpgrade())) / 100.0;
+    public void onDamage(EntityDamageEvent event) {
+        if(!(event.getEntity() instanceof Player)) return;
+        Player p = (Player) event.getEntity();
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        double chance = (7 + (3 * mPlayer.getUpgradeLevel(UpgradeType.ABILITY))) / 100.0;
         if (new Random().nextDouble() <= chance) {
             Bukkit.getScheduler().runTaskLater(KitPVP.getInstance(), () -> p.setVelocity(new Vector(0, 0, 0)), 1L);
         }
     }
 
-    @EventHandler
-    public void onInteract(PlayerInteractEvent e) {
-        final Player p = e.getPlayer();
+    @Override
+    public void onInteract(Player p, PlayerInteractEvent e) {
         if (!e.getAction().name().contains("RIGHT")) return;
         if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
-        if (MPlayerManager.getMPlayer(p.getName()).getCurrentClass() != this) return;
         if (!Utils.isUsingSword(p.getItemInHand())) return;
         if (p.getLevel() < 100) return;
 
-        Upgrade upgrade = new Upgrade(p, this, UpgradeType.ABILITY);
-        com.jules.kitpvp.abilities.Teleport.use(p, upgrade.getCurrentUpgrade());
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        com.jules.kitpvp.abilities.Teleport.use(p, mPlayer.getUpgradeLevel(UpgradeType.ABILITY));
         p.setLevel(0);
         p.setExp(0);
     }

@@ -1,130 +1,72 @@
 package com.jules.kitpvp.kits;
 
-import com.jules.kitpvp.KitPVP;
-import com.jules.kitpvp.kits.Upgrade;
-import com.jules.kitpvp.kits.UpgradeType;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-public abstract class KitClass implements Listener {
+public abstract class KitClass {
 
-    public abstract String getName();
-    public abstract List<String> getDescription();
-    public abstract ClassType getType();
-    public abstract ItemStack getIcon();
-    public abstract int getPrice();
-    public abstract HashMap<Integer, ItemStack> getStartingItems(int upgrade);
-    public abstract int getXPPerHit();
-    public abstract int getUpgradePrice(int level);
-    public abstract String getAbilityName();
-    public abstract HitType getHitType();
-    public abstract List<String> getAbilityDescription(int upgrade);
-    public abstract String getAbilityReadyName();
+    private String name;
+    private List<String> description;
+    private int price;
+    private ItemStack icon;
+    private List<Upgrade> upgrades;
 
-    public List<String> getSwordLore(int upgrade) {
-        List<String> list = new ArrayList<>();
-        list.add(ChatColor.GRAY + "Ability: " + ChatColor.RED + getAbilityName());
-        list.add("");
-        for(String s : getAbilityDescription(upgrade)) {
-            list.add(s);
-        }
-        return list;
+    public KitClass(String name, String[] description, int price, ItemStack icon, Upgrade... upgrades) {
+        this.name = name;
+        this.description = Arrays.asList(description);
+        this.price = price;
+        this.icon = icon;
+        this.upgrades = Arrays.asList(upgrades);
     }
 
-    public String getNameByType(UpgradeType type) {
-        if(type.equals(UpgradeType.ABILITY)) {
-            return getAbilityName();
-        }
-        if(type.equals(UpgradeType.KIT)) {
-            return getName();
-        }
-        return null;
+    public abstract List<ItemStack> getStartingItems(Player p);
+    public abstract List<PotionEffect> getPassiveEffects(Player p);
+    public abstract Kit getKit();
+
+    public void onDamage(EntityDamageEvent event) {}
+    public void onDamageByEntity(EntityDamageByEntityEvent event) {}
+    public void onKill(Player p, Player killed) {}
+    public void onDeath(PlayerDeathEvent event) {}
+    public void onInteract(Player p, PlayerInteractEvent event) {}
+    public void onBowShoot(EntityShootBowEvent event) {}
+    public void onBlockBreak(BlockBreakEvent event) {}
+    public void onProjectileHit(ProjectileHitEvent event) {}
+    public void onHangingBreak(HangingBreakEvent event) {}
+    public void onEntityExplode(EntityExplodeEvent event) {}
+    public void onItemConsume(PlayerItemConsumeEvent event) {}
+
+    public String getName() {
+        return name;
     }
 
-    public void autoArmor(Player p) {
-        for(ItemStack item : p.getInventory().getContents()) {
-            if(item == null || item.getType() == Material.AIR) continue;
-            if(item.getType().toString().contains("HELMET")) {
-                p.getInventory().setHelmet(item);
-                p.getInventory().remove(item);
-            }
-            if(item.getType().toString().contains("CHESTPLATE")) {
-                p.getInventory().setChestplate(item);
-                p.getInventory().remove(item);
-            }
-            if(item.getType().toString().contains("LEGGINGS")) {
-                p.getInventory().setLeggings(item);
-                p.getInventory().remove(item);
-            }
-            if(item.getType().toString().contains("BOOTS")) {
-                p.getInventory().setBoots(item);
-                p.getInventory().remove(item);
-            }
-        }
-        if(p.getInventory().getHelmet() == null) {
-            p.getInventory().setHelmet(new ItemStack(Material.IRON_HELMET));
-        }
-        if(p.getInventory().getChestplate() == null) {
-            p.getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
-        }
-        if(p.getInventory().getLeggings() == null) {
-            p.getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
-        }
-        if(p.getInventory().getBoots() == null) {
-            p.getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
-        }
-        p.updateInventory();
+    public List<String> getDescription() {
+        return description;
     }
 
-    public String getPotionEffectName(PotionEffectType pe) {
-        if(pe.equals(PotionEffectType.INCREASE_DAMAGE)) {
-            return "Strength";
-        }
-        if(pe.equals(PotionEffectType.SPEED)) {
-            return "Speed";
-        }
-        if(pe.equals(PotionEffectType.FAST_DIGGING)) {
-            return "Haste";
-        }
-        if(pe.equals(PotionEffectType.REGENERATION)) {
-            return "Regeneration";
-        }
-        if(pe.equals(PotionEffectType.DAMAGE_RESISTANCE)) {
-            return "Resistance";
-        }
-        return "PotionEffect";
+    public int getPrice() {
+        return price;
     }
 
-    public void apply(final Player p){
-        KitPVP.getPlaying().add(p.getName());
-        p.setGameMode(GameMode.SURVIVAL);
-        p.setFoodLevel(20);
-        p.getInventory().clear();
-        p.getInventory().setArmorContents(null);
-        for(PotionEffect potion : p.getActivePotionEffects()) p.removePotionEffect(potion.getType());
+    public ItemStack getIcon() {
+        return icon;
+    }
 
-        Upgrade upgrade = new Upgrade(p, this, UpgradeType.KIT);
-        for(Map.Entry<Integer, ItemStack> entry : getStartingItems(upgrade.getCurrentUpgrade()).entrySet()) {
-            p.getInventory().setItem(entry.getKey(), entry.getValue());
-        }
-
-        if(upgrade.hasPrestige()) {
-            p.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST,100000,5));
-        } else {
-            p.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST,100000,4));
-        }
-        p.addPotionEffect(new PotionEffect(PotionEffectType.HEAL,1,5));
-        autoArmor(p);
+    public List<Upgrade> getUpgrades() {
+        return upgrades;
     }
 }

@@ -1,8 +1,8 @@
 package com.jules.kitpvp.abilities;
 
 import com.jules.kitpvp.KitPVP;
+import com.jules.kitpvp.kits.Kit;
 import com.jules.kitpvp.player.MPlayer;
-import com.jules.kitpvp.player.MPlayerManager;
 import com.jules.kitpvp.team.TeamManager;
 import com.jules.kitpvp.util.Utils;
 import net.md_5.bungee.api.ChatColor;
@@ -55,12 +55,12 @@ public class Detonate {
                             }
                             if(ent instanceof Player) {
                                 Player enp = (Player)ent;
-                                MPlayer player = MPlayerManager.getMPlayer(enp.getName());
-                                if(player.getCurrentClass().getName().equalsIgnoreCase("Creeper")) {
+                                MPlayer player = MPlayer.getMPlayer(enp.getUniqueId());
+                                if(player.getKit().getName().equalsIgnoreCase("Creeper")) {
                                     Utils.realDamage(ent, p, damage/3);
                                     continue;
                                 }
-                                if(player.getCurrentClass().getName().equalsIgnoreCase("Arcanist")) {
+                                if(player.getKit().getName().equalsIgnoreCase("Arcanist")) {
                                     Utils.realDamage(ent, p, damage/2);
                                     continue;
                                 }

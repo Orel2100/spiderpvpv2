@@ -1,8 +1,13 @@
 package com.jules.kitpvp.util;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
 
@@ -56,5 +61,19 @@ public class Utils {
         value = value * factor;
         long tmp = Math.round(value);
         return (double) tmp / factor;
+    }
+
+    public static List<Entity> getNearbyEntities(Location l, int size) {
+        List<Entity> entities = new ArrayList<Entity>();
+        for(Entity ent : l.getWorld().getEntities()) {
+            if(!(ent instanceof LivingEntity)) continue;
+            if(ent.isDead()) continue;
+            if(ent == null) continue;
+            if(!ent.getWorld().equals(l.getWorld())) continue;
+            if(l.distance(ent.getLocation()) <= size) {
+                entities.add(ent);
+            }
+        }
+        return entities;
     }
 }

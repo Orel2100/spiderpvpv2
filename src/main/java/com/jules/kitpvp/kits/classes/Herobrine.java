@@ -1,182 +1,109 @@
 package com.jules.kitpvp.kits.classes;
 
-import com.jules.kitpvp.kits.ClassType;
-import com.jules.kitpvp.kits.HitType;
+import com.jules.kitpvp.kits.Kit;
 import com.jules.kitpvp.kits.KitClass;
 import com.jules.kitpvp.kits.Upgrade;
 import com.jules.kitpvp.kits.UpgradeType;
 import com.jules.kitpvp.player.MPlayer;
-import com.jules.kitpvp.player.MPlayerManager;
 import com.jules.kitpvp.util.ItemStackCreator;
 import com.jules.kitpvp.util.Utils;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Herobrine extends KitClass {
 
-    @Override
-    public String getName() {
-        return "Herobrine";
+    public Herobrine() {
+        super(
+                "Herobrine",
+                new String[]{"The Herobrine class uses", "supernatural abilities to", "attack and destroy your", "enemies."},
+                600,
+                new ItemStackCreator(Material.ENDER_PEARL, "§bHerobrine").build(),
+                new Upgrade(UpgradeType.SWORD, 3),
+                new Upgrade(UpgradeType.HELMET, 1),
+                new Upgrade(UpgradeType.POTION, 4),
+                new Upgrade(UpgradeType.ABILITY, 5)
+        );
     }
 
     @Override
-    public List<String> getDescription() {
-        return Arrays.asList("The Herobrine class uses", "supernatural abilities to", "attack and destroy your", "enemies.");
-    }
+    public List<ItemStack> getStartingItems(Player p) {
+        List<ItemStack> items = new ArrayList<>();
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
 
-    @Override
-    public ClassType getType() {
-        return ClassType.NORMAL;
-    }
+        // Sword
+        int swordLevel = mPlayer.getUpgradeLevel(UpgradeType.SWORD);
+        if (swordLevel == 1) items.add(new ItemStack(Material.STONE_SWORD));
+        else if (swordLevel == 2) items.add(new ItemStack(Material.IRON_SWORD));
+        else items.add(new ItemStack(Material.DIAMOND_SWORD));
 
-    @Override
-    public ItemStack getIcon() {
-        return new ItemStack(Material.ENDER_PEARL);
-    }
-
-    @Override
-    public HashMap<Integer, ItemStack> getStartingItems(int upgrade) {
-        HashMap<Integer, ItemStack> items = new HashMap<>();
-
-        ItemStack sword = new ItemStack(Material.STONE_SWORD);
-        if (upgrade >= 5) sword.setType(Material.IRON_SWORD);
-        if (upgrade >= 9) sword.setType(Material.DIAMOND_SWORD);
-        sword.addEnchantment(Enchantment.DURABILITY, 3);
-        items.put(0, ItemStackCreator.createItem(sword, ChatColor.AQUA + getName() + " Sword", 1, getSwordLore(upgrade)));
-
-        if (upgrade >= 2) {
-            int steakAmount = 1;
-            if (upgrade >= 3) steakAmount = 2;
-            if (upgrade >= 4) steakAmount = 3;
-            items.put(1, Utils.getSteaks(steakAmount, getName()));
+        // Helmet
+        if (mPlayer.getUpgradeLevel(UpgradeType.HELMET) >= 1) {
+            items.add(new ItemStackCreator(Material.IRON_HELMET)
+                    .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
+                    .addEnchantment(Enchantment.DURABILITY, 1)
+                    .addEnchantment(Enchantment.WATER_WORKER, 1)
+                    .build());
         }
 
-        if (upgrade >= 4) {
-            int healPotionLevel = 1;
-            if (upgrade >= 8) healPotionLevel = 2;
-            items.put(2, Utils.getPotionHeal(6, healPotionLevel));
-        }
-
-        if (upgrade >= 6) {
-            int speedPotionLevel = 1;
-            if (upgrade >= 8) speedPotionLevel = 2;
-            items.put(3, Utils.getPotionSpeed(speedPotionLevel));
-        }
-
-        if (upgrade >= 7) {
-            ItemStack helmet = new ItemStack(Material.IRON_HELMET);
-            HashMap<Enchantment, Integer> enchants = new HashMap<>();
-            enchants.put(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-            enchants.put(Enchantment.DURABILITY, 1);
-            enchants.put(Enchantment.WATER_WORKER, 1);
-            items.put(4, ItemStackCreator.createItemStack(helmet, 1, ChatColor.AQUA + getName() + " Helmet", null, enchants));
-        }
+        // Consumables
+        items.add(new ItemStack(Material.COOKED_BEEF, 3));
+        int potionLevel = mPlayer.getUpgradeLevel(UpgradeType.POTION);
+        if (potionLevel >= 1) items.add(Utils.getPotionHeal(6, 1));
+        if (potionLevel >= 2) items.add(Utils.getPotionSpeed(1));
+        if (potionLevel >= 3) items.add(Utils.getPotionHeal(6, 2));
+        if (potionLevel >= 4) items.add(Utils.getPotionSpeed(2));
 
         return items;
     }
 
     @Override
-    public int getPrice() {
-        return 600;
+    public List<PotionEffect> getPassiveEffects(Player p) {
+        return new ArrayList<>();
     }
 
     @Override
-    public int getUpgradePrice(int level) {
-        switch (level) {
-            case 1: return 0;
-            case 2: return 50;
-            case 3: return 125;
-            case 4: return 300;
-            case 5: return 600;
-            case 6: return 3500;
-            case 7: return 6500;
-            case 8: return 8500;
-            case 9: return 14000;
-            default: return 14000;
-        }
+    public Kit getKit() {
+        return Kit.HEROBRINE;
     }
 
     @Override
-    public String getAbilityName() {
-        return "Wrath";
-    }
-
-    @Override
-    public int getXPPerHit() {
-        return 20;
-    }
-
-    @Override
-    public List<String> getAbilityDescription(int upgrade) {
-        double damage = -0.5 + (0.5 * upgrade);
-        return Arrays.asList("§7Unleash the wrath of", "§7Herobrine striking all", "§7nearby enemies for §c" + damage, "§7damage.");
-    }
-
-    @Override
-    public HitType getHitType() {
-        return HitType.MELEE;
-    }
-
-    @Override
-    public String getAbilityReadyName() {
-        return getAbilityName();
-    }
-
-    @EventHandler
-    public void onKill(PlayerDeathEvent e) {
-        if (e.getEntity().getKiller() == null) return;
-
-        Player p = e.getEntity().getKiller();
-        MPlayer player = MPlayerManager.getMPlayer(p.getName());
-        if (player.getCurrentClass() != this) return;
-
-        // Skill: Power
-        Upgrade upgrade = new Upgrade(p, this, null);
-        double duration = 1.5 + (0.5 * upgrade.getCurrentUpgrade());
-
+    public void onKill(Player p, Player killed) {
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        double duration = 1.5 + (0.5 * mPlayer.getUpgradeLevel(UpgradeType.ABILITY));
         p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, (int) (20 * duration), 0));
     }
 
-    @EventHandler
-    public void onHit(EntityDamageByEntityEvent e) {
+    @Override
+    public void onDamageByEntity(EntityDamageByEntityEvent e) {
         if (!(e.getDamager() instanceof Player) || !(e.getEntity() instanceof Player)) return;
-
         Player p = (Player) e.getDamager();
-        MPlayer player = MPlayerManager.getMPlayer(p.getName());
-        if (player.getCurrentClass() != this) return;
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        if (mPlayer.getKit() != Kit.HEROBRINE) return;
 
-        // Skill: Flurry
-        Upgrade upgrade = new Upgrade(p, this, null);
-        double chance = (21 + (6 * upgrade.getCurrentUpgrade())) / 100.0;
+        double chance = (21 + (6 * mPlayer.getUpgradeLevel(UpgradeType.ABILITY))) / 100.0;
         if (new Random().nextDouble() <= chance) {
             p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 1));
         }
     }
 
-    @EventHandler
-    public void onInteract(PlayerInteractEvent e) {
-        Player p = e.getPlayer();
+    @Override
+    public void onInteract(Player p, PlayerInteractEvent e) {
         if (!e.getAction().name().contains("RIGHT")) return;
         if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
-        if (MPlayerManager.getMPlayer(p.getName()).getCurrentClass() != this) return;
         if (!Utils.isUsingSword(p.getItemInHand())) return;
         if (p.getLevel() < 100) return;
 
-        Upgrade upgrade = new Upgrade(p, this, UpgradeType.ABILITY);
-        com.jules.kitpvp.abilities.Wrath.use(p, upgrade.getCurrentUpgrade());
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        com.jules.kitpvp.abilities.Wrath.use(p, mPlayer.getUpgradeLevel(UpgradeType.ABILITY));
     }
 }

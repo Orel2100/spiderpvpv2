@@ -6,7 +6,6 @@ import com.jules.kitpvp.util.Utils;
 import com.jules.kitpvp.team.TeamManager;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -21,23 +20,17 @@ public class IronPunch {
     public static void use(final Player p, final int upgrade) {
         p.setLevel(0);
         p.setExp(0);
-        EffectUtils.createCircle(p.getLocation(), 5, 20*2);
+        EffectUtils.createCircle(p.getLocation(), 20*2, true);
         EffectUtils.createHelix(p.getLocation(), 5, 20*2);
         for(int x = -2; x<4; x=x+2) {
             for(int z = -2; z<4; z=z+2) {
                 if(x == 0 && z == 0) continue;
-                final FallingBlock fb = p.getWorld().spawnFallingBlock(p.getLocation().add(x, 3, z), Material.IRON_BLOCK, (byte)0);
+                final FallingBlock fb = p.getWorld().spawnFallingBlock(p.getLocation().add(x, 3, z), Material.IRON_BLOCK.createBlockData());
                 new BukkitRunnable() {
 
                     @Override
                     public void run() {
                         if(fb.getLocation().subtract(0, 1, 0).getBlock().getType() != Material.AIR) {
-                            for(Entity ent : fb.getNearbyEntities(15, 15, 15)) {
-                                if(ent instanceof Player) {
-                                    Player enp = (Player)ent;
-                                    enp.playEffect(fb.getLocation(), Effect.STEP_SOUND, Material.IRON_BLOCK);
-                                }
-                            }
                             fb.remove();
                             cancel();
                         }
@@ -53,7 +46,7 @@ public class IronPunch {
                 for(int i = 0; i < upgrade; i++) {
                     damage += 0.5;
                 }
-                for(Entity ent : BurningSoul.getNearbyEntites(p.getLocation(), 5)){
+                for(Entity ent : Utils.getNearbyEntities(p.getLocation(), 5)){
                     if(ent instanceof LivingEntity){
                         if(ent instanceof Player) {
                             ((Player)ent).playSound(p.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);

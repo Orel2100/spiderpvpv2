@@ -1,85 +1,103 @@
 package com.jules.kitpvp.gui;
 
-import com.jules.kitpvp.kits.KitClass;
+import com.jules.kitpvp.KitPVP;
 import com.jules.kitpvp.kits.Upgrade;
 import com.jules.kitpvp.kits.UpgradeType;
 import com.jules.kitpvp.player.MPlayer;
-import com.jules.kitpvp.player.MPlayerManager;
 import com.jules.kitpvp.util.ItemStackCreator;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Arrays;
 
 public class UpgradeGUI implements InventoryHolder {
 
-    private final KitClass kit;
-    private final Player player;
-    private final Inventory inventory;
+    private Inventory inv;
+    private MPlayer mPlayer;
 
-    public UpgradeGUI(Player player, KitClass kit) {
-        this.player = player;
-        this.kit = kit;
-        this.inventory = Bukkit.createInventory(this, 9 * 3, "Upgrade " + kit.getName());
-        initializeItems();
+    public UpgradeGUI(MPlayer mPlayer) {
+        this.mPlayer = mPlayer;
+        this.inv = Bukkit.createInventory(this, 27, "Upgrades for " + mPlayer.getKit().getName());
+        setupGUI();
     }
 
-    private void initializeItems() {
-        MPlayer mPlayer = MPlayerManager.getMPlayer(player.getName());
-        Upgrade upgrade = new Upgrade(player, kit, UpgradeType.KIT);
-
-        // Current Level Item
-        ItemStack currentLevelItem = new ItemStack(Material.BOOK, upgrade.getCurrentUpgrade());
-        ItemMeta currentLevelMeta = currentLevelItem.getItemMeta();
-        currentLevelMeta.setDisplayName(ChatColor.GREEN + "Current Level");
-        currentLevelMeta.setLore(Arrays.asList(ChatColor.GRAY + "You are currently at level " + upgrade.getCurrentUpgrade()));
-        currentLevelItem.setItemMeta(currentLevelMeta);
-        inventory.setItem(11, currentLevelItem);
-
-        // Next Level Item
-        if (upgrade.getCurrentUpgrade() < 9) {
-            ItemStack nextLevelItem = new ItemStack(Material.ANVIL);
-            ItemMeta nextLevelMeta = nextLevelItem.getItemMeta();
-            nextLevelMeta.setDisplayName(ChatColor.GREEN + "Upgrade to Level " + upgrade.getNextUpgrade());
-            nextLevelMeta.setLore(Arrays.asList(
-                    ChatColor.GRAY + "Cost: " + ChatColor.GOLD + kit.getUpgradePrice(upgrade.getNextUpgrade()) + " coins",
-                    ChatColor.YELLOW + "Click to purchase!"
-            ));
-            nextLevelItem.setItemMeta(nextLevelMeta);
-            inventory.setItem(15, nextLevelItem);
-        } else {
-            ItemStack maxLevelItem = new ItemStack(Material.BARRIER);
-            ItemMeta maxLevelMeta = maxLevelItem.getItemMeta();
-            maxLevelMeta.setDisplayName(ChatColor.RED + "Max Level Reached");
-            maxLevelItem.setItemMeta(maxLevelMeta);
-            inventory.setItem(15, maxLevelItem);
+    private void setupGUI() {
+        if (mPlayer.getKitClass() == null) {
+            mPlayer.getPlayer().sendMessage("You have not selected a kit!");
+            return;
         }
+        for(Upgrade upgrade : mPlayer.getKitClass().getUpgrades()) {
+            ItemStack item;
+            String name = "";
+            String lore;
+            int level = mPlayer.getUpgradeLevel(upgrade.getType());
+            int maxLevel = upgrade.getMaxLevel();
+            int cost = KitPVP.getInstance().getUpgradeManager().getCost(level + 1);
 
-        // Player Coins Item
-        ItemStack coinsItem = new ItemStack(Material.GOLD_NUGGET);
-        ItemMeta coinsMeta = coinsItem.getItemMeta();
-        coinsMeta.setDisplayName(ChatColor.GOLD + "Your Coins");
-        coinsMeta.setLore(Arrays.asList(ChatColor.GRAY + String.valueOf(mPlayer.getPlayerData().getCoins())));
-        coinsItem.setItemMeta(coinsMeta);
-        inventory.setItem(22, coinsItem);
+            switch (upgrade.getType()) {
+                case SWORD:
+                    name = "§bSword Upgrade";
+                    item = new ItemStack(Material.DIAMOND_SWORD);
+                    break;
+                case AXE:
+                    name = "§bAxe Upgrade";
+                    item = new ItemStack(Material.DIAMOND_AXE);
+                    break;
+                case BOW:
+                    name = "§bBow Upgrade";
+                    item = new ItemStack(Material.BOW);
+                    break;
+                case HELMET:
+                    name = "§bHelmet Upgrade";
+                    item = new ItemStack(Material.DIAMOND_HELMET);
+                    break;
+                case CHESTPLATE:
+                    name = "§bChestplate Upgrade";
+                    item = new ItemStack(Material.DIAMOND_CHESTPLATE);
+                    break;
+                case LEGGINGS:
+                    name = "§bLeggings Upgrade";
+                    item = new ItemStack(Material.DIAMOND_LEGGINGS);
+                    break;
+                case BOOTS:
+                    name = "§bBoots Upgrade";
+                    item = new ItemStack(Material.DIAMOND_BOOTS);
+                    break;
+                case POTION:
+                    name = "§bPotion Upgrade";
+                    item = new ItemStack(Material.POTION);
+                    break;
+                case GOLDEN_APPLE:
+                    name = "§bGolden Apple Upgrade";
+                    item = new ItemStack(Material.GOLDEN_APPLE);
+                    break;
+                case ABILITY:
+                    name = "§bAbility Upgrade";
+                    item = new ItemStack(Material.NETHER_STAR);
+                    break;
+                default:
+                    name = "§cUnknown Upgrade";
+                    item = new ItemStack(Material.STONE);
+                    break;
+            }
+            if(level >= maxLevel) {
+                lore = "§aMax level reached!";
+            } else {
+                lore = "§7Cost: §6" + cost + " coins";
+            }
+            ItemStackCreator creator = new ItemStackCreator(item).setName(name).addLoreLine(lore).addLoreLine("§7Level: §a" + level + "/" + maxLevel);
+            inv.addItem(creator.build());
+        }
     }
 
-    public void open() {
-        player.openInventory(inventory);
+    public void open(Player player) {
+        player.openInventory(inv);
     }
 
     @Override
     public Inventory getInventory() {
-        return inventory;
-    }
-
-    public KitClass getKit() {
-        return kit;
+        return inv;
     }
 }

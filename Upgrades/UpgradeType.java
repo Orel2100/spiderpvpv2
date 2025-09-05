@@ -1,24 +1,25 @@
 package me.main.yoni.ClassSystem.Upgrades;
 
 public enum UpgradeType {
-	
-	ABILITY("Ability"),
-	KIT("KitUpgrade"),
-	BLOCKS("Blocks"),
-	TEAM("TeamOption");
 
-	private String name;
+    PRIMARY_WEAPON("Primary Weapon"),
+    ARMOR("Armor"),
+    CONSUMABLE("Consumable"),
+    ABILITY("Ability"),
+    BLOCKS("Blocks"),
+    TEAM("TeamOption");
 
-	private UpgradeType(String name) {
-		this.name = name;
-	}
-	
-	public String getName() {
-		return name;
-	}
+    private String name;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private UpgradeType(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
-

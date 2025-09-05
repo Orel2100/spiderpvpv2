@@ -1,9 +1,8 @@
 package com.jules.kitpvp.gui;
 
-import com.jules.kitpvp.kits.ClassManager;
-import com.jules.kitpvp.kits.ClassType;
+import com.jules.kitpvp.kits.Kit;
 import com.jules.kitpvp.kits.KitClass;
-import com.jules.kitpvp.util.ItemStackCreator;
+import com.jules.kitpvp.kits.ClassType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -18,28 +17,33 @@ public class ClassSelectorGUI implements InventoryHolder {
 
     private final Inventory inventory;
 
-    public ClassSelectorGUI(ClassManager classManager, ClassType type) {
+    public ClassSelectorGUI(ClassType type) {
         if (type == ClassType.NORMAL) {
             this.inventory = Bukkit.createInventory(this, 9 * 4, "Normal Kits");
         } else {
             this.inventory = Bukkit.createInventory(this, 9 * 4, "Hero Kits");
         }
-        initializeItems(classManager, type);
+        initializeItems(type);
     }
 
-    private void initializeItems(ClassManager classManager, ClassType type) {
-        for (KitClass kit : classManager.getClasses()) {
-            if (kit.getType() == type) {
-                ItemStack item = kit.getIcon();
-                ItemMeta meta = item.getItemMeta();
-                meta.setDisplayName(kit.getName());
-                List<String> lore = new ArrayList<>();
-                lore.addAll(kit.getDescription());
-                lore.add(" ");
-                lore.add("Price: " + kit.getPrice());
-                meta.setLore(lore);
-                item.setItemMeta(meta);
-                inventory.addItem(item);
+    private void initializeItems(ClassType type) {
+        for (Kit kit : Kit.values()) {
+            if (kit.getClassType() == type) {
+                try {
+                    KitClass kitClass = kit.getKitClass().newInstance();
+                    ItemStack item = kitClass.getIcon();
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setDisplayName(kitClass.getName());
+                    List<String> lore = new ArrayList<>();
+                    lore.addAll(kitClass.getDescription());
+                    lore.add(" ");
+                    lore.add("Price: " + kitClass.getPrice());
+                    meta.setLore(lore);
+                    item.setItemMeta(meta);
+                    inventory.addItem(item);
+                } catch (InstantiationException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

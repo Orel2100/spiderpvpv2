@@ -1,7 +1,7 @@
 package com.jules.kitpvp.listeners;
 
 import com.jules.kitpvp.KitPVP;
-import com.jules.kitpvp.player.PlayerManager;
+import com.jules.kitpvp.player.MPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,17 +14,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class PlayerJoinListener implements Listener {
 
     private final KitPVP plugin;
-    private final PlayerManager playerManager;
 
-    public PlayerJoinListener(KitPVP plugin, PlayerManager playerManager) {
+    public PlayerJoinListener(KitPVP plugin) {
         this.plugin = plugin;
-        this.playerManager = playerManager;
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        playerManager.addPlayer(player);
+        MPlayer.getMPlayer(player.getUniqueId());
 
         player.getInventory().clear();
 

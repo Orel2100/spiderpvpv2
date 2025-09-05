@@ -2,14 +2,12 @@ package com.jules.kitpvp.kits.classes;
 
 import com.jules.kitpvp.KitPVP;
 import com.jules.kitpvp.abilities.HomingTask;
-import com.jules.kitpvp.kits.ClassType;
-import com.jules.kitpvp.kits.HitType;
+import com.jules.kitpvp.kits.Kit;
 import com.jules.kitpvp.kits.KitClass;
 import com.jules.kitpvp.kits.Upgrade;
 import com.jules.kitpvp.kits.UpgradeType;
-import com.jules.kitpvp.player.MPlayerManager;
+import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
-import com.jules.kitpvp.util.Utils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,160 +16,141 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 public class Hunter extends KitClass {
 
-    public ArrayList<String> cd = new ArrayList<>();
+    private ArrayList<String> cd = new ArrayList<>();
 
-    @Override
-    public String getName() {
-        return "Hunter";
+    public Hunter() {
+        super(
+                "Hunter",
+                new String[]{"This archery class powers", "up with the thrill of the", "hunt."},
+                20000,
+                new ItemStackCreator(Material.BOW, "§bHunter").build(),
+                new Upgrade(UpgradeType.SWORD, 4),
+                new Upgrade(UpgradeType.BOW, 9),
+                new Upgrade(UpgradeType.HELMET, 5),
+                new Upgrade(UpgradeType.BOOTS, 5),
+                new Upgrade(UpgradeType.POTION, 2), // for steaks
+                new Upgrade(UpgradeType.GOLDEN_APPLE, 2),
+                new Upgrade(UpgradeType.ABILITY, 5)
+        );
     }
 
     @Override
-    public List<String> getDescription() {
-        return Arrays.asList("This archery class powers", "up with the thrill of the", "hunt.");
-    }
+    public List<ItemStack> getStartingItems(Player p) {
+        List<ItemStack> items = new ArrayList<>();
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
 
-    @Override
-    public ClassType getType() {
-        return ClassType.HERO;
-    }
+        // Sword
+        int swordLevel = mPlayer.getUpgradeLevel(UpgradeType.SWORD);
+        ItemStack sword;
+        if (swordLevel == 1) {
+            sword = new ItemStack(Material.WOODEN_SWORD);
+        } else if (swordLevel == 2) {
+            sword = new ItemStack(Material.STONE_SWORD);
+        } else if (swordLevel == 3) {
+            sword = new ItemStack(Material.IRON_SWORD);
+        } else { // level 4+
+            sword = new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 1).build();
+        }
+        items.add(sword);
 
-    @Override
-    public ItemStack getIcon() {
-        return new ItemStack(Material.BOW);
-    }
+        // Bow & Arrows
+        int bowLevel = mPlayer.getUpgradeLevel(UpgradeType.BOW);
+        ItemStack bow;
+        int arrowCount = 0;
+        if (bowLevel <= 4) {
+            bow = new ItemStack(Material.BOW);
+            if (bowLevel == 1) arrowCount = 12;
+            else if (bowLevel == 2) arrowCount = 16;
+            else if (bowLevel == 3) arrowCount = 20;
+            else arrowCount = 24; // level 4
+        } else { // level 5+
+            bow = new ItemStackCreator(Material.BOW).addEnchantment(Enchantment.ARROW_DAMAGE, 1).build();
+            if (bowLevel == 5) arrowCount = 32;
+            else if (bowLevel == 6) arrowCount = 40;
+            else if (bowLevel == 7) arrowCount = 48;
+            else if (bowLevel == 8) arrowCount = 56;
+            else arrowCount = 64; // level 9
+        }
+        items.add(bow);
+        if (arrowCount > 0) items.add(new ItemStack(Material.ARROW, arrowCount));
 
-    @Override
-    public HashMap<Integer, ItemStack> getStartingItems(int upgrade) {
-        HashMap<Integer, ItemStack> items = new HashMap<>();
 
-        ItemStack sword = new ItemStack(Material.WOOD_SWORD);
-        if(upgrade >= 2) sword.setType(Material.STONE_SWORD);
-        if(upgrade >= 4) sword.setType(Material.IRON_SWORD);
-        if(upgrade >= 9) sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
-        sword.addEnchantment(Enchantment.DURABILITY, 2);
-        items.put(0, ItemStackCreator.createItem(sword, ChatColor.AQUA + getName() + " Sword", 1, getSwordLore(upgrade)));
-
-        ItemStack bow = new ItemStack(Material.BOW);
-        if(upgrade >= 6) bow.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
-        bow.addEnchantment(Enchantment.DURABILITY, 2);
-        items.put(1, ItemStackCreator.createItem(bow, ChatColor.AQUA + getName() + " Bow", 1, getSwordLore(upgrade)));
-
-        int steakAmount = 2;
-        if(upgrade >= 4) steakAmount = 3;
-        items.put(2, Utils.getSteaks(steakAmount, getName()));
-
-        int arrowAmount = 12;
-        if(upgrade >= 2) arrowAmount = 16;
-        if(upgrade >= 3) arrowAmount = 30;
-        if(upgrade >= 4) arrowAmount = 24;
-        if(upgrade >= 5) arrowAmount = 32;
-        if(upgrade >= 6) arrowAmount = 40;
-        if(upgrade >= 7) arrowAmount = 48;
-        if(upgrade >= 8) arrowAmount = 56;
-        if(upgrade >= 9) arrowAmount = 64;
-        items.put(3, new ItemStack(Material.ARROW, arrowAmount));
-
-        if(upgrade >= 3) {
-            ItemStack helmet = new ItemStack(Material.IRON_HELMET);
-            if(upgrade >= 7) helmet.setType(Material.DIAMOND_HELMET);
-            HashMap<Enchantment, Integer> enchants = new HashMap<>();
-            enchants.put(Enchantment.DURABILITY, 2);
-            if(upgrade >= 6) {
-                enchants.put(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-                enchants.put(Enchantment.PROTECTION_PROJECTILE, 1);
+        // Helmet
+        int helmetLevel = mPlayer.getUpgradeLevel(UpgradeType.HELMET);
+        if (helmetLevel >= 2) {
+            ItemStack helmet;
+            if (helmetLevel == 2) {
+                helmet = new ItemStack(Material.IRON_HELMET);
+            } else if (helmetLevel == 3) {
+                helmet = new ItemStackCreator(Material.IRON_HELMET).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1).addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).build();
+            } else if (helmetLevel == 4) {
+                helmet = new ItemStackCreator(Material.DIAMOND_HELMET).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1).addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).build();
+            } else { // level 5+
+                helmet = new ItemStackCreator(Material.DIAMOND_HELMET).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).addEnchantment(Enchantment.PROTECTION_PROJECTILE, 2).build();
             }
-            if(upgrade >= 8) {
-                enchants.put(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-                enchants.put(Enchantment.PROTECTION_PROJECTILE, 2);
-            }
-            items.put(4, ItemStackCreator.createItemStack(helmet, 1, ChatColor.AQUA + getName() + " Helmet", null, enchants));
+            items.add(helmet);
         }
 
-        if(upgrade >= 4){
-            ItemStack boots = new ItemStack(Material.CHAINMAIL_BOOTS);
-            if(upgrade >= 5) boots.setType(Material.IRON_BOOTS);
-            HashMap<Enchantment, Integer> enchants = new HashMap<>();
-            enchants.put(Enchantment.DURABILITY, 2);
-            if(upgrade >= 7) enchants.put(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-            if(upgrade >= 8) enchants.put(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-            items.put(5, ItemStackCreator.createItemStack(boots, 1, ChatColor.AQUA + getName() + " Boots", null, enchants));
+        // Boots
+        int bootsLevel = mPlayer.getUpgradeLevel(UpgradeType.BOOTS);
+        if (bootsLevel >= 2) {
+            ItemStack boots;
+            if (bootsLevel == 2) {
+                boots = new ItemStack(Material.CHAINMAIL_BOOTS);
+            } else if (bootsLevel == 3) {
+                boots = new ItemStack(Material.IRON_BOOTS);
+            } else if (bootsLevel == 4) {
+                boots = new ItemStackCreator(Material.IRON_BOOTS).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1).build();
+            } else { // level 5+
+                boots = new ItemStackCreator(Material.IRON_BOOTS).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build();
+            }
+            items.add(boots);
         }
 
-        if(upgrade >= 9){
-            items.put(6, new ItemStack(Material.GOLDEN_APPLE, 2));
+        // Steak (using POTION)
+        int steakLevel = mPlayer.getUpgradeLevel(UpgradeType.POTION);
+        if (steakLevel == 1) {
+            items.add(new ItemStack(Material.COOKED_BEEF, 2));
+        } else if (steakLevel >= 2) {
+            items.add(new ItemStack(Material.COOKED_BEEF, 3));
+        }
+
+        // Golden Apple
+        int gappleLevel = mPlayer.getUpgradeLevel(UpgradeType.GOLDEN_APPLE);
+        if (gappleLevel >= 2) {
+            items.add(new ItemStack(Material.GOLDEN_APPLE, 2));
         }
 
         return items;
     }
 
     @Override
-    public int getPrice() {
-        return 20000;
+    public List<PotionEffect> getPassiveEffects(Player p) {
+        return new ArrayList<>();
     }
 
     @Override
-    public int getUpgradePrice(int level) {
-        switch (level) {
-            case 1: return 0;
-            case 2: return 200;
-            case 3: return 500;
-            case 4: return 1200;
-            case 5: return 2400;
-            case 6: return 7000;
-            case 7: return 13000;
-            case 8: return 17000;
-            case 9: return 28000;
-            default: return 28000;
-        }
+    public Kit getKit() {
+        return Kit.HUNTER;
     }
 
     @Override
-    public String getAbilityName() {
-        return "Eagle's Eye";
-    }
-
-    @Override
-    public int getXPPerHit() {
-        return 2;
-    }
-
-    @Override
-    public List<String> getAbilityDescription(int upgrade) {
-        int duration = 6 + upgrade;
-        return Arrays.asList("§7Upon activation, you will", "§7have homing arrows for §c" + duration, "§7seconds.");
-    }
-
-
-    @Override
-    public HitType getHitType() {
-        return HitType.TIMER;
-    }
-
-    @Override
-    public String getAbilityReadyName() {
-        return getAbilityName();
-    }
-
-    @EventHandler
     public void onBowShoot(EntityShootBowEvent e) {
         if (e.getForce() != 1.0) return;
         if (!(e.getEntity() instanceof Player)) return;
 
         Player p = (Player) e.getEntity();
-        if (MPlayerManager.getMPlayer(p.getName()).getCurrentClass() != this) return;
         if (!cd.contains(p.getName())) return;
         if (!(e.getProjectile() instanceof Arrow)) return;
 
@@ -192,16 +171,15 @@ public class Hunter extends KitClass {
         }
     }
 
-    @EventHandler
-    public void onInteract(PlayerInteractEvent e) {
-        final Player p = e.getPlayer();
+    @Override
+    public void onInteract(Player p, PlayerInteractEvent e) {
         if (!e.getAction().name().contains("LEFT")) return;
-        if (p.getItemInHand() == null || p.getItemInHand().getType() != Material.BOW) return;
-        if (MPlayerManager.getMPlayer(p.getName()).getCurrentClass() != this) return;
+        if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.BOW) return;
         if (p.getLevel() < 100) return;
 
-        Upgrade upgrade = new Upgrade(p, this, UpgradeType.ABILITY);
-        int duration = 6 + upgrade.getCurrentUpgrade();
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        int abilityLevel = mPlayer.getUpgradeLevel(UpgradeType.ABILITY);
+        int duration = 6 + abilityLevel;
 
         p.setLevel(0);
         p.setExp(0);

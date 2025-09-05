@@ -1,14 +1,9 @@
 package com.jules.kitpvp.listeners;
 
 import com.jules.kitpvp.KitPVP;
-import com.jules.kitpvp.gui.ClassSelectorGUI;
-import com.jules.kitpvp.gui.ShopGUI;
-import com.jules.kitpvp.kits.ClassManager;
-import com.jules.kitpvp.KitPVP;
 import com.jules.kitpvp.arena.Arena;
 import com.jules.kitpvp.gui.ClassSelectorGUI;
 import com.jules.kitpvp.gui.ShopGUI;
-import com.jules.kitpvp.kits.ClassManager;
 import com.jules.kitpvp.kits.ClassType;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -20,11 +15,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class ItemListener implements Listener {
 
     private final KitPVP plugin;
-    private final ClassManager classManager;
 
-    public ItemListener(KitPVP plugin, ClassManager classManager) {
+    public ItemListener(KitPVP plugin) {
         this.plugin = plugin;
-        this.classManager = classManager;
     }
 
     @EventHandler
@@ -49,7 +42,7 @@ public class ItemListener implements Listener {
         } else if (itemType == Material.EMERALD && itemName.equals(ChatColor.GREEN + "Shop")) {
             new ShopGUI().open(player);
         } else if (itemType == Material.IRON_SWORD && itemName.equals(ChatColor.GREEN + "Kit Selector")) {
-            new ClassSelectorGUI(classManager, ClassType.NORMAL).open(player);
+            new ClassSelectorGUI(ClassType.NORMAL).open(player);
         }
     }
 }

@@ -28,6 +28,15 @@ public class Utils {
         return potion;
     }
 
+    public static ItemStack getPotionRegen(int level, int amount) {
+        ItemStack potion = new ItemStack(org.bukkit.Material.POTION, amount);
+        org.bukkit.inventory.meta.PotionMeta meta = (org.bukkit.inventory.meta.PotionMeta) potion.getItemMeta();
+        meta.addCustomEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.REGENERATION, 20 * 10, level), true);
+        meta.setDisplayName("Potion of Regeneration");
+        potion.setItemMeta(meta);
+        return potion;
+    }
+
     public static ItemStack getPotionSpeed(int level) {
         ItemStack potion = new ItemStack(org.bukkit.Material.POTION, 1);
         org.bukkit.inventory.meta.PotionMeta meta = (org.bukkit.inventory.meta.PotionMeta) potion.getItemMeta();

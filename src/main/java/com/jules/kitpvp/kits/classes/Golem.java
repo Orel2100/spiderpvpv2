@@ -1,20 +1,22 @@
 package com.jules.kitpvp.kits.classes;
 
-import com.jules.kitpvp.kits.Kit;
-import com.jules.kitpvp.kits.KitStat;
-import com.jules.kitpvp.kits.Upgrade;
-import com.jules.kitpvp.kits.UpgradeCategory;
+import com.jules.kitpvp.abilities.IronPunch;
+import com.jules.kitpvp.kits.*;
+import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
+import com.jules.kitpvp.util.Utils;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Golem extends MegaWallsClass {
 
@@ -39,13 +41,85 @@ public class Golem extends MegaWallsClass {
     @Override
     public List<ItemStack> getStartingItems(Player p) {
         List<ItemStack> items = new ArrayList<>();
-        items.add(new ItemStack(Material.IRON_SWORD));
-        items.add(new ItemStack(Material.IRON_HELMET));
-        items.add(new ItemStack(Material.IRON_CHESTPLATE));
-        items.add(new ItemStack(Material.IRON_LEGGINGS));
-        items.add(new ItemStack(Material.IRON_BOOTS));
-        items.add(new ItemStack(Material.GOLDEN_APPLE, 2));
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
+
+        switch (level) {
+            case 1:
+                items.add(new ItemStack(Material.IRON_SWORD));
+                items.add(new ItemStack(Material.COOKED_BEEF, 2));
+                break;
+            case 2:
+                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DURABILITY, 1).build());
+                items.add(new ItemStack(Material.COOKED_BEEF, 2));
+                break;
+            case 3:
+                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 1).build());
+                items.add(new ItemStack(Material.COOKED_BEEF, 3));
+                break;
+            case 4:
+                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 1).addEnchantment(Enchantment.DURABILITY, 1).build());
+                items.add(new ItemStack(Material.COOKED_BEEF, 3));
+                break;
+            case 5:
+                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 1).addEnchantment(Enchantment.DURABILITY, 2).build());
+                items.add(new ItemStack(Material.COOKED_BEEF, 4));
+                items.add(Utils.getPotionRegen(3, 2));
+                break;
+        }
         return items;
+    }
+
+    @Override
+    public void onInteract(Player p, PlayerInteractEvent event) {
+        if (!event.getAction().name().contains("RIGHT")) return;
+        if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
+        if (!Utils.isUsingSword(p.getItemInHand())) return;
+
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.ABILITY).get(0));
+        IronPunch.use(p, level);
+    }
+
+    @Override
+    public void onDamageByEntity(EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof Player) {
+            Player p = (Player) event.getEntity();
+            MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
+            if (level > 0) {
+                double chance = 0.1 + (level - 1) * 0.05;
+                if (new Random().nextDouble() < chance) {
+                    int resistanceLevel = level < 4 ? 1 : 2;
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 3, resistanceLevel -1));
+                }
+            }
+        }
+        if(event.getDamager() instanceof Player){
+            Player p = (Player) event.getDamager();
+            MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_2).get(0));
+            if (level > 0) {
+                double chance = 0.05 + (level - 1) * 0.025;
+                if (new Random().nextDouble() < chance) {
+                    event.getEntity().setVelocity(p.getLocation().getDirection().multiply(2).add(new Vector(0, 0.5, 0)));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onBlockBreak(BlockBreakEvent e) {
+        if (e.getBlock().getType() == Material.IRON_ORE) {
+            MPlayer mPlayer = MPlayer.getMPlayer(e.getPlayer().getUniqueId());
+            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.GATHERING).get(0));
+            if (level > 0) {
+                double chance = 0.1 + (level - 1) * 0.05;
+                if (new Random().nextDouble() < chance) {
+                    e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT));
+                }
+            }
+        }
     }
 
     @Override
@@ -63,6 +137,37 @@ public class Golem extends MegaWallsClass {
 
     @Override
     public Map<UpgradeCategory, List<Upgrade>> getUpgrades() {
-        return new HashMap<>();
+        Map<UpgradeCategory, List<Upgrade>> upgrades = new LinkedHashMap<>();
+
+        upgrades.put(UpgradeCategory.KIT, Arrays.asList(
+                new Upgrade("Golem Kit", Arrays.asList("Upgrade your kit items."), 5,
+                        Arrays.asList(100, 200, 300, 400, 500),
+                        Arrays.asList(Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD))
+        ));
+
+        upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
+                new Upgrade("Iron Punch", Arrays.asList("Deals damage and applies Slowness."), 5,
+                        Arrays.asList(100, 200, 300, 400, 500),
+                        Arrays.asList(Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK))
+        ));
+
+        upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
+                new Upgrade("Iron Skin", Arrays.asList("Chance to gain Resistance when hit."), 5,
+                        Arrays.asList(1000, 2000, 3000, 4000, 5000),
+                        Arrays.asList(Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT))
+        ));
+
+        upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
+                new Upgrade("Stomper", Arrays.asList("Chance to deal a knockback effect on hit."), 5,
+                        Arrays.asList(1000, 2000, 3000, 4000, 5000),
+                        Arrays.asList(Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON))
+        ));
+
+        upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
+                new Upgrade("Ore Finder", Arrays.asList("Chance to find an extra iron ingot", "when mining iron ore."), 5,
+                        Arrays.asList(500, 1000, 1500, 2000, 2500),
+                        Arrays.asList(Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE))
+        ));
+        return upgrades;
     }
 }

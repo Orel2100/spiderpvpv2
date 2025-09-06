@@ -4,9 +4,7 @@ import com.jules.kitpvp.KitPVP;
 import com.jules.kitpvp.gui.ClassSelectorGUI;
 import com.jules.kitpvp.gui.UpgradeGUI;
 import com.jules.kitpvp.kits.Kit;
-import com.jules.kitpvp.kits.UpgradeType;
 import com.jules.kitpvp.player.MPlayer;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,16 +34,7 @@ public class GUIListener implements Listener {
             if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
                 return;
             }
-            String itemName = event.getCurrentItem().getItemMeta().getDisplayName();
-            // "§bSword Upgrade" -> "SWORD"
-            String upgradeName = ChatColor.stripColor(itemName).replace(" Upgrade", "").replace(" ", "_").toUpperCase();
-            try {
-                UpgradeType type = UpgradeType.valueOf(upgradeName);
-                MPlayer mPlayer = MPlayer.getMPlayer(player.getUniqueId());
-                KitPVP.getInstance().getUpgradeManager().upgrade(mPlayer, type);
-            } catch (IllegalArgumentException e) {
-                // Not an upgrade item
-            }
+            KitPVP.getInstance().getUpgradeManager().attemptPurchase(player, event.getCurrentItem().getItemMeta().getDisplayName());
         }
     }
 }

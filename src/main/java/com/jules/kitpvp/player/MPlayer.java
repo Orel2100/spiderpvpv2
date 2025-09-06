@@ -2,7 +2,7 @@ package com.jules.kitpvp.player;
 
 import com.jules.kitpvp.kits.Kit;
 import com.jules.kitpvp.kits.KitClass;
-import com.jules.kitpvp.kits.UpgradeType;
+import com.jules.kitpvp.kits.Upgrade;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -18,7 +18,7 @@ public class MPlayer {
     private Kit kit;
     private KitClass kitClass;
     private int coins = 0;
-    private Map<UpgradeType, Integer> upgradeLevels = new HashMap<>();
+    private Map<Upgrade, Integer> upgradeLevels = new HashMap<>();
 
     public MPlayer(UUID uuid) {
         this.uuid = uuid;
@@ -36,12 +36,12 @@ public class MPlayer {
         return Bukkit.getPlayer(uuid);
     }
 
-    public int getUpgradeLevel(UpgradeType type) {
-        return upgradeLevels.getOrDefault(type, 1);
+    public int getUpgradeLevel(Upgrade upgrade) {
+        return upgradeLevels.getOrDefault(upgrade, 0);
     }
 
-    public void setUpgradeLevel(UpgradeType type, int level) {
-        upgradeLevels.put(type, level);
+    public void setUpgradeLevel(Upgrade upgrade, int level) {
+        upgradeLevels.put(upgrade, level);
     }
 
     public void setKit(Kit kit) {
@@ -81,11 +81,4 @@ public class MPlayer {
         this.coins = coins;
     }
 
-    public Map<UpgradeType, Integer> getUpgradeLevels() {
-        return upgradeLevels;
-    }
-
-    public void setUpgradeLevels(Map<UpgradeType, Integer> upgradeLevels) {
-        this.upgradeLevels = upgradeLevels;
-    }
 }

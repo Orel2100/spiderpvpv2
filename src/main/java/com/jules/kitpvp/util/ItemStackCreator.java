@@ -2,6 +2,7 @@ package com.jules.kitpvp.util;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -53,6 +54,16 @@ public class ItemStackCreator {
 
     public ItemStackCreator addEnchantment(Enchantment enchantment, int level) {
         meta.addEnchant(enchantment, level, true);
+        return this;
+    }
+
+    public ItemStackCreator setDurability(short durability) {
+        item.setDurability(durability);
+        return this;
+    }
+
+    public ItemStackCreator addItemFlag(ItemFlag flag) {
+        meta.addItemFlags(flag);
         return this;
     }
 

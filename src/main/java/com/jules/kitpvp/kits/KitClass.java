@@ -15,8 +15,10 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public abstract class KitClass {
 
@@ -32,6 +34,14 @@ public abstract class KitClass {
         this.price = price;
         this.icon = icon;
         this.upgrades = Arrays.asList(upgrades);
+    }
+
+    public KitClass(String name, String[] description, int price, ItemStack icon) {
+        this.name = name;
+        this.description = Arrays.asList(description);
+        this.price = price;
+        this.icon = icon;
+        this.upgrades = new ArrayList<>();
     }
 
     public abstract List<ItemStack> getStartingItems(Player p);
@@ -66,7 +76,7 @@ public abstract class KitClass {
         return icon;
     }
 
-    public List<Upgrade> getUpgrades() {
-        return upgrades;
+    public Map<UpgradeCategory, List<Upgrade>> getUpgrades() {
+        return new java.util.HashMap<>();
     }
 }

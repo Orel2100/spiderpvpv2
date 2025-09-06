@@ -48,9 +48,11 @@ public class UpgradeGUI implements InventoryHolder {
             List<Upgrade> categoryUpgrades = upgrades.get(category);
             for (int i = 0; i < categoryUpgrades.size(); i++) {
                 Upgrade upgrade = categoryUpgrades.get(i);
-                int level = mPlayer.getUpgradeLevel(upgrade);
-                int slot = category.getRow() * 9 + 3 + i;
-                inv.setItem(slot, createUpgradeItem(upgrade, level));
+                int currentLevel = mPlayer.getUpgradeLevel(upgrade);
+                for (int tier = 1; tier <= upgrade.getMaxLevel(); tier++) {
+                    int slot = category.getRow() * 9 + 2 + (tier - 1);
+                    inv.setItem(slot, createUpgradeItem(upgrade, tier, currentLevel));
+                }
             }
         }
 
@@ -59,33 +61,44 @@ public class UpgradeGUI implements InventoryHolder {
         setupPrestige();
     }
 
-    private ItemStack createUpgradeItem(Upgrade upgrade, int level) {
-        boolean maxed = level >= upgrade.getMaxLevel();
-        boolean canAfford = mPlayer.getCoins() >= upgrade.getCost(level + 1);
+    private ItemStack createUpgradeItem(Upgrade upgrade, int tier, int currentLevel) {
+        boolean unlocked = tier <= currentLevel;
+        boolean nextUnlock = tier == currentLevel + 1;
+        boolean canAfford = mPlayer.getCoins() >= upgrade.getCost(tier);
 
-        Material material = maxed ? Material.GREEN_STAINED_GLASS_PANE : upgrade.getMaterial(level + 1);
-        short durability = maxed ? (short) 13 : (canAfford ? (short) 5 : (short) 14);
-        String name = (maxed ? "§a" : (canAfford ? "§a" : "§c")) + upgrade.getName() + " " + (level + 1);
-
-        ItemStackCreator creator = new ItemStackCreator(material, name).setDurability(durability);
-        if (maxed) {
-            creator.addEnchantment(Enchantment.DURABILITY, 1).addItemFlag(ItemFlag.HIDE_ENCHANTS);
-        }
-
+        Material material;
+        String name;
         List<String> lore = new ArrayList<>(upgrade.getDescription());
-        lore.add(" ");
-        if (maxed) {
-            lore.add("§aMAXED OUT");
-        } else {
-            lore.add("§7Cost: §6" + upgrade.getCost(level + 1));
+        ItemStackCreator creator;
+
+        if (unlocked) {
+            material = Material.GREEN_STAINED_GLASS_PANE;
+            name = "§a" + upgrade.getName() + " " + tier;
+            lore.add(" ");
+            lore.add("§aUNLOCKED");
+            creator = new ItemStackCreator(material, name).setDurability((short) 5);
+            creator.addEnchantment(Enchantment.DURABILITY, 1).addItemFlag(ItemFlag.HIDE_ENCHANTS);
+        } else if (nextUnlock) {
+            material = upgrade.getMaterial(tier);
+            name = (canAfford ? "§a" : "§c") + upgrade.getName() + " " + tier;
+            lore.add(" ");
+            lore.add("§7Cost: §6" + upgrade.getCost(tier));
             if (canAfford) {
                 lore.add("§aClick to purchase!");
             } else {
                 lore.add("§cYou cannot afford this!");
             }
+            creator = new ItemStackCreator(material, name);
+        } else {
+            material = Material.RED_STAINED_GLASS_PANE;
+            name = "§c" + upgrade.getName() + " " + tier;
+            lore.add(" ");
+            lore.add("§7Cost: §6" + upgrade.getCost(tier));
+            lore.add("§cLocked!");
+            creator = new ItemStackCreator(material, name).setDurability((short) 14);
         }
-        creator.setLore(lore);
 
+        creator.setLore(lore);
         return creator.build();
     }
 

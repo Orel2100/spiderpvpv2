@@ -1,5 +1,6 @@
 package com.jules.kitpvp.kits.classes;
 
+import com.jules.kitpvp.KitPVP;
 import com.jules.kitpvp.abilities.Wrath;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
@@ -23,7 +24,7 @@ public class Herobrine extends MegaWallsClass {
         super(
                 "Herobrine",
                 new String[]{"A mysterious and powerful kit."},
-                10000,
+                KitPVP.getInstance().getConfig().getInt("kits.herobrine.cost", 10000),
                 new ItemStackCreator(Material.NETHER_STAR, "§dHerobrine").build()
         );
     }
@@ -134,34 +135,35 @@ public class Herobrine extends MegaWallsClass {
     @Override
     public Map<UpgradeCategory, List<Upgrade>> getUpgrades() {
         Map<UpgradeCategory, List<Upgrade>> upgrades = new LinkedHashMap<>();
+        KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
                 new Upgrade("Herobrine Kit", Arrays.asList("Upgrade your kit items."), 5,
-                        Arrays.asList(100, 200, 300, 400, 500),
+                        plugin.getConfig().getIntegerList("kits.herobrine.upgrades.kit.costs"),
                         Arrays.asList(Material.STONE_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.DIAMOND_SWORD, Material.DIAMOND_HELMET))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
                 new Upgrade("Wrath", Arrays.asList("Strikes nearby enemies with lightning."), 5,
-                        Arrays.asList(100, 200, 300, 400, 500),
+                        plugin.getConfig().getIntegerList("kits.herobrine.upgrades.ability.costs"),
                         Arrays.asList(Material.NETHER_STAR, Material.NETHER_STAR, Material.NETHER_STAR, Material.NETHER_STAR, Material.NETHER_STAR))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
                 new Upgrade("Power", Arrays.asList("Gain a Strength I effect upon", "killing an enemy."), 5,
-                        Arrays.asList(1000, 2000, 3000, 4000, 5000),
+                        plugin.getConfig().getIntegerList("kits.herobrine.upgrades.passive1.costs"),
                         Arrays.asList(Material.DIAMOND_SWORD, Material.DIAMOND_SWORD, Material.DIAMOND_SWORD, Material.DIAMOND_SWORD, Material.DIAMOND_SWORD))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
                 new Upgrade("Flurry", Arrays.asList("Chance to gain Speed II on hit."), 5,
-                        Arrays.asList(1000, 2000, 3000, 4000, 5000),
+                        plugin.getConfig().getIntegerList("kits.herobrine.upgrades.passive2.costs"),
                         Arrays.asList(Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
                 new Upgrade("Treasure Hunter", Arrays.asList("Chance to find extra treasures", "when mining."), 5,
-                        Arrays.asList(500, 1000, 1500, 2000, 2500),
+                        plugin.getConfig().getIntegerList("kits.herobrine.upgrades.gathering.costs"),
                         Arrays.asList(Material.GOLD_INGOT, Material.GOLD_INGOT, Material.GOLD_INGOT, Material.GOLD_INGOT, Material.GOLD_INGOT))
         ));
 

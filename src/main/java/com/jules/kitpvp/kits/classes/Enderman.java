@@ -1,5 +1,6 @@
 package com.jules.kitpvp.kits.classes;
 
+import com.jules.kitpvp.KitPVP;
 import com.jules.kitpvp.abilities.Teleport;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
@@ -22,7 +23,7 @@ public class Enderman extends MegaWallsClass {
         super(
                 "Enderman",
                 new String[]{"A teleporting kit that can", "reposition itself in battle."},
-                4000,
+                KitPVP.getInstance().getConfig().getInt("kits.enderman.cost", 4000),
                 new ItemStackCreator(Material.ENDER_PEARL, "§5Enderman").build()
         );
     }
@@ -126,34 +127,35 @@ public class Enderman extends MegaWallsClass {
     @Override
     public Map<UpgradeCategory, List<Upgrade>> getUpgrades() {
         Map<UpgradeCategory, List<Upgrade>> upgrades = new LinkedHashMap<>();
+        KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
                 new Upgrade("Enderman Kit", Arrays.asList("Upgrade your kit items."), 5,
-                        Arrays.asList(100, 200, 300, 400, 500),
+                        plugin.getConfig().getIntegerList("kits.enderman.upgrades.kit.costs"),
                         Arrays.asList(Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.DIAMOND_SWORD))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
                 new Upgrade("Blink", Arrays.asList("Teleport forward."), 5,
-                        Arrays.asList(100, 200, 300, 400, 500),
+                        plugin.getConfig().getIntegerList("kits.enderman.upgrades.ability.costs"),
                         Arrays.asList(Material.ENDER_PEARL, Material.ENDER_PEARL, Material.ENDER_PEARL, Material.ENDER_PEARL, Material.ENDER_PEARL))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
                 new Upgrade("Fear", Arrays.asList("Chance to apply Slowness on hit."), 5,
-                        Arrays.asList(1000, 2000, 3000, 4000, 5000),
+                        plugin.getConfig().getIntegerList("kits.enderman.upgrades.passive1.costs"),
                         Arrays.asList(Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
                 new Upgrade("Teleportation Master", Arrays.asList("Gain Speed after using your ability."), 5,
-                        Arrays.asList(1000, 2000, 3000, 4000, 5000),
+                        plugin.getConfig().getIntegerList("kits.enderman.upgrades.passive2.costs"),
                         Arrays.asList(Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
                 new Upgrade("Ender's Touch", Arrays.asList("Chance to drop extra diamonds", "when mining diamond ore."), 5,
-                        Arrays.asList(500, 1000, 1500, 2000, 2500),
+                        plugin.getConfig().getIntegerList("kits.enderman.upgrades.gathering.costs"),
                         Arrays.asList(Material.DIAMOND, Material.DIAMOND, Material.DIAMOND, Material.DIAMOND, Material.DIAMOND))
         ));
         return upgrades;

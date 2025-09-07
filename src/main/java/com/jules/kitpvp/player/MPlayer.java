@@ -18,7 +18,7 @@ public class MPlayer {
     private Kit kit;
     private KitClass kitClass;
     private int coins = 0;
-    private Map<Upgrade, Integer> upgradeLevels = new HashMap<>();
+    private Map<String, Integer> upgradeLevels = new HashMap<>();
 
     public MPlayer(UUID uuid) {
         this.uuid = uuid;
@@ -37,11 +37,11 @@ public class MPlayer {
     }
 
     public int getUpgradeLevel(Upgrade upgrade) {
-        return upgradeLevels.getOrDefault(upgrade, 0);
+        return upgradeLevels.getOrDefault(upgrade.getName(), 0);
     }
 
     public void setUpgradeLevel(Upgrade upgrade, int level) {
-        upgradeLevels.put(upgrade, level);
+        upgradeLevels.put(upgrade.getName(), level);
     }
 
     public void setKit(Kit kit) {

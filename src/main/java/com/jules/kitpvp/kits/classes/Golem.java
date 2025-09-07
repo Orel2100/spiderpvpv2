@@ -1,5 +1,6 @@
 package com.jules.kitpvp.kits.classes;
 
+import com.jules.kitpvp.KitPVP;
 import com.jules.kitpvp.abilities.IronPunch;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
@@ -28,7 +29,7 @@ public class Golem extends MegaWallsClass {
                         "Use your ability to deal",
                         "damage to nearby enemies."
                 },
-                3000,
+                KitPVP.getInstance().getConfig().getInt("kits.golem.cost", 3000),
                 new ItemStackCreator(Material.IRON_BLOCK, "§bGolem").build()
         );
     }
@@ -138,34 +139,35 @@ public class Golem extends MegaWallsClass {
     @Override
     public Map<UpgradeCategory, List<Upgrade>> getUpgrades() {
         Map<UpgradeCategory, List<Upgrade>> upgrades = new LinkedHashMap<>();
+        KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
                 new Upgrade("Golem Kit", Arrays.asList("Upgrade your kit items."), 5,
-                        Arrays.asList(100, 200, 300, 400, 500),
+                        plugin.getConfig().getIntegerList("kits.golem.upgrades.kit.costs"),
                         Arrays.asList(Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
                 new Upgrade("Iron Punch", Arrays.asList("Deals damage and applies Slowness."), 5,
-                        Arrays.asList(100, 200, 300, 400, 500),
+                        plugin.getConfig().getIntegerList("kits.golem.upgrades.ability.costs"),
                         Arrays.asList(Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
                 new Upgrade("Iron Skin", Arrays.asList("Chance to gain Resistance when hit."), 5,
-                        Arrays.asList(1000, 2000, 3000, 4000, 5000),
+                        plugin.getConfig().getIntegerList("kits.golem.upgrades.passive1.costs"),
                         Arrays.asList(Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
                 new Upgrade("Stomper", Arrays.asList("Chance to deal a knockback effect on hit."), 5,
-                        Arrays.asList(1000, 2000, 3000, 4000, 5000),
+                        plugin.getConfig().getIntegerList("kits.golem.upgrades.passive2.costs"),
                         Arrays.asList(Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
                 new Upgrade("Ore Finder", Arrays.asList("Chance to find an extra iron ingot", "when mining iron ore."), 5,
-                        Arrays.asList(500, 1000, 1500, 2000, 2500),
+                        plugin.getConfig().getIntegerList("kits.golem.upgrades.gathering.costs"),
                         Arrays.asList(Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE))
         ));
         return upgrades;

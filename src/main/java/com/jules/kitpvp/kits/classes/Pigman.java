@@ -1,5 +1,6 @@
 package com.jules.kitpvp.kits.classes;
 
+import com.jules.kitpvp.KitPVP;
 import com.jules.kitpvp.abilities.BurningSoul;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
@@ -23,7 +24,7 @@ public class Pigman extends MegaWallsClass {
         super(
                 "Pigman",
                 new String[]{"A strong and tanky kit that gets", "stronger as it takes damage."},
-                7500,
+                KitPVP.getInstance().getConfig().getInt("kits.pigman.cost", 7500),
                 new ItemStackCreator(Material.PORKCHOP, "§dPigman").build()
         );
     }
@@ -128,34 +129,35 @@ public class Pigman extends MegaWallsClass {
     @Override
     public Map<UpgradeCategory, List<Upgrade>> getUpgrades() {
         Map<UpgradeCategory, List<Upgrade>> upgrades = new LinkedHashMap<>();
+        KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
                 new Upgrade("Pigman Kit", Arrays.asList("Upgrade your kit items."), 5,
-                        Arrays.asList(100, 200, 300, 400, 500),
+                        plugin.getConfig().getIntegerList("kits.pigman.upgrades.kit.costs"),
                         Arrays.asList(Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_CHESTPLATE))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
                 new Upgrade("Burning Soul", Arrays.asList("Summons a fire bubble that deals", "damage over time."), 5,
-                        Arrays.asList(100, 200, 300, 400, 500),
+                        plugin.getConfig().getIntegerList("kits.pigman.upgrades.ability.costs"),
                         Arrays.asList(Material.FIRE_CHARGE, Material.FIRE_CHARGE, Material.FIRE_CHARGE, Material.FIRE_CHARGE, Material.FIRE_CHARGE))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
                 new Upgrade("Valor", Arrays.asList("Chance to give Resistance and Regen", "to you and nearby teammates."), 5,
-                        Arrays.asList(1000, 2000, 3000, 4000, 5000),
+                        plugin.getConfig().getIntegerList("kits.pigman.upgrades.passive1.costs"),
                         Arrays.asList(Material.GOLDEN_APPLE, Material.GOLDEN_APPLE, Material.GOLDEN_APPLE, Material.GOLDEN_APPLE, Material.GOLDEN_APPLE))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
                 new Upgrade("Endurance", Arrays.asList("Gain Resistance when below 6 hearts."), 5,
-                        Arrays.asList(1000, 2000, 3000, 4000, 5000),
+                        plugin.getConfig().getIntegerList("kits.pigman.upgrades.passive2.costs"),
                         Arrays.asList(Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
                 new Upgrade("Resourcefulness", Arrays.asList("Chance to find an extra piece of", "iron armor in mining chests."), 5,
-                        Arrays.asList(500, 1000, 1500, 2000, 2500),
+                        plugin.getConfig().getIntegerList("kits.pigman.upgrades.gathering.costs"),
                         Arrays.asList(Material.CHEST, Material.CHEST, Material.CHEST, Material.CHEST, Material.CHEST))
         ));
         return upgrades;

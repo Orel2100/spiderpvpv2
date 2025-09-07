@@ -3,6 +3,7 @@ package com.jules.kitpvp.listeners;
 import com.jules.kitpvp.KitPVP;
 import com.jules.kitpvp.duel.DuelManager;
 import com.jules.kitpvp.player.MPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,6 +34,9 @@ public class PlayerDeathListener implements Listener {
             if (mKiller.getKitClass() != null) {
                 mKiller.getKitClass().onKill(killer, player);
             }
+            int coinsPerKill = KitPVP.getInstance().getConfig().getInt("coins-per-kill", 10);
+            mKiller.setCoins(mKiller.getCoins() + coinsPerKill);
+            killer.sendMessage(ChatColor.GOLD + "+ " + coinsPerKill + " coins!");
         }
         // Handle FFA death, duel death, rewards, etc.
     }

@@ -1,0 +1,55 @@
+coins-per-kill: 10
+
+kits:
+  herobrine:
+    cost: 10000
+    upgrades:
+      kit:
+        costs: [100, 200, 300, 400, 500]
+      ability:
+        costs: [100, 200, 300, 400, 500]
+      passive1:
+        costs: [1000, 2000, 3000, 4000, 5000]
+      passive2:
+        costs: [1000, 2000, 3000, 4000, 5000]
+      gathering:
+        costs: [500, 1000, 1500, 2000, 2500]
+  golem:
+    cost: 3000
+    upgrades:
+      kit:
+        costs: [100, 200, 300, 400, 500]
+      ability:
+        costs: [100, 200, 300, 400, 500]
+      passive1:
+        costs: [1000, 2000, 3000, 4000, 5000]
+      passive2:
+        costs: [1000, 2000, 3000, 4000, 5000]
+      gathering:
+        costs: [500, 1000, 1500, 2000, 2500]
+  enderman:
+    cost: 4000
+    upgrades:
+      kit:
+        costs: [100, 200, 300, 400, 500]
+      ability:
+        costs: [100, 200, 300, 400, 500]
+      passive1:
+        costs: [1000, 2000, 3000, 4000, 5000]
+      passive2:
+        costs: [1000, 2000, 3000, 4000, 5000]
+      gathering:
+        costs: [500, 1000, 1500, 2000, 2500]
+  pigman:
+    cost: 7500
+    upgrades:
+      kit:
+        costs: [100, 200, 300, 400, 500]
+      ability:
+        costs: [100, 200, 300, 400, 500]
+      passive1:
+        costs: [1000, 2000, 3000, 4000, 5000]
+      passive2:
+        costs: [1000, 2000, 3000, 4000, 5000]
+      gathering:
+        costs: [500, 1000, 1500, 2000, 2500]

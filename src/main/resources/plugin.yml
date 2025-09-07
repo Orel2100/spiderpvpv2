@@ -21,3 +21,17 @@ commands:
   1v1:
     description: Duel another player
     usage: /1v1 <player|accept|deny>
+  setlobby:
+    description: Sets the lobby spawn point
+    usage: /setlobby
+    permission: kitpvp.admin
+  set1v1:
+    description: Sets the 1v1 lobby spawn point
+    usage: /set1v1
+    permission: kitpvp.admin
+  upgrade:
+    description: Opens the upgrade GUI
+    usage: /upgrade
+  lobby:
+    description: Teleports you to the lobby
+    usage: /lobby

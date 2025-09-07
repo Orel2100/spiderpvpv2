@@ -1,8 +1,11 @@
 package com.jules.kitpvp.listeners;
 
 import com.jules.kitpvp.KitPVP;
+import com.jules.kitpvp.config.Configuration;
 import com.jules.kitpvp.player.MPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,6 +28,20 @@ public class PlayerJoinListener implements Listener {
         MPlayer.getMPlayer(player.getUniqueId());
 
         player.getInventory().clear();
+
+        Configuration locations = Configuration.getConfig("locations");
+        if (locations.get("lobby.world") != null) {
+            Location loc = new Location(
+                    Bukkit.getWorld(locations.get("lobby.world").toString()),
+                    locations.getInt("lobby.x"),
+                    locations.getInt("lobby.y"),
+                    locations.getInt("lobby.z"),
+                    (float) locations.get("lobby.yaw"),
+                    (float) locations.get("lobby.pitch")
+            );
+            player.teleport(loc);
+        }
+
 
         ItemStack playItem = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta playMeta = playItem.getItemMeta();

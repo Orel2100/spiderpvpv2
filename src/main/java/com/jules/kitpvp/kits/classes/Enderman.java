@@ -5,6 +5,7 @@ import com.jules.kitpvp.abilities.Teleport;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -106,6 +107,8 @@ public class Enderman extends MegaWallsClass {
             MPlayer mPlayer = MPlayer.getMPlayer(e.getPlayer().getUniqueId());
             int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.GATHERING).get(0));
             if (level > 0) {
+                mPlayer.setCoins(mPlayer.getCoins() + level * 10);
+                e.getPlayer().sendMessage(ChatColor.GOLD + "+ " + level * 10 + " coins!");
                 double chance = 0.1 + (level - 1) * 0.05;
                 if (new Random().nextDouble() < chance) {
                     e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), new ItemStack(Material.DIAMOND));
@@ -130,31 +133,31 @@ public class Enderman extends MegaWallsClass {
         KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
-                new Upgrade("Enderman Kit", Arrays.asList("Upgrade your kit items."), 5,
+                new Upgrade("Enderman Kit", Arrays.asList(ChatColor.GRAY + "Upgrade your starting kit."), 5,
                         plugin.getConfig().getIntegerList("kits.enderman.upgrades.kit.costs"),
                         Arrays.asList(Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.DIAMOND_SWORD))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Blink", Arrays.asList("Teleport forward."), 5,
+                new Upgrade("Blink", Arrays.asList(ChatColor.GRAY + "Teleport up to " + ChatColor.GREEN + "15" + ChatColor.GRAY + " blocks."), 5,
                         plugin.getConfig().getIntegerList("kits.enderman.upgrades.ability.costs"),
                         Arrays.asList(Material.ENDER_PEARL, Material.ENDER_PEARL, Material.ENDER_PEARL, Material.ENDER_PEARL, Material.ENDER_PEARL))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Fear", Arrays.asList("Chance to apply Slowness on hit."), 5,
+                new Upgrade("Fear", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to apply " + ChatColor.AQUA + "Slowness I" + ChatColor.GRAY + " on hit for 2 seconds."), 5,
                         plugin.getConfig().getIntegerList("kits.enderman.upgrades.passive1.costs"),
                         Arrays.asList(Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Teleportation Master", Arrays.asList("Gain Speed after using your ability."), 5,
+                new Upgrade("Teleportation Master", Arrays.asList(ChatColor.GRAY + "After using your ability, you gain " + ChatColor.AQUA + "Speed I" + ChatColor.GRAY + " for 3 seconds."), 5,
                         plugin.getConfig().getIntegerList("kits.enderman.upgrades.passive2.costs"),
                         Arrays.asList(Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Ender's Touch", Arrays.asList("Chance to drop extra diamonds", "when mining diamond ore."), 5,
+                new Upgrade("Ender's Touch", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to drop extra diamonds", "when mining diamond ore."), 5,
                         plugin.getConfig().getIntegerList("kits.enderman.upgrades.gathering.costs"),
                         Arrays.asList(Material.DIAMOND, Material.DIAMOND, Material.DIAMOND, Material.DIAMOND, Material.DIAMOND))
         ));

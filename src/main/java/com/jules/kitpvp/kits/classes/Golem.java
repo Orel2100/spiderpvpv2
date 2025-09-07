@@ -6,6 +6,7 @@ import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
 import com.jules.kitpvp.util.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -115,6 +116,8 @@ public class Golem extends MegaWallsClass {
             MPlayer mPlayer = MPlayer.getMPlayer(e.getPlayer().getUniqueId());
             int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.GATHERING).get(0));
             if (level > 0) {
+                mPlayer.setCoins(mPlayer.getCoins() + level * 10);
+                e.getPlayer().sendMessage(ChatColor.GOLD + "+ " + level * 10 + " coins!");
                 double chance = 0.1 + (level - 1) * 0.05;
                 if (new Random().nextDouble() < chance) {
                     e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT));
@@ -142,31 +145,31 @@ public class Golem extends MegaWallsClass {
         KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
-                new Upgrade("Golem Kit", Arrays.asList("Upgrade your kit items."), 5,
+                new Upgrade("Golem Kit", Arrays.asList(ChatColor.GRAY + "Upgrade your starting kit."), 5,
                         plugin.getConfig().getIntegerList("kits.golem.upgrades.kit.costs"),
                         Arrays.asList(Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Iron Punch", Arrays.asList("Deals damage and applies Slowness."), 5,
+                new Upgrade("Iron Punch", Arrays.asList(ChatColor.GRAY + "Deals " + ChatColor.RED + "2.5" + ChatColor.GRAY + " damage to a single target", ChatColor.GRAY + "and applies " + ChatColor.AQUA + "Slowness II" + ChatColor.GRAY + " for 2 seconds."), 5,
                         plugin.getConfig().getIntegerList("kits.golem.upgrades.ability.costs"),
                         Arrays.asList(Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Iron Skin", Arrays.asList("Chance to gain Resistance when hit."), 5,
+                new Upgrade("Iron Skin", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to gain " + ChatColor.AQUA + "Resistance I" + ChatColor.GRAY + " for 3 seconds when hit."), 5,
                         plugin.getConfig().getIntegerList("kits.golem.upgrades.passive1.costs"),
                         Arrays.asList(Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Stomper", Arrays.asList("Chance to deal a knockback effect on hit."), 5,
+                new Upgrade("Stomper", Arrays.asList(ChatColor.GREEN + "5%" + ChatColor.GRAY + " chance to deal a knockback effect on hit."), 5,
                         plugin.getConfig().getIntegerList("kits.golem.upgrades.passive2.costs"),
                         Arrays.asList(Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Ore Finder", Arrays.asList("Chance to find an extra iron ingot", "when mining iron ore."), 5,
+                new Upgrade("Ore Finder", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to find an extra iron ingot", "when mining iron ore."), 5,
                         plugin.getConfig().getIntegerList("kits.golem.upgrades.gathering.costs"),
                         Arrays.asList(Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE))
         ));

@@ -3,6 +3,10 @@ package com.jules.kitpvp;
 import com.jules.kitpvp.arena.ArenaManager;
 import com.jules.kitpvp.kits.UpgradeManager;
 import com.jules.kitpvp.config.Configuration;
+import com.jules.kitpvp.commands.LobbyCommand;
+import com.jules.kitpvp.commands.Set1v1Command;
+import com.jules.kitpvp.commands.SetLobbyCommand;
+import com.jules.kitpvp.commands.UpgradeCommand;
 import com.jules.kitpvp.duel.DuelManager;
 import com.jules.kitpvp.listeners.*;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,6 +36,10 @@ public class KitPVP extends JavaPlugin {
         getCommand("arena").setExecutor(new com.jules.kitpvp.commands.ArenaCommands(this, arenaManager));
         getCommand("class").setExecutor(new com.jules.kitpvp.commands.ClassCommand());
         getCommand("1v1").setExecutor(new com.jules.kitpvp.commands.CommandOneonOne(duelManager));
+        getCommand("setlobby").setExecutor(new SetLobbyCommand());
+        getCommand("set1v1").setExecutor(new Set1v1Command());
+        getCommand("upgrade").setExecutor(new UpgradeCommand());
+        getCommand("lobby").setExecutor(new LobbyCommand());
 
         getServer().getPluginManager().registerEvents(new GUIListener(), this);
         getServer().getPluginManager().registerEvents(new OneOnOneListener(duelManager), this);

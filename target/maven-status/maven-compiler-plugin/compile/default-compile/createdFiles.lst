@@ -8,6 +8,7 @@ com/jules/kitpvp/abilities/Leap.class
 com/jules/kitpvp/player/PlayerManager.class
 com/jules/kitpvp/kits/classes/MegaWallsClass.class
 com/jules/kitpvp/listeners/GUIListener.class
+com/jules/kitpvp/commands/SetLobbyCommand.class
 com/jules/kitpvp/kits/classes/Pigman.class
 com/jules/kitpvp/listeners/PlayerDeathListener.class
 com/jules/kitpvp/listeners/BlockBreakListener.class
@@ -17,6 +18,7 @@ com/jules/kitpvp/abilities/ShadowBurst$1.class
 com/jules/kitpvp/KitPVP.class
 com/jules/kitpvp/abilities/IronPunch$2.class
 com/jules/kitpvp/listeners/AssistListener.class
+com/jules/kitpvp/commands/UpgradeCommand.class
 com/jules/kitpvp/team/Team.class
 com/jules/kitpvp/commands/CommandOneonOne.class
 com/jules/kitpvp/currency/BoosterManager.class
@@ -38,6 +40,7 @@ com/jules/kitpvp/kits/ClassType.class
 com/jules/kitpvp/listeners/ProjectileHitListener.class
 com/jules/kitpvp/gui/UpgradeGUI.class
 com/jules/kitpvp/kits/classes/Arcanist.class
+com/jules/kitpvp/commands/LobbyCommand.class
 com/jules/kitpvp/currency/CoinManager.class
 com/jules/kitpvp/listeners/PlayerInteractListener.class
 com/jules/kitpvp/abilities/IronPunch$1.class
@@ -80,6 +83,7 @@ com/jules/kitpvp/kits/classes/Dreadlord.class
 com/jules/kitpvp/listeners/PlayerJoinListener.class
 com/jules/kitpvp/currency/BoosterManager$1.class
 com/jules/kitpvp/abilities/Detonate.class
+com/jules/kitpvp/commands/Set1v1Command.class
 com/jules/kitpvp/kits/UpgradeManager.class
 com/jules/kitpvp/listeners/TempBlocksListener.class
 com/jules/kitpvp/kits/Kit.class

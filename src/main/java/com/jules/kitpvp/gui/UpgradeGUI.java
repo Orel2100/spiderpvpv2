@@ -27,6 +27,9 @@ public class UpgradeGUI implements InventoryHolder {
 
     public UpgradeGUI(MPlayer mPlayer) {
         this.mPlayer = mPlayer;
+        if (!(mPlayer.getKitClass() instanceof MegaWallsClass)) {
+            throw new IllegalArgumentException("Cannot open MegaWalls upgrade GUI for a non-MegaWalls class.");
+        }
         this.kit = (MegaWallsClass) mPlayer.getKitClass();
         this.inv = Bukkit.createInventory(this, 54, "Upgrades for " + kit.getName());
         setupGUI();

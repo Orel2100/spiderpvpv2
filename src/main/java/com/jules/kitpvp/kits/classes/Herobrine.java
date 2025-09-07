@@ -6,6 +6,7 @@ import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
 import com.jules.kitpvp.util.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -111,12 +112,16 @@ public class Herobrine extends MegaWallsClass {
 
     @Override
     public void onBlockBreak(BlockBreakEvent e) {
-        MPlayer mPlayer = MPlayer.getMPlayer(e.getPlayer().getUniqueId());
-        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.GATHERING).get(0));
-        if (level > 0) {
-            double chance = (0.1 + (level - 1) * 0.11);
-            if (new Random().nextDouble() < chance) {
-                e.getPlayer().getInventory().addItem(new ItemStack(Material.DIAMOND));
+        if (e.getBlock().getType() == Material.IRON_ORE) {
+            MPlayer mPlayer = MPlayer.getMPlayer(e.getPlayer().getUniqueId());
+            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.GATHERING).get(0));
+            if (level > 0) {
+                mPlayer.setCoins(mPlayer.getCoins() + level * 10);
+                e.getPlayer().sendMessage(ChatColor.GOLD + "+ " + level * 10 + " coins!");
+                double chance = (0.1 + (level - 1) * 0.11);
+                if (new Random().nextDouble() < chance) {
+                    e.getPlayer().getInventory().addItem(new ItemStack(Material.DIAMOND));
+                }
             }
         }
     }
@@ -138,31 +143,41 @@ public class Herobrine extends MegaWallsClass {
         KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
-                new Upgrade("Herobrine Kit", Arrays.asList("Upgrade your kit items."), 5,
+                new Upgrade("Herobrine Kit",
+                        Arrays.asList(ChatColor.GRAY + "Upgrade your starting kit."),
+                        5,
                         plugin.getConfig().getIntegerList("kits.herobrine.upgrades.kit.costs"),
                         Arrays.asList(Material.STONE_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.DIAMOND_SWORD, Material.DIAMOND_HELMET))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Wrath", Arrays.asList("Strikes nearby enemies with lightning."), 5,
+                new Upgrade("Wrath",
+                        Arrays.asList(ChatColor.GRAY + "Strikes nearby enemies with lightning", ChatColor.GRAY + "for " + ChatColor.RED + "1.0" + ChatColor.GRAY + " damage."),
+                        5,
                         plugin.getConfig().getIntegerList("kits.herobrine.upgrades.ability.costs"),
                         Arrays.asList(Material.NETHER_STAR, Material.NETHER_STAR, Material.NETHER_STAR, Material.NETHER_STAR, Material.NETHER_STAR))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Power", Arrays.asList("Gain a Strength I effect upon", "killing an enemy."), 5,
+                new Upgrade("Power",
+                        Arrays.asList(ChatColor.GRAY + "Gain a " + ChatColor.RED + "Strength I" + ChatColor.GRAY + " effect for " + ChatColor.GREEN + "2.0", ChatColor.GRAY + "seconds upon killing an enemy."),
+                        5,
                         plugin.getConfig().getIntegerList("kits.herobrine.upgrades.passive1.costs"),
                         Arrays.asList(Material.DIAMOND_SWORD, Material.DIAMOND_SWORD, Material.DIAMOND_SWORD, Material.DIAMOND_SWORD, Material.DIAMOND_SWORD))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Flurry", Arrays.asList("Chance to gain Speed II on hit."), 5,
+                new Upgrade("Flurry",
+                        Arrays.asList(ChatColor.GREEN + "27%" + ChatColor.GRAY + " chance to gain " + ChatColor.AQUA + "Speed II" + ChatColor.GRAY + " for 1 second on hit."),
+                        5,
                         plugin.getConfig().getIntegerList("kits.herobrine.upgrades.passive2.costs"),
                         Arrays.asList(Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Treasure Hunter", Arrays.asList("Chance to find extra treasures", "when mining."), 5,
+                new Upgrade("Treasure Hunter",
+                        Arrays.asList(ChatColor.GREEN + "10.0%" + ChatColor.GRAY + " chance to find extra", ChatColor.GRAY + "treasures when mining."),
+                        5,
                         plugin.getConfig().getIntegerList("kits.herobrine.upgrades.gathering.costs"),
                         Arrays.asList(Material.GOLD_INGOT, Material.GOLD_INGOT, Material.GOLD_INGOT, Material.GOLD_INGOT, Material.GOLD_INGOT))
         ));

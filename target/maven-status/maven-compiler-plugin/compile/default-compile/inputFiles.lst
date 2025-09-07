@@ -7,6 +7,7 @@
 /app/src/main/java/com/jules/kitpvp/player/PlayerData.java
 /app/src/main/java/com/jules/kitpvp/kits/UpgradeCategory.java
 /app/src/main/java/com/jules/kitpvp/abilities/Heal.java
+/app/src/main/java/com/jules/kitpvp/commands/Set1v1Command.java
 /app/src/main/java/com/jules/kitpvp/listeners/PlayerJoinListener.java
 /app/src/main/java/com/jules/kitpvp/listeners/PlayerItemConsumeListener.java
 /app/src/main/java/com/jules/kitpvp/util/Utils.java
@@ -14,6 +15,7 @@
 /app/src/main/java/com/jules/kitpvp/kits/classes/Hunter.java
 /app/src/main/java/com/jules/kitpvp/listeners/ItemListener.java
 /app/src/main/java/com/jules/kitpvp/arena/ArenaManager.java
+/app/src/main/java/com/jules/kitpvp/commands/LobbyCommand.java
 /app/src/main/java/com/jules/kitpvp/commands/BoosterCommand.java
 /app/src/main/java/com/jules/kitpvp/gui/ShopGUI.java
 /app/src/main/java/com/jules/kitpvp/kits/classes/Herobrine.java
@@ -61,10 +63,12 @@
 /app/src/main/java/com/jules/kitpvp/abilities/IronPunch.java
 /app/src/main/java/com/jules/kitpvp/commands/ClassCommand.java
 /app/src/main/java/com/jules/kitpvp/listeners/EntityShootBowListener.java
+/app/src/main/java/com/jules/kitpvp/commands/SetLobbyCommand.java
 /app/src/main/java/com/jules/kitpvp/commands/CommandOneonOne.java
 /app/src/main/java/com/jules/kitpvp/listeners/BlockBreakListener.java
 /app/src/main/java/com/jules/kitpvp/KitPVP.java
 /app/src/main/java/com/jules/kitpvp/listeners/PlayerDamageListener.java
+/app/src/main/java/com/jules/kitpvp/commands/UpgradeCommand.java
 /app/src/main/java/com/jules/kitpvp/kits/UpgradeType.java
 /app/src/main/java/com/jules/kitpvp/kits/HitType.java
 /app/src/main/java/com/jules/kitpvp/listeners/ProjectileHitListener.java

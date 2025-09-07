@@ -59,12 +59,12 @@ public class Herobrine extends MegaWallsClass {
                 items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DURABILITY, 2).build());
                 items.add(new ItemStack(Material.COOKED_BEEF, 3));
                 items.add(Utils.getPotionHeal(1, 1));
-                items.add(Utils.getPotionSpeed(1));
+                items.add(Utils.getPotionSpeed(2));
                 break;
             case 5:
                 items.add(new ItemStack(Material.DIAMOND_SWORD));
                 items.add(new ItemStack(Material.COOKED_BEEF, 3));
-                items.add(Utils.getPotionHeal(2, 1));
+                items.add(Utils.getPotionHeal(1, 2));
                 items.add(Utils.getPotionSpeed(2));
                 items.add(new ItemStackCreator(Material.IRON_HELMET).addEnchantment(Enchantment.WATER_WORKER, 1).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
                 break;
@@ -112,16 +112,12 @@ public class Herobrine extends MegaWallsClass {
 
     @Override
     public void onBlockBreak(BlockBreakEvent e) {
-        if (e.getBlock().getType() == Material.IRON_ORE) {
+        if (e.getBlock().getType().name().endsWith("_ORE")) {
             MPlayer mPlayer = MPlayer.getMPlayer(e.getPlayer().getUniqueId());
             int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.GATHERING).get(0));
             if (level > 0) {
                 mPlayer.setCoins(mPlayer.getCoins() + level * 10);
                 e.getPlayer().sendMessage(ChatColor.GOLD + "+ " + level * 10 + " coins!");
-                double chance = (0.1 + (level - 1) * 0.11);
-                if (new Random().nextDouble() < chance) {
-                    e.getPlayer().getInventory().addItem(new ItemStack(Material.DIAMOND));
-                }
             }
         }
     }

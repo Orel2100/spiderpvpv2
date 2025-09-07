@@ -103,16 +103,12 @@ public class Enderman extends MegaWallsClass {
 
     @Override
     public void onBlockBreak(BlockBreakEvent e) {
-        if (e.getBlock().getType() == Material.DIAMOND_ORE) {
+        if (e.getBlock().getType().name().endsWith("_ORE")) {
             MPlayer mPlayer = MPlayer.getMPlayer(e.getPlayer().getUniqueId());
             int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.GATHERING).get(0));
             if (level > 0) {
                 mPlayer.setCoins(mPlayer.getCoins() + level * 10);
                 e.getPlayer().sendMessage(ChatColor.GOLD + "+ " + level * 10 + " coins!");
-                double chance = 0.1 + (level - 1) * 0.05;
-                if (new Random().nextDouble() < chance) {
-                    e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), new ItemStack(Material.DIAMOND));
-                }
             }
         }
     }

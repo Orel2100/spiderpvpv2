@@ -24,7 +24,14 @@ public class Configuration {
         this.plugin = plugin;
         this.configFile = new File(plugin.getDataFolder(), fileName + ".yml");
         if (!configFile.exists()) {
-            plugin.saveResource(fileName + ".yml", false);
+            if (fileName.contains("/")) {
+                configFile.getParentFile().mkdirs();
+            }
+            try {
+                configFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         this.config = YamlConfiguration.loadConfiguration(configFile);
     }

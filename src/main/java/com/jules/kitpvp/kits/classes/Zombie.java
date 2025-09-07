@@ -124,31 +124,31 @@ public class Zombie extends MegaWallsClass {
         KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
-                new Upgrade("Zombie Kit", Arrays.asList(ChatColor.GRAY + "Upgrade your starting kit."), 5,
+                new Upgrade("Zombie Kit", "Upgrade your starting kit.", 5,
                         plugin.getConfig().getIntegerList("kits.zombie.upgrades.kit.costs"),
                         Arrays.asList(Material.CHAINMAIL_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_SWORD, Material.IRON_SWORD))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Circle of Healing", Arrays.asList(ChatColor.GRAY + "Heals " + ChatColor.GREEN + "2.0" + ChatColor.GRAY + " health to nearby allies."), 5,
+                new Upgrade("Circle of Healing", "Heals " + ChatColor.GREEN + "2.0" + ChatColor.GRAY + " health to nearby allies.", 5,
                         plugin.getConfig().getIntegerList("kits.zombie.upgrades.ability.costs"),
                         Arrays.asList(Material.APPLE, Material.APPLE, Material.APPLE, Material.APPLE, Material.APPLE))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Toughness", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to gain " + ChatColor.AQUA + "Resistance I" + ChatColor.GRAY + " for 3 seconds when hit."), 5,
+                new Upgrade("Toughness", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to gain " + ChatColor.AQUA + "Resistance I" + ChatColor.GRAY + " for 3 seconds when hit.", 5,
                         plugin.getConfig().getIntegerList("kits.zombie.upgrades.passive1.costs"),
                         Arrays.asList(Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Berserk", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to gain " + ChatColor.RED + "Strength I" + ChatColor.GRAY + " and " + ChatColor.AQUA + "Speed I" + ChatColor.GRAY + " for 3 seconds when hit by an arrow."), 5,
+                new Upgrade("Berserk", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to gain " + ChatColor.RED + "Strength I" + ChatColor.GRAY + " and " + ChatColor.AQUA + "Speed I" + ChatColor.GRAY + " for 3 seconds when hit by an arrow.", 5,
                         plugin.getConfig().getIntegerList("kits.zombie.upgrades.passive2.costs"),
                         Arrays.asList(Material.ARROW, Material.ARROW, Material.ARROW, Material.ARROW, Material.ARROW))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Fleshy", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to find an extra piece of leather armor when mining stone."), 5,
+                new Upgrade("Fleshy", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to find an extra piece of leather armor when mining stone.", 5,
                         plugin.getConfig().getIntegerList("kits.zombie.upgrades.gathering.costs"),
                         Arrays.asList(Material.LEATHER, Material.LEATHER, Material.LEATHER, Material.LEATHER, Material.LEATHER))
         ));

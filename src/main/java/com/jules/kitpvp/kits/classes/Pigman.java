@@ -5,6 +5,7 @@ import com.jules.kitpvp.abilities.BurningSoul;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -132,34 +133,59 @@ public class Pigman extends MegaWallsClass {
         KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
-                new Upgrade("Pigman Kit", Arrays.asList(org.bukkit.ChatColor.GRAY + "Upgrade your starting kit."), 5,
+                new Upgrade("Pigman Kit", "Upgrade your starting kit.", 5,
                         plugin.getConfig().getIntegerList("kits.pigman.upgrades.kit.costs"),
                         Arrays.asList(Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_CHESTPLATE))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Burning Soul", Arrays.asList(org.bukkit.ChatColor.GRAY + "Summons a fire bubble that deals " + org.bukkit.ChatColor.RED + "2.0" + org.bukkit.ChatColor.GRAY + " damage", "every second for 6 seconds."), 5,
+                new Upgrade("Burning Soul", "Summons a fire bubble that deals damage over time.", 5,
                         plugin.getConfig().getIntegerList("kits.pigman.upgrades.ability.costs"),
                         Arrays.asList(Material.FIRE_CHARGE, Material.FIRE_CHARGE, Material.FIRE_CHARGE, Material.FIRE_CHARGE, Material.FIRE_CHARGE))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Valor", Arrays.asList(org.bukkit.ChatColor.GREEN + "2.0%" + org.bukkit.ChatColor.GRAY + " chance to give " + org.bukkit.ChatColor.AQUA + "Resistance I" + org.bukkit.ChatColor.GRAY + " and " + org.bukkit.ChatColor.AQUA + "Regen I" + org.bukkit.ChatColor.GRAY + " for 8 seconds", "to you and nearby teammates."), 5,
+                new Upgrade("Valor", "Chance to give Resistance and Regen to you and nearby teammates.", 5,
                         plugin.getConfig().getIntegerList("kits.pigman.upgrades.passive1.costs"),
                         Arrays.asList(Material.GOLDEN_APPLE, Material.GOLDEN_APPLE, Material.GOLDEN_APPLE, Material.GOLDEN_APPLE, Material.GOLDEN_APPLE))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Endurance", Arrays.asList(org.bukkit.ChatColor.GRAY + "Gain " + org.bukkit.ChatColor.AQUA + "Resistance II" + org.bukkit.ChatColor.GRAY + " for 2 seconds when below 6 hearts.", "Cannot be triggered more than once every 30 seconds."), 5,
+                new Upgrade("Endurance", "Gain Resistance when below 6 hearts.", 5,
                         plugin.getConfig().getIntegerList("kits.pigman.upgrades.passive2.costs"),
                         Arrays.asList(Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Resourcefulness", Arrays.asList(org.bukkit.ChatColor.GREEN + "10%" + org.bukkit.ChatColor.GRAY + " chance to find an extra piece of", "iron armor in mining chests."), 5,
+                new Upgrade("Resourcefulness", "Chance to find an extra piece of iron armor in mining chests.", 5,
                         plugin.getConfig().getIntegerList("kits.pigman.upgrades.gathering.costs"),
                         Arrays.asList(Material.CHEST, Material.CHEST, Material.CHEST, Material.CHEST, Material.CHEST))
         ));
         return upgrades;
+    }
+
+    @Override
+    public List<String> getLoreForUpgrade(Upgrade upgrade, int level) {
+        List<String> lore = new ArrayList<>();
+        lore.add(upgrade.getDescription());
+        lore.add("");
+        switch (upgrade.getName()) {
+            case "Burning Soul":
+                lore.add(ChatColor.GRAY + "Damage: " + ChatColor.RED + (2.0 + (level - 1) * 0.5));
+                break;
+            case "Valor":
+                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (2.0 + (level - 1) * 1.0) + "%");
+                lore.add(ChatColor.GRAY + "Resistance: " + ChatColor.AQUA + (level < 4 ? "I" : "II"));
+                lore.add(ChatColor.GRAY + "Regen: " + ChatColor.AQUA + (level < 5 ? "I" : "II"));
+                break;
+            case "Endurance":
+                lore.add(ChatColor.GRAY + "Duration: " + ChatColor.GREEN + (2.0 + (level - 1) * 0.5) + "s");
+                lore.add(ChatColor.GRAY + "Resistance: " + ChatColor.AQUA + (level < 5 ? "II" : "III"));
+                break;
+            case "Resourcefulness":
+                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (10 + (level - 1) * 10) + "%");
+                break;
+        }
+        return lore;
     }
 }

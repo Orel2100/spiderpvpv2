@@ -44,6 +44,14 @@ public class MPlayer {
         upgradeLevels.put(upgrade.getName(), level);
     }
 
+    public void setUpgradeLevel(String name, int level) {
+        upgradeLevels.put(name, level);
+    }
+
+    public Map<String, Integer> getUpgradeLevels() {
+        return upgradeLevels;
+    }
+
     public void setKit(Kit kit) {
         this.kit = kit;
         try {

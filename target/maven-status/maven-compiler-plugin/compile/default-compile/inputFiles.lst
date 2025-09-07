@@ -42,6 +42,7 @@
 /app/src/main/java/com/jules/kitpvp/kits/ClassType.java
 /app/src/main/java/com/jules/kitpvp/kits/classes/Arcanist.java
 /app/src/main/java/com/jules/kitpvp/kits/classes/Enderman.java
+/app/src/main/java/com/jules/kitpvp/listeners/PlayerQuitListener.java
 /app/src/main/java/com/jules/kitpvp/abilities/Detonate.java
 /app/src/main/java/com/jules/kitpvp/abilities/BurningSoul.java
 /app/src/main/java/com/jules/kitpvp/abilities/ExplosiveArrow.java
@@ -73,12 +74,10 @@
 /app/src/main/java/com/jules/kitpvp/kits/HitType.java
 /app/src/main/java/com/jules/kitpvp/listeners/ProjectileHitListener.java
 /app/src/main/java/com/jules/kitpvp/abilities/HomingTask.java
-/app/src/main/java/com/jules/kitpvp/currency/CoinManager.java
 /app/src/main/java/com/jules/kitpvp/abilities/Tornado.java
 /app/src/main/java/com/jules/kitpvp/kits/classes/Creeper.java
 /app/src/main/java/com/jules/kitpvp/kits/classes/Squid.java
 /app/src/main/java/com/jules/kitpvp/abilities/Leap.java
 /app/src/main/java/com/jules/kitpvp/kits/Kit.java
-/app/src/main/java/com/jules/kitpvp/player/PlayerManager.java
 /app/src/main/java/com/jules/kitpvp/listeners/HangingBreakListener.java
 /app/src/main/java/com/jules/kitpvp/currency/BoosterManager.java

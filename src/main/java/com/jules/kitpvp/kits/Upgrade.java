@@ -7,12 +7,12 @@ import java.util.List;
 public class Upgrade {
 
     private String name;
-    private List<String> description;
+    private String description;
     private int maxLevel;
     private List<Integer> costs;
     private List<Material> materials;
 
-    public Upgrade(String name, List<String> description, int maxLevel, List<Integer> costs, List<Material> materials) {
+    public Upgrade(String name, String description, int maxLevel, List<Integer> costs, List<Material> materials) {
         this.name = name;
         this.description = description;
         this.maxLevel = maxLevel;
@@ -24,7 +24,7 @@ public class Upgrade {
         return name;
     }
 
-    public List<String> getDescription() {
+    public String getDescription() {
         return description;
     }
 

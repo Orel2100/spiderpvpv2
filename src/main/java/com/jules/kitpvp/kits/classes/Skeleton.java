@@ -96,31 +96,31 @@ public class Skeleton extends MegaWallsClass {
         KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
-                new Upgrade("Skeleton Kit", Arrays.asList(ChatColor.GRAY + "Upgrade your starting kit."), 5,
+                new Upgrade("Skeleton Kit", "Upgrade your starting kit.", 5,
                         plugin.getConfig().getIntegerList("kits.skeleton.upgrades.kit.costs"),
                         Arrays.asList(Material.BOW, Material.STONE_SWORD, Material.BOW, Material.IRON_SWORD, Material.BOW))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Explosive Arrow", Arrays.asList(ChatColor.GRAY + "Fires an explosive arrow that deals " + ChatColor.RED + "4.0" + ChatColor.GRAY + " health damage."), 5,
+                new Upgrade("Explosive Arrow", "Fires an explosive arrow that deals " + ChatColor.RED + "4.0" + ChatColor.GRAY + " health damage.", 5,
                         plugin.getConfig().getIntegerList("kits.skeleton.upgrades.ability.costs"),
                         Arrays.asList(Material.TNT, Material.TNT, Material.TNT, Material.TNT, Material.TNT))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Salvaging", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to get an arrow back when you shoot a bow."), 5,
+                new Upgrade("Salvaging", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to get an arrow back when you shoot a bow.", 5,
                         plugin.getConfig().getIntegerList("kits.skeleton.upgrades.passive1.costs"),
                         Arrays.asList(Material.ARROW, Material.ARROW, Material.ARROW, Material.ARROW, Material.ARROW))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Bone Shield", Arrays.asList(ChatColor.GRAY + "Gain " + ChatColor.AQUA + "Regeneration I" + ChatColor.GRAY + " for 2 seconds after killing a player."), 5,
+                new Upgrade("Bone Shield", "Gain " + ChatColor.AQUA + "Regeneration I" + ChatColor.GRAY + " for 2 seconds after killing a player.", 5,
                         plugin.getConfig().getIntegerList("kits.skeleton.upgrades.passive2.costs"),
                         Arrays.asList(Material.BONE, Material.BONE, Material.BONE, Material.BONE, Material.BONE))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Arrow Crafting", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to craft 2 arrows instead of 1."), 5,
+                new Upgrade("Arrow Crafting", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to craft 2 arrows instead of 1.", 5,
                         plugin.getConfig().getIntegerList("kits.skeleton.upgrades.gathering.costs"),
                         Arrays.asList(Material.FLINT, Material.FLINT, Material.FLINT, Material.FLINT, Material.FLINT))
         ));

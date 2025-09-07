@@ -1,53 +1,32 @@
 package com.jules.kitpvp.player;
 
-import com.jules.kitpvp.kits.KitClass;
-import java.util.UUID;
+import com.jules.kitpvp.KitPVP;
+import com.jules.kitpvp.config.Configuration;
+import org.bukkit.entity.Player;
+
+import java.util.Map;
 
 public class PlayerData {
 
-    private final UUID uuid;
-    private KitClass kit;
-    private int kills;
-    private int deaths;
-    private double coins;
+    public static void saveData(Player player) {
+        MPlayer mPlayer = MPlayer.getMPlayer(player.getUniqueId());
+        Configuration config = new Configuration(KitPVP.getInstance(), "playerdata/" + player.getUniqueId().toString());
 
-    public PlayerData(UUID uuid) {
-        this.uuid = uuid;
+        config.set("coins", mPlayer.getCoins());
+        config.set("upgrades", mPlayer.getUpgradeLevels());
+
+        config.saveConfig();
     }
 
-    public UUID getUuid() {
-        return uuid;
-    }
+    public static void loadData(Player player) {
+        MPlayer mPlayer = MPlayer.getMPlayer(player.getUniqueId());
+        Configuration config = new Configuration(KitPVP.getInstance(), "playerdata/" + player.getUniqueId().toString());
 
-    public KitClass getKit() {
-        return kit;
-    }
-
-    public void setKit(KitClass kit) {
-        this.kit = kit;
-    }
-
-    public int getKills() {
-        return kills;
-    }
-
-    public void setKills(int kills) {
-        this.kills = kills;
-    }
-
-    public int getDeaths() {
-        return deaths;
-    }
-
-    public void setDeaths(int deaths) {
-        this.deaths = deaths;
-    }
-
-    public double getCoins() {
-        return coins;
-    }
-
-    public void setCoins(double coins) {
-        this.coins = coins;
+        mPlayer.setCoins(config.getInt("coins"));
+        if (config.get("upgrades") != null) {
+            for (String upgradeName : config.getConfiguration().getConfigurationSection("upgrades").getKeys(false)) {
+                mPlayer.setUpgradeLevel(upgradeName, config.getInt("upgrades." + upgradeName));
+            }
+        }
     }
 }

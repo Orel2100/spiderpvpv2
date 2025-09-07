@@ -145,34 +145,58 @@ public class Golem extends MegaWallsClass {
         KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
-                new Upgrade("Golem Kit", Arrays.asList(ChatColor.GRAY + "Upgrade your starting kit."), 5,
+                new Upgrade("Golem Kit", "Upgrade your starting kit.", 5,
                         plugin.getConfig().getIntegerList("kits.golem.upgrades.kit.costs"),
                         Arrays.asList(Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Iron Punch", Arrays.asList(ChatColor.GRAY + "Deals " + ChatColor.RED + "2.5" + ChatColor.GRAY + " damage to a single target", ChatColor.GRAY + "and applies " + ChatColor.AQUA + "Slowness II" + ChatColor.GRAY + " for 2 seconds."), 5,
+                new Upgrade("Iron Punch", "Deals damage and applies Slowness.", 5,
                         plugin.getConfig().getIntegerList("kits.golem.upgrades.ability.costs"),
                         Arrays.asList(Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Iron Skin", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to gain " + ChatColor.AQUA + "Resistance I" + ChatColor.GRAY + " for 3 seconds when hit."), 5,
+                new Upgrade("Iron Skin", "Chance to gain Resistance when hit.", 5,
                         plugin.getConfig().getIntegerList("kits.golem.upgrades.passive1.costs"),
                         Arrays.asList(Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Stomper", Arrays.asList(ChatColor.GREEN + "5%" + ChatColor.GRAY + " chance to deal a knockback effect on hit."), 5,
+                new Upgrade("Stomper", "Chance to deal a knockback effect on hit.", 5,
                         plugin.getConfig().getIntegerList("kits.golem.upgrades.passive2.costs"),
                         Arrays.asList(Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Ore Finder", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to find an extra iron ingot", "when mining iron ore."), 5,
+                new Upgrade("Ore Finder", "Chance to find an extra iron ingot when mining iron ore.", 5,
                         plugin.getConfig().getIntegerList("kits.golem.upgrades.gathering.costs"),
                         Arrays.asList(Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE))
         ));
         return upgrades;
+    }
+
+    @Override
+    public List<String> getLoreForUpgrade(Upgrade upgrade, int level) {
+        List<String> lore = new ArrayList<>();
+        lore.add(upgrade.getDescription());
+        lore.add("");
+        switch (upgrade.getName()) {
+            case "Iron Punch":
+                lore.add(ChatColor.GRAY + "Damage: " + ChatColor.RED + (2.5 + (level - 1) * 0.5));
+                lore.add(ChatColor.GRAY + "Slowness: " + ChatColor.AQUA + (level < 4 ? "II" : "III"));
+                break;
+            case "Iron Skin":
+                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (10 + (level - 1) * 5) + "%");
+                lore.add(ChatColor.GRAY + "Resistance: " + ChatColor.AQUA + (level < 4 ? "I" : "II"));
+                break;
+            case "Stomper":
+                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (5 + (level - 1) * 2.5) + "%");
+                break;
+            case "Ore Finder":
+                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (10 + (level - 1) * 5) + "%");
+                break;
+        }
+        return lore;
     }
 }

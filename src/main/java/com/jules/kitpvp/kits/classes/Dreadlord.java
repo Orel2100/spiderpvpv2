@@ -135,31 +135,31 @@ public class Dreadlord extends MegaWallsClass {
         KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
-                new Upgrade("Dreadlord Kit", Arrays.asList(ChatColor.GRAY + "Upgrade your starting kit."), 5,
+                new Upgrade("Dreadlord Kit", "Upgrade your starting kit.", 5,
                         plugin.getConfig().getIntegerList("kits.dreadlord.upgrades.kit.costs"),
                         Arrays.asList(Material.STONE_SWORD, Material.STONE_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.DIAMOND_LEGGINGS))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Shadow Burst", Arrays.asList(ChatColor.GRAY + "Fires 3 wither skulls dealing " + ChatColor.RED + "3.0" + ChatColor.GRAY + " damage each."), 5,
+                new Upgrade("Shadow Burst", "Fires 3 wither skulls dealing " + ChatColor.RED + "3.0" + ChatColor.GRAY + " damage each.", 5,
                         plugin.getConfig().getIntegerList("kits.dreadlord.upgrades.ability.costs"),
                         Arrays.asList(Material.WITHER_SKELETON_SKULL, Material.WITHER_SKELETON_SKULL, Material.WITHER_SKELETON_SKULL, Material.WITHER_SKELETON_SKULL, Material.WITHER_SKELETON_SKULL))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Soul Eater", Arrays.asList(ChatColor.GREEN + "12%" + ChatColor.GRAY + " chance to gain " + ChatColor.AQUA + "Regeneration I" + ChatColor.GRAY + " for 2 seconds upon killing a player."), 5,
+                new Upgrade("Soul Eater", ChatColor.GREEN + "12%" + ChatColor.GRAY + " chance to gain " + ChatColor.AQUA + "Regeneration I" + ChatColor.GRAY + " for 2 seconds upon killing a player.", 5,
                         plugin.getConfig().getIntegerList("kits.dreadlord.upgrades.passive1.costs"),
                         Arrays.asList(Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Ethereal", Arrays.asList(ChatColor.GREEN + "5%" + ChatColor.GRAY + " chance to gain " + ChatColor.AQUA + "Speed I" + ChatColor.GRAY + " for 3 seconds when hit."), 5,
+                new Upgrade("Ethereal", ChatColor.GREEN + "5%" + ChatColor.GRAY + " chance to gain " + ChatColor.AQUA + "Speed I" + ChatColor.GRAY + " for 3 seconds when hit.", 5,
                         plugin.getConfig().getIntegerList("kits.dreadlord.upgrades.passive2.costs"),
                         Arrays.asList(Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Soul Seeker", Arrays.asList(ChatColor.GREEN + "5%" + ChatColor.GRAY + " chance to find a Soul Stone when mining coal ore."), 5,
+                new Upgrade("Soul Seeker", ChatColor.GREEN + "5%" + ChatColor.GRAY + " chance to find a Soul Stone when mining coal ore.", 5,
                         plugin.getConfig().getIntegerList("kits.dreadlord.upgrades.gathering.costs"),
                         Arrays.asList(Material.GHAST_TEAR, Material.GHAST_TEAR, Material.GHAST_TEAR, Material.GHAST_TEAR, Material.GHAST_TEAR))
         ));

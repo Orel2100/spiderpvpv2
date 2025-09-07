@@ -109,31 +109,31 @@ public class Spider extends MegaWallsClass {
         KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
-                new Upgrade("Spider Kit", Arrays.asList(ChatColor.GRAY + "Upgrade your starting kit."), 5,
+                new Upgrade("Spider Kit", "Upgrade your starting kit.", 5,
                         plugin.getConfig().getIntegerList("kits.spider.upgrades.kit.costs"),
                         Arrays.asList(Material.STONE_SWORD, Material.STONE_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.LEATHER_HELMET))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Leap", Arrays.asList(ChatColor.GRAY + "Leap up to " + ChatColor.GREEN + "10" + ChatColor.GRAY + " blocks forward."), 5,
+                new Upgrade("Leap", "Leap up to " + ChatColor.GREEN + "10" + ChatColor.GRAY + " blocks forward.", 5,
                         plugin.getConfig().getIntegerList("kits.spider.upgrades.ability.costs"),
                         Arrays.asList(Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Drop Shock", Arrays.asList(ChatColor.GRAY + "Deals " + ChatColor.RED + "200%" + ChatColor.GRAY + " of the fall damage you take in a 2-block radius upon landing."), 5,
+                new Upgrade("Drop Shock", "Deals " + ChatColor.RED + "200%" + ChatColor.GRAY + " of the fall damage you take in a 2-block radius upon landing.", 5,
                         plugin.getConfig().getIntegerList("kits.spider.upgrades.passive1.costs"),
                         Arrays.asList(Material.ANVIL, Material.ANVIL, Material.ANVIL, Material.ANVIL, Material.ANVIL))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Nest Egg", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to spawn 1 spider upon death."), 5,
+                new Upgrade("Nest Egg", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to spawn 1 spider upon death.", 5,
                         plugin.getConfig().getIntegerList("kits.spider.upgrades.passive2.costs"),
                         Arrays.asList(Material.SPIDER_EYE, Material.SPIDER_EYE, Material.SPIDER_EYE, Material.SPIDER_EYE, Material.SPIDER_EYE))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Spiderman", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to find an extra string when mining stone."), 5,
+                new Upgrade("Spiderman", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to find an extra string when mining stone.", 5,
                         plugin.getConfig().getIntegerList("kits.spider.upgrades.gathering.costs"),
                         Arrays.asList(Material.STRING, Material.STRING, Material.STRING, Material.STRING, Material.STRING))
         ));

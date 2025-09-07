@@ -79,4 +79,8 @@ public abstract class KitClass {
     public Map<UpgradeCategory, List<Upgrade>> getUpgrades() {
         return new java.util.HashMap<>();
     }
+
+    public List<String> getLoreForUpgrade(Upgrade upgrade, int level) {
+        return Arrays.asList(upgrade.getDescription());
+    }
 }

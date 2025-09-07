@@ -69,4 +69,8 @@ public class Configuration {
     public Object get(String path) {
         return config.get(path);
     }
+
+    public FileConfiguration getConfiguration() {
+        return config;
+    }
 }

@@ -71,7 +71,7 @@ public class UpgradeGUI implements InventoryHolder {
 
         Material material;
         String name;
-        List<String> lore = new ArrayList<>(upgrade.getDescription());
+        List<String> lore = kit.getLoreForUpgrade(upgrade, tier);
         ItemStackCreator creator;
 
         if (unlocked) {

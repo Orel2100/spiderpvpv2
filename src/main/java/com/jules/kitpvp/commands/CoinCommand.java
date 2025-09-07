@@ -1,18 +1,13 @@
 package com.jules.kitpvp.commands;
 
-import com.jules.kitpvp.currency.CoinManager;
+import com.jules.kitpvp.player.MPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CoinCommand implements CommandExecutor {
-
-    private final CoinManager coinManager;
-
-    public CoinCommand(CoinManager coinManager) {
-        this.coinManager = coinManager;
-    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -22,8 +17,8 @@ public class CoinCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        double balance = coinManager.getBalance(player);
-        player.sendMessage("Your coin balance is: " + balance);
+        MPlayer mPlayer = MPlayer.getMPlayer(player.getUniqueId());
+        player.sendMessage(ChatColor.GOLD + "You have " + mPlayer.getCoins() + " coins.");
 
         return true;
     }

@@ -133,34 +133,58 @@ public class Enderman extends MegaWallsClass {
         KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
-                new Upgrade("Enderman Kit", Arrays.asList(ChatColor.GRAY + "Upgrade your starting kit."), 5,
+                new Upgrade("Enderman Kit", "Upgrade your starting kit.", 5,
                         plugin.getConfig().getIntegerList("kits.enderman.upgrades.kit.costs"),
                         Arrays.asList(Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.DIAMOND_SWORD))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Blink", Arrays.asList(ChatColor.GRAY + "Teleport up to " + ChatColor.GREEN + "15" + ChatColor.GRAY + " blocks."), 5,
+                new Upgrade("Blink", "Teleport forward.", 5,
                         plugin.getConfig().getIntegerList("kits.enderman.upgrades.ability.costs"),
                         Arrays.asList(Material.ENDER_PEARL, Material.ENDER_PEARL, Material.ENDER_PEARL, Material.ENDER_PEARL, Material.ENDER_PEARL))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Fear", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to apply " + ChatColor.AQUA + "Slowness I" + ChatColor.GRAY + " on hit for 2 seconds."), 5,
+                new Upgrade("Fear", "Chance to apply Slowness on hit.", 5,
                         plugin.getConfig().getIntegerList("kits.enderman.upgrades.passive1.costs"),
                         Arrays.asList(Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Teleportation Master", Arrays.asList(ChatColor.GRAY + "After using your ability, you gain " + ChatColor.AQUA + "Speed I" + ChatColor.GRAY + " for 3 seconds."), 5,
+                new Upgrade("Teleportation Master", "Gain Speed after using your ability.", 5,
                         plugin.getConfig().getIntegerList("kits.enderman.upgrades.passive2.costs"),
                         Arrays.asList(Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Ender's Touch", Arrays.asList(ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to drop extra diamonds", "when mining diamond ore."), 5,
+                new Upgrade("Ender's Touch", "Chance to drop extra diamonds when mining diamond ore.", 5,
                         plugin.getConfig().getIntegerList("kits.enderman.upgrades.gathering.costs"),
                         Arrays.asList(Material.DIAMOND, Material.DIAMOND, Material.DIAMOND, Material.DIAMOND, Material.DIAMOND))
         ));
         return upgrades;
+    }
+
+    @Override
+    public List<String> getLoreForUpgrade(Upgrade upgrade, int level) {
+        List<String> lore = new ArrayList<>();
+        lore.add(upgrade.getDescription());
+        lore.add("");
+        switch (upgrade.getName()) {
+            case "Blink":
+                lore.add(ChatColor.GRAY + "Distance: " + ChatColor.GREEN + (15 + (level - 1) * 5) + " blocks");
+                break;
+            case "Fear":
+                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (10 + (level - 1) * 5) + "%");
+                lore.add(ChatColor.GRAY + "Slowness: " + ChatColor.AQUA + (level < 4 ? "I" : "II"));
+                break;
+            case "Teleportation Master":
+                lore.add(ChatColor.GRAY + "Speed: " + ChatColor.AQUA + (level < 3 ? "I" : (level < 5 ? "II" : "III")));
+                lore.add(ChatColor.GRAY + "Duration: " + ChatColor.GREEN + (level == 1 || level == 2 ? 3 : (level == 3 || level == 4 ? 4 : 5)) + "s");
+                break;
+            case "Ender's Touch":
+                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (10 + (level - 1) * 5) + "%");
+                break;
+        }
+        return lore;
     }
 }

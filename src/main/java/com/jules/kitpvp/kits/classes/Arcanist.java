@@ -1,10 +1,12 @@
 package com.jules.kitpvp.kits.classes;
 
+import com.jules.kitpvp.KitPVP;
 import com.jules.kitpvp.abilities.Beam;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
 import com.jules.kitpvp.util.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -24,35 +26,9 @@ public class Arcanist extends MegaWallsClass {
         super(
                 "Arcanist",
                 new String[]{"A powerful mage."},
-                10000,
+                KitPVP.getInstance().getConfig().getInt("kits.arcanist.cost", 10000),
                 new ItemStackCreator(Material.BOOK, "§bArcanist").build()
         );
-    }
-
-    @Override
-    public Map<UpgradeCategory, List<Upgrade>> getUpgrades() {
-        Map<UpgradeCategory, List<Upgrade>> upgrades = new LinkedHashMap<>();
-
-        upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Arcane Beam", Arrays.asList("Your primary attack now shoots", "a beam of energy."), 5,
-                        Arrays.asList(100, 200, 300, 400, 500),
-                        Arrays.asList(Material.DIAMOND, Material.EMERALD, Material.GOLD_INGOT, Material.IRON_INGOT, Material.COAL))
-        ));
-
-        upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Arcane Explosion", Arrays.asList("Chance to create an explosion", "on hit."), 3,
-                        Arrays.asList(1000, 2000, 3000),
-                        Arrays.asList(Material.TNT, Material.TNT, Material.TNT))
-        ));
-
-        upgrades.put(UpgradeCategory.KIT, Arrays.asList(
-                new Upgrade("Wizard Hat", Collections.singletonList("A pointy hat."), 1, Collections.singletonList(0), Collections.singletonList(Material.LEATHER_HELMET)),
-                new Upgrade("Wizard Robes", Collections.singletonList("Flowy robes."), 1, Collections.singletonList(0), Collections.singletonList(Material.LEATHER_CHESTPLATE)),
-                new Upgrade("Wizard Pants", Collections.singletonList("Comfortable pants."), 1, Collections.singletonList(0), Collections.singletonList(Material.LEATHER_LEGGINGS)),
-                new Upgrade("Wizard Boots", Collections.singletonList("Stylish boots."), 1, Collections.singletonList(0), Collections.singletonList(Material.LEATHER_BOOTS))
-        ));
-
-        return upgrades;
     }
 
     @Override
@@ -64,25 +40,10 @@ public class Arcanist extends MegaWallsClass {
     public List<ItemStack> getStartingItems(Player p) {
         List<ItemStack> items = new ArrayList<>();
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
 
-        for (Upgrade upgrade : getUpgrades().get(UpgradeCategory.KIT)) {
-            if (mPlayer.getUpgradeLevel(upgrade) > 0) {
-                items.add(new ItemStack(upgrade.getMaterial(1)));
-            }
-        }
         items.add(new ItemStack(Material.STONE_SWORD));
-
         return items;
-    }
-
-    @Override
-    public List<PotionEffect> getPassiveEffects(Player p) {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public Kit getKit() {
-        return Kit.ARCANIST;
     }
 
     @Override
@@ -121,10 +82,39 @@ public class Arcanist extends MegaWallsClass {
     }
 
     @Override
-    public void onKill(Player p, Player killed) {
+    public List<PotionEffect> getPassiveEffects(Player p) {
+        return new ArrayList<>();
     }
 
     @Override
-    public void onBlockBreak(BlockBreakEvent e) {
+    public Kit getKit() {
+        return Kit.ARCANIST;
+    }
+
+    @Override
+    public Map<UpgradeCategory, List<Upgrade>> getUpgrades() {
+        Map<UpgradeCategory, List<Upgrade>> upgrades = new LinkedHashMap<>();
+        KitPVP plugin = KitPVP.getInstance();
+
+        upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
+                new Upgrade("Arcane Beam", "Your primary attack now shoots a beam of energy.", 5,
+                        plugin.getConfig().getIntegerList("kits.arcanist.upgrades.ability.costs"),
+                        Arrays.asList(Material.DIAMOND, Material.EMERALD, Material.GOLD_INGOT, Material.IRON_INGOT, Material.COAL))
+        ));
+
+        upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
+                new Upgrade("Arcane Explosion", "Chance to create an explosion on hit.", 3,
+                        plugin.getConfig().getIntegerList("kits.arcanist.upgrades.passive1.costs"),
+                        Arrays.asList(Material.TNT, Material.TNT, Material.TNT))
+        ));
+
+        upgrades.put(UpgradeCategory.KIT, Arrays.asList(
+                new Upgrade("Wizard Hat", "A pointy hat.", 1, plugin.getConfig().getIntegerList("kits.arcanist.upgrades.kit.costs"), Collections.singletonList(Material.LEATHER_HELMET)),
+                new Upgrade("Wizard Robes", "Flowy robes.", 1, plugin.getConfig().getIntegerList("kits.arcanist.upgrades.kit.costs"), Collections.singletonList(Material.LEATHER_CHESTPLATE)),
+                new Upgrade("Wizard Pants", "Comfortable pants.", 1, plugin.getConfig().getIntegerList("kits.arcanist.upgrades.kit.costs"), Collections.singletonList(Material.LEATHER_LEGGINGS)),
+                new Upgrade("Wizard Boots", "Stylish boots.", 1, plugin.getConfig().getIntegerList("kits.arcanist.upgrades.kit.costs"), Collections.singletonList(Material.LEATHER_BOOTS))
+        ));
+
+        return upgrades;
     }
 }

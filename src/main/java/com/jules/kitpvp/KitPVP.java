@@ -36,6 +36,7 @@ public class KitPVP extends JavaPlugin {
         getCommand("arena").setExecutor(new com.jules.kitpvp.commands.ArenaCommands(this, arenaManager));
         getCommand("class").setExecutor(new com.jules.kitpvp.commands.ClassCommand());
         getCommand("1v1").setExecutor(new com.jules.kitpvp.commands.CommandOneonOne(duelManager));
+        getCommand("coins").setExecutor(new com.jules.kitpvp.commands.CoinCommand());
         getCommand("setlobby").setExecutor(new SetLobbyCommand());
         getCommand("set1v1").setExecutor(new Set1v1Command());
         getCommand("upgrade").setExecutor(new UpgradeCommand());
@@ -55,6 +56,7 @@ public class KitPVP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new HangingBreakListener(), this);
         getServer().getPluginManager().registerEvents(new EntityExplodeListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerItemConsumeListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
 
 
         getLogger().info("KitPVP has been enabled!");

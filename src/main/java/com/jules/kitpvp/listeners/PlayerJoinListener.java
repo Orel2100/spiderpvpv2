@@ -3,6 +3,7 @@ package com.jules.kitpvp.listeners;
 import com.jules.kitpvp.KitPVP;
 import com.jules.kitpvp.config.Configuration;
 import com.jules.kitpvp.player.MPlayer;
+import com.jules.kitpvp.player.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -26,6 +27,7 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         MPlayer.getMPlayer(player.getUniqueId());
+        PlayerData.loadData(player);
 
         player.getInventory().clear();
 

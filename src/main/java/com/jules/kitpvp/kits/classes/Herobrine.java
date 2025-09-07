@@ -143,45 +143,57 @@ public class Herobrine extends MegaWallsClass {
         KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
-                new Upgrade("Herobrine Kit",
-                        Arrays.asList(ChatColor.GRAY + "Upgrade your starting kit."),
-                        5,
+                new Upgrade("Herobrine Kit", "Upgrade your starting kit.", 5,
                         plugin.getConfig().getIntegerList("kits.herobrine.upgrades.kit.costs"),
                         Arrays.asList(Material.STONE_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.DIAMOND_SWORD, Material.DIAMOND_HELMET))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Wrath",
-                        Arrays.asList(ChatColor.GRAY + "Strikes nearby enemies with lightning", ChatColor.GRAY + "for " + ChatColor.RED + "1.0" + ChatColor.GRAY + " damage."),
-                        5,
+                new Upgrade("Wrath", "Strikes nearby enemies with lightning.", 5,
                         plugin.getConfig().getIntegerList("kits.herobrine.upgrades.ability.costs"),
                         Arrays.asList(Material.NETHER_STAR, Material.NETHER_STAR, Material.NETHER_STAR, Material.NETHER_STAR, Material.NETHER_STAR))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Power",
-                        Arrays.asList(ChatColor.GRAY + "Gain a " + ChatColor.RED + "Strength I" + ChatColor.GRAY + " effect for " + ChatColor.GREEN + "2.0", ChatColor.GRAY + "seconds upon killing an enemy."),
-                        5,
+                new Upgrade("Power", "Gain a Strength I effect upon killing an enemy.", 5,
                         plugin.getConfig().getIntegerList("kits.herobrine.upgrades.passive1.costs"),
                         Arrays.asList(Material.DIAMOND_SWORD, Material.DIAMOND_SWORD, Material.DIAMOND_SWORD, Material.DIAMOND_SWORD, Material.DIAMOND_SWORD))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Flurry",
-                        Arrays.asList(ChatColor.GREEN + "27%" + ChatColor.GRAY + " chance to gain " + ChatColor.AQUA + "Speed II" + ChatColor.GRAY + " for 1 second on hit."),
-                        5,
+                new Upgrade("Flurry", "Chance to gain Speed II on hit.", 5,
                         plugin.getConfig().getIntegerList("kits.herobrine.upgrades.passive2.costs"),
                         Arrays.asList(Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER))
         ));
 
         upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Treasure Hunter",
-                        Arrays.asList(ChatColor.GREEN + "10.0%" + ChatColor.GRAY + " chance to find extra", ChatColor.GRAY + "treasures when mining."),
-                        5,
+                new Upgrade("Treasure Hunter", "Chance to find extra treasures when mining.", 5,
                         plugin.getConfig().getIntegerList("kits.herobrine.upgrades.gathering.costs"),
                         Arrays.asList(Material.GOLD_INGOT, Material.GOLD_INGOT, Material.GOLD_INGOT, Material.GOLD_INGOT, Material.GOLD_INGOT))
         ));
 
         return upgrades;
+    }
+
+    @Override
+    public List<String> getLoreForUpgrade(Upgrade upgrade, int level) {
+        List<String> lore = new ArrayList<>();
+        lore.add(upgrade.getDescription());
+        lore.add("");
+        switch (upgrade.getName()) {
+            case "Wrath":
+                lore.add(ChatColor.GRAY + "Damage: " + ChatColor.RED + (1.0 + (level - 1) * 0.5));
+                break;
+            case "Power":
+                lore.add(ChatColor.GRAY + "Duration: " + ChatColor.GREEN + (2.0 + (level - 1) * 0.5) + "s");
+                break;
+            case "Flurry":
+                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (27 + (level - 1) * 6) + "%");
+                break;
+            case "Treasure Hunter":
+                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (10 + (level - 1) * 11) + "%");
+                break;
+        }
+        return lore;
     }
 }

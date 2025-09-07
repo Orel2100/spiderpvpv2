@@ -8,17 +8,20 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class ShadowBurst {
 
-    public static void use(Player p) {
+    public static void use(Player p, int level) {
         for(int i = 0; i<3; i++) {
+            WitherSkull ws = p.launchProjectile(WitherSkull.class);
+            ws.setShooter(p);
+            ws.setYield(0);
+            ws.setIsIncendiary(false);
+            double damage = 3.0 + (level - 1) * 0.75;
+            ws.setCustomName(String.valueOf(damage));
+            ws.setCustomNameVisible(false);
             if(i == 0) {
-                WitherSkull ws = p.launchProjectile(WitherSkull.class);
-                ws.setShooter(p);
                 ws.setDirection(p.getEyeLocation().getDirection());
                 ws.setVelocity(ws.getDirection().multiply(0.5));
             }
             if(i == 1) {
-                WitherSkull ws = p.launchProjectile(WitherSkull.class);
-                ws.setShooter(p);
                 Location loc = ws.getLocation();
                 loc.setYaw(p.getEyeLocation().getYaw() - 25);
                 ws.teleport(loc);
@@ -26,8 +29,6 @@ public class ShadowBurst {
                 ws.setVelocity(ws.getDirection().multiply(-0.1));
             }
             if(i == 2) {
-                WitherSkull ws = p.launchProjectile(WitherSkull.class);
-                ws.setShooter(p);
                 Location loc = ws.getLocation();
                 loc.setYaw(p.getEyeLocation().getYaw() + 25);
                 ws.teleport(loc);

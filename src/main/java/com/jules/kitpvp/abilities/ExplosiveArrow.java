@@ -12,13 +12,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class ExplosiveArrow {
 
-    public static HashMap<Arrow, Player> exArrow = new HashMap<>();
+    public static HashMap<Arrow, Double> exArrow = new HashMap<>();
 
     public static void use(final Player p, final int upgrade) {
         final Arrow a = p.launchProjectile(Arrow.class);
         a.setVelocity(p.getEyeLocation().getDirection().multiply(2.5));
         a.setShooter(p);
-        exArrow.put(a, p);
+        double damage = 4.0 + (upgrade - 1) * 0.5;
+        exArrow.put(a, damage);
         new BukkitRunnable() {
             public void run() {
                 if(a.isDead() || a == null){ cancel(); return;}

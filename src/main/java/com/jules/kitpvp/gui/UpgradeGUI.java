@@ -62,6 +62,9 @@ public class UpgradeGUI implements InventoryHolder {
         // Set up stats and prestige
         setupStats();
         setupPrestige();
+
+        // Add gathering upgrades button
+        inv.setItem(45, new ItemStackCreator(Material.GOLDEN_PICKAXE, "§aGathering Upgrades").addLoreLine("§7Click to view gathering upgrades.").build());
     }
 
     private ItemStack createUpgradeItem(Upgrade upgrade, int tier, int currentLevel) {
@@ -125,7 +128,6 @@ public class UpgradeGUI implements InventoryHolder {
             case PASSIVE_1: return Material.FEATHER;
             case PASSIVE_2: return Material.TNT;
             case KIT: return Material.DIAMOND_SWORD;
-            case GATHERING: return Material.GOLDEN_PICKAXE;
             default: return Material.STONE;
         }
     }

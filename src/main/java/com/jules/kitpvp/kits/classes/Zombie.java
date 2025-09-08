@@ -99,21 +99,6 @@ public class Zombie extends MegaWallsClass {
     }
 
     @Override
-    public void onBlockBreak(BlockBreakEvent e) {
-        if (e.getBlock().getType().name().endsWith("_ORE")) {
-            MPlayer mPlayer = MPlayer.getMPlayer(e.getPlayer().getUniqueId());
-            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.GATHERING).get(0));
-            if (level > 0) {
-                double chance = 0.1 + (level - 1) * 0.1;
-                if (new Random().nextDouble() < chance) {
-                    mPlayer.setCoins(mPlayer.getCoins() + level * 10);
-                e.getPlayer().sendMessage(ChatColor.GOLD + "+ " + level * 10 + " coins!");
-                }
-            }
-        }
-    }
-
-    @Override
     public List<PotionEffect> getPassiveEffects(Player p) { return new ArrayList<>(); }
 
     @Override
@@ -146,12 +131,6 @@ public class Zombie extends MegaWallsClass {
                 new Upgrade("Berserk", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to gain " + ChatColor.RED + "Strength I" + ChatColor.GRAY + " and " + ChatColor.AQUA + "Speed I" + ChatColor.GRAY + " for 3 seconds when hit by an arrow.", 5,
                         plugin.getConfig().getIntegerList("kits.zombie.upgrades.passive2.costs"),
                         Arrays.asList(Material.ARROW, Material.ARROW, Material.ARROW, Material.ARROW, Material.ARROW))
-        ));
-
-        upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Fleshy", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to find an extra piece of leather armor when mining stone.", 5,
-                        plugin.getConfig().getIntegerList("kits.zombie.upgrades.gathering.costs"),
-                        Arrays.asList(Material.LEATHER, Material.LEATHER, Material.LEATHER, Material.LEATHER, Material.LEATHER))
         ));
 
         return upgrades;

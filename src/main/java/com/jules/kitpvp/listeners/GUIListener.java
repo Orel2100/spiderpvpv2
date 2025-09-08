@@ -34,7 +34,21 @@ public class GUIListener implements Listener {
             if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
                 return;
             }
+            if (event.getCurrentItem().getType() == Material.GOLDEN_PICKAXE) {
+                new com.jules.kitpvp.gui.GatheringGUI(MPlayer.getMPlayer(player.getUniqueId())).open(player);
+                return;
+            }
             KitPVP.getInstance().getUpgradeManager().attemptPurchase(player, event.getCurrentItem().getItemMeta().getDisplayName());
+        } else if (holder instanceof com.jules.kitpvp.gui.GatheringGUI) {
+            event.setCancelled(true);
+            if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
+                return;
+            }
+            if (event.getCurrentItem().getType() == Material.ARROW) {
+                new UpgradeGUI(MPlayer.getMPlayer(player.getUniqueId())).open(player);
+                return;
+            }
+            KitPVP.getInstance().getGatheringManager().attemptPurchase(player, event.getCurrentItem().getItemMeta().getDisplayName());
         }
     }
 }

@@ -119,12 +119,6 @@ public class Skeleton extends MegaWallsClass {
                         Arrays.asList(Material.BONE, Material.BONE, Material.BONE, Material.BONE, Material.BONE))
         ));
 
-        upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Arrow Crafting", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to craft 2 arrows instead of 1.", 5,
-                        plugin.getConfig().getIntegerList("kits.skeleton.upgrades.gathering.costs"),
-                        Arrays.asList(Material.FLINT, Material.FLINT, Material.FLINT, Material.FLINT, Material.FLINT))
-        ));
-
         return upgrades;
     }
 }

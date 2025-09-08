@@ -102,18 +102,6 @@ public class Enderman extends MegaWallsClass {
     }
 
     @Override
-    public void onBlockBreak(BlockBreakEvent e) {
-        if (e.getBlock().getType().name().endsWith("_ORE")) {
-            MPlayer mPlayer = MPlayer.getMPlayer(e.getPlayer().getUniqueId());
-            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.GATHERING).get(0));
-            if (level > 0) {
-                mPlayer.setCoins(mPlayer.getCoins() + level * 10);
-                e.getPlayer().sendMessage(ChatColor.GOLD + "+ " + level * 10 + " coins!");
-            }
-        }
-    }
-
-    @Override
     public List<PotionEffect> getPassiveEffects(Player p) {
         return new ArrayList<>();
     }
@@ -152,11 +140,6 @@ public class Enderman extends MegaWallsClass {
                         Arrays.asList(Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER))
         ));
 
-        upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Ender's Touch", "Chance to drop extra diamonds when mining diamond ore.", 5,
-                        plugin.getConfig().getIntegerList("kits.enderman.upgrades.gathering.costs"),
-                        Arrays.asList(Material.DIAMOND, Material.DIAMOND, Material.DIAMOND, Material.DIAMOND, Material.DIAMOND))
-        ));
         return upgrades;
     }
 
@@ -176,9 +159,6 @@ public class Enderman extends MegaWallsClass {
             case "Teleportation Master":
                 lore.add(ChatColor.GRAY + "Speed: " + ChatColor.AQUA + (level < 3 ? "I" : (level < 5 ? "II" : "III")));
                 lore.add(ChatColor.GRAY + "Duration: " + ChatColor.GREEN + (level == 1 || level == 2 ? 3 : (level == 3 || level == 4 ? 4 : 5)) + "s");
-                break;
-            case "Ender's Touch":
-                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (10 + (level - 1) * 5) + "%");
                 break;
         }
         return lore;

@@ -106,21 +106,6 @@ public class Dreadlord extends MegaWallsClass {
     }
 
     @Override
-    public void onBlockBreak(BlockBreakEvent e) {
-        if (e.getBlock().getType().name().endsWith("_ORE")) {
-            MPlayer mPlayer = MPlayer.getMPlayer(e.getPlayer().getUniqueId());
-            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.GATHERING).get(0));
-            if (level > 0) {
-                double chance = 0.05 + (level - 1) * 0.05;
-                if (new Random().nextDouble() < chance) {
-                    mPlayer.setCoins(mPlayer.getCoins() + level * 10);
-                e.getPlayer().sendMessage(ChatColor.GOLD + "+ " + level * 10 + " coins!");
-                }
-            }
-        }
-    }
-
-    @Override
     public List<PotionEffect> getPassiveEffects(Player p) {
         return new ArrayList<>();
     }
@@ -157,12 +142,6 @@ public class Dreadlord extends MegaWallsClass {
                 new Upgrade("Ethereal", ChatColor.GREEN + "5%" + ChatColor.GRAY + " chance to gain " + ChatColor.AQUA + "Speed I" + ChatColor.GRAY + " for 3 seconds when hit.", 5,
                         plugin.getConfig().getIntegerList("kits.dreadlord.upgrades.passive2.costs"),
                         Arrays.asList(Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER))
-        ));
-
-        upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Soul Seeker", ChatColor.GREEN + "5%" + ChatColor.GRAY + " chance to find a Soul Stone when mining coal ore.", 5,
-                        plugin.getConfig().getIntegerList("kits.dreadlord.upgrades.gathering.costs"),
-                        Arrays.asList(Material.GHAST_TEAR, Material.GHAST_TEAR, Material.GHAST_TEAR, Material.GHAST_TEAR, Material.GHAST_TEAR))
         ));
 
         return upgrades;

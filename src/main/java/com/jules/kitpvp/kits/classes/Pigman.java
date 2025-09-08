@@ -156,11 +156,6 @@ public class Pigman extends MegaWallsClass {
                         Arrays.asList(Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE))
         ));
 
-        upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Resourcefulness", "Chance to find an extra piece of iron armor in mining chests.", 5,
-                        plugin.getConfig().getIntegerList("kits.pigman.upgrades.gathering.costs"),
-                        Arrays.asList(Material.CHEST, Material.CHEST, Material.CHEST, Material.CHEST, Material.CHEST))
-        ));
         return upgrades;
     }
 
@@ -181,9 +176,6 @@ public class Pigman extends MegaWallsClass {
             case "Endurance":
                 lore.add(ChatColor.GRAY + "Duration: " + ChatColor.GREEN + (2.0 + (level - 1) * 0.5) + "s");
                 lore.add(ChatColor.GRAY + "Resistance: " + ChatColor.AQUA + (level < 5 ? "II" : "III"));
-                break;
-            case "Resourcefulness":
-                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (10 + (level - 1) * 10) + "%");
                 break;
         }
         return lore;

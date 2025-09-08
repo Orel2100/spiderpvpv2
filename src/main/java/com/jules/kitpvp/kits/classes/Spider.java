@@ -132,12 +132,6 @@ public class Spider extends MegaWallsClass {
                         Arrays.asList(Material.SPIDER_EYE, Material.SPIDER_EYE, Material.SPIDER_EYE, Material.SPIDER_EYE, Material.SPIDER_EYE))
         ));
 
-        upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Spiderman", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to find an extra string when mining stone.", 5,
-                        plugin.getConfig().getIntegerList("kits.spider.upgrades.gathering.costs"),
-                        Arrays.asList(Material.STRING, Material.STRING, Material.STRING, Material.STRING, Material.STRING))
-        ));
-
         return upgrades;
     }
 }

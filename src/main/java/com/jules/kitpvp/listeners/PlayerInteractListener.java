@@ -1,10 +1,13 @@
 package com.jules.kitpvp.listeners;
 
+import com.jules.kitpvp.KitPVP;
+import com.jules.kitpvp.game.GameManager;
 import com.jules.kitpvp.gui.ClassSelectorGUI;
 import com.jules.kitpvp.gui.ShopGUI;
 import com.jules.kitpvp.kits.ClassType;
 import com.jules.kitpvp.player.MPlayer;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +16,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class PlayerInteractListener implements Listener {
+
+    private final KitPVP plugin;
+    private final GameManager gameManager;
+
+    public PlayerInteractListener(KitPVP plugin) {
+        this.plugin = plugin;
+        this.gameManager = plugin.getGameManager();
+    }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -36,8 +47,13 @@ public class PlayerInteractListener implements Listener {
 
             if (item.getType() == Material.COMMAND_BLOCK && "PLAY!".equals(displayName)) {
                 event.setCancelled(true);
-                player.sendMessage(ChatColor.GREEN + "Joining arena...");
-                // Arena joining logic would go here
+                Location spawnPoint = gameManager.getRandomSpawn();
+                if (spawnPoint != null) {
+                    player.teleport(spawnPoint);
+                    player.sendMessage(ChatColor.GREEN + "You have been teleported to the arena!");
+                } else {
+                    player.sendMessage(ChatColor.RED + "There are no spawn points set! Please contact an admin.");
+                }
                 return;
             }
         }

@@ -35,3 +35,6 @@ commands:
   lobby:
     description: Teleports you to the lobby
     usage: /lobby
+  gtest:
+    description: Gives you a pickaxe and some iron ores to test the gathering ability
+    usage: /gtest

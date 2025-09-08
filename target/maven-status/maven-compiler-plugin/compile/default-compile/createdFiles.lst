@@ -47,7 +47,6 @@ com/jules/kitpvp/kits/classes/Pirate.class
 com/jules/kitpvp/util/Utils.class
 com/jules/kitpvp/kits/classes/Zombie.class
 com/jules/kitpvp/listeners/GUIListener.class
-com/jules/kitpvp/listeners/GameListener.class
 com/jules/kitpvp/commands/SetLobbyCommand.class
 com/jules/kitpvp/listeners/PlayerDeathListener.class
 com/jules/kitpvp/listeners/OneOnOneListener.class

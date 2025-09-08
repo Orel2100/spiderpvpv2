@@ -9,7 +9,6 @@ import com.jules.kitpvp.commands.SetLobbyCommand;
 import com.jules.kitpvp.commands.UpgradeCommand;
 import com.jules.kitpvp.duel.DuelManager;
 import com.jules.kitpvp.game.GameManager;
-import com.jules.kitpvp.listeners.GameListener;
 import com.jules.kitpvp.listeners.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -62,7 +61,6 @@ public class KitPVP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EntityExplodeListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerItemConsumeListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
-        getServer().getPluginManager().registerEvents(new GameListener(this), this);
 
 
         getLogger().info("KitPVP has been enabled!");

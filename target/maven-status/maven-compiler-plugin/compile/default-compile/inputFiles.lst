@@ -55,7 +55,6 @@
 /app/src/main/java/com/jules/kitpvp/util/ItemStackCreator.java
 /app/src/main/java/com/jules/kitpvp/kits/UpgradeManager.java
 /app/src/main/java/com/jules/kitpvp/util/EffectUtils.java
-/app/src/main/java/com/jules/kitpvp/listeners/GameListener.java
 /app/src/main/java/com/jules/kitpvp/listeners/GUIListener.java
 /app/src/main/java/com/jules/kitpvp/kits/classes/Zombie.java
 /app/src/main/java/com/jules/kitpvp/player/MPlayer.java

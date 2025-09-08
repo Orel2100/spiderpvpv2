@@ -27,6 +27,9 @@ public class PlayerData {
             for (String upgradeName : config.getConfiguration().getConfigurationSection("upgrades").getKeys(false)) {
                 mPlayer.setUpgradeLevel(upgradeName, config.getInt("upgrades." + upgradeName));
             }
+        } else {
+            // New player, give default gathering upgrade
+            mPlayer.setUpgradeLevel("Coin Gathering", 1);
         }
     }
 }

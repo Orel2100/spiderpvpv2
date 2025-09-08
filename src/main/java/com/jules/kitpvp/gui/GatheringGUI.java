@@ -58,6 +58,10 @@ public class GatheringGUI implements InventoryHolder {
         String name;
         List<String> lore = new java.util.ArrayList<>();
         lore.add(upgrade.getDescription());
+        if (upgrade.getName().equals("Coin Gathering")) {
+            int coins = (int) (10 * Math.pow(2, tier - 1));
+            lore.add("§7Coins per ore: §6" + coins);
+        }
         ItemStackCreator creator;
 
         if (unlocked) {

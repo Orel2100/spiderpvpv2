@@ -22,6 +22,7 @@ public class KitPVP extends JavaPlugin {
     private ArenaManager arenaManager;
     private UpgradeManager upgradeManager;
     private com.jules.kitpvp.kits.GatheringManager gatheringManager;
+    private com.jules.kitpvp.io.PlayerDataManager playerDataManager;
     private DuelManager duelManager;
 
     @Override
@@ -33,6 +34,7 @@ public class KitPVP extends JavaPlugin {
         this.arenaManager = new ArenaManager();
         this.upgradeManager = new UpgradeManager();
         this.gatheringManager = new com.jules.kitpvp.kits.GatheringManager(this);
+        this.playerDataManager = new com.jules.kitpvp.io.PlayerDataManager(this);
         this.duelManager = new DuelManager();
 
         getCommand("arena").setExecutor(new com.jules.kitpvp.commands.ArenaCommands(this, arenaManager));
@@ -88,5 +90,9 @@ public class KitPVP extends JavaPlugin {
 
     public com.jules.kitpvp.kits.GatheringManager getGatheringManager() {
         return gatheringManager;
+    }
+
+    public com.jules.kitpvp.io.PlayerDataManager getPlayerDataManager() {
+        return playerDataManager;
     }
 }

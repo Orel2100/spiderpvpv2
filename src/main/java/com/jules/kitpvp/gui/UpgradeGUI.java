@@ -125,7 +125,6 @@ public class UpgradeGUI implements InventoryHolder {
             case PASSIVE_1: return Material.FEATHER;
             case PASSIVE_2: return Material.TNT;
             case KIT: return Material.DIAMOND_SWORD;
-            case GATHERING: return Material.GOLDEN_PICKAXE;
             default: return Material.STONE;
         }
     }

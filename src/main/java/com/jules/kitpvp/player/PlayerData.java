@@ -13,6 +13,7 @@ public class PlayerData {
         Configuration config = new Configuration(KitPVP.getInstance(), "playerdata/" + player.getUniqueId().toString());
 
         config.set("coins", mPlayer.getCoins());
+        config.set("gatheringLevel", mPlayer.getGatheringLevel());
         config.set("upgrades", mPlayer.getUpgradeLevels());
 
         config.saveConfig();
@@ -23,6 +24,7 @@ public class PlayerData {
         Configuration config = new Configuration(KitPVP.getInstance(), "playerdata/" + player.getUniqueId().toString());
 
         mPlayer.setCoins(config.getInt("coins"));
+        mPlayer.setGatheringLevel(config.getInt("gatheringLevel"));
         if (config.get("upgrades") != null) {
             for (String upgradeName : config.getConfiguration().getConfigurationSection("upgrades").getKeys(false)) {
                 mPlayer.setUpgradeLevel(upgradeName, config.getInt("upgrades." + upgradeName));

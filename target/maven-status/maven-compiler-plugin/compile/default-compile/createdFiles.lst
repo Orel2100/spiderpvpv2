@@ -3,6 +3,7 @@ com/jules/kitpvp/gui/ShopGUI.class
 com/jules/kitpvp/abilities/ImmolatingBurst$2.class
 com/jules/kitpvp/abilities/SquidSplash.class
 com/jules/kitpvp/abilities/Leap.class
+com/jules/kitpvp/gui/GatheringUpgradeGUI.class
 com/jules/kitpvp/kits/classes/MegaWallsClass.class
 com/jules/kitpvp/kits/classes/Pigman.class
 com/jules/kitpvp/listeners/BlockBreakListener.class
@@ -80,7 +81,6 @@ com/jules/kitpvp/arena/Arena.class
 com/jules/kitpvp/kits/Upgrade.class
 com/jules/kitpvp/listeners/HangingBreakListener.class
 com/jules/kitpvp/kits/HitType.class
-com/jules/kitpvp/commands/SetSpawnCommand.class
 com/jules/kitpvp/kits/classes/Spider.class
 com/jules/kitpvp/commands/ClassCommand.class
 com/jules/kitpvp/listeners/PlayerQuitListener.class
@@ -90,6 +90,5 @@ com/jules/kitpvp/listeners/TempBlocksListener.class
 com/jules/kitpvp/kits/Kit.class
 com/jules/kitpvp/listeners/EntityExplodeListener.class
 com/jules/kitpvp/kits/classes/Hunter.class
-com/jules/kitpvp/game/GameManager.class
 com/jules/kitpvp/abilities/Ability.class
 com/jules/kitpvp/gui/ClassSelectorGUI.class

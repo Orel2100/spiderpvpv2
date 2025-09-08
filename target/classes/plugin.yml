@@ -35,7 +35,3 @@ commands:
   lobby:
     description: Teleports you to the lobby
     usage: /lobby
-  setspawn:
-    description: Gives the spawn setter item
-    usage: /setspawn
-    permission: kitpvp.admin

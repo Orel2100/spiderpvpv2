@@ -18,6 +18,7 @@ public class MPlayer {
     private Kit kit;
     private KitClass kitClass;
     private int coins = 0;
+    private int gatheringLevel = 0;
     private Map<String, Integer> upgradeLevels = new HashMap<>();
 
     public MPlayer(UUID uuid) {
@@ -89,4 +90,11 @@ public class MPlayer {
         this.coins = coins;
     }
 
+    public int getGatheringLevel() {
+        return gatheringLevel;
+    }
+
+    public void setGatheringLevel(int gatheringLevel) {
+        this.gatheringLevel = gatheringLevel;
+    }
 }

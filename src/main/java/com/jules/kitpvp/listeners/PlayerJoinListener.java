@@ -45,7 +45,7 @@ public class PlayerJoinListener implements Listener {
         }
 
 
-        ItemStack playItem = new ItemStack(Material.CAKE);
+        ItemStack playItem = new ItemStack(Material.COMMAND_BLOCK);
         ItemMeta playMeta = playItem.getItemMeta();
         playMeta.setDisplayName(ChatColor.GREEN + "PLAY!");
         playItem.setItemMeta(playMeta);

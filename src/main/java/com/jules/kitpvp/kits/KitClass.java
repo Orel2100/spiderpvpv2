@@ -83,4 +83,8 @@ public abstract class KitClass {
     public List<String> getLoreForUpgrade(Upgrade upgrade, int level) {
         return new ArrayList<>(Arrays.asList(upgrade.getDescription()));
     }
+
+    public ItemStack getAbilityItem() {
+        return null;
+    }
 }

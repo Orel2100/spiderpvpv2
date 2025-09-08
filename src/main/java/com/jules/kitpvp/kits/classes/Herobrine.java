@@ -5,6 +5,7 @@ import com.jules.kitpvp.abilities.Wrath;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
+import com.jules.kitpvp.util.KitUtils;
 import com.jules.kitpvp.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -43,30 +44,30 @@ public class Herobrine extends MegaWallsClass {
 
         switch (level) {
             case 1:
-                items.add(new ItemStack(Material.STONE_SWORD));
-                items.add(new ItemStack(Material.COOKED_BEEF, 2));
+                items.add(new ItemStackCreator(Material.STONE_SWORD, "§dHerobrine Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Material.COOKED_BEEF, "§dHerobrine Steak").setAmount(2).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
                 break;
             case 2:
-                items.add(new ItemStackCreator(Material.STONE_SWORD).addEnchantment(Enchantment.DURABILITY, 1).build());
-                items.add(new ItemStack(Material.COOKED_BEEF, 2));
+                items.add(new ItemStackCreator(Material.STONE_SWORD, "§dHerobrine Sword").addEnchantment(Enchantment.DURABILITY, 1).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Material.COOKED_BEEF, "§dHerobrine Steak").setAmount(2).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
                 break;
             case 3:
-                items.add(new ItemStack(Material.IRON_SWORD));
-                items.add(new ItemStack(Material.COOKED_BEEF, 3));
-                items.add(Utils.getPotionHeal(1, 1));
+                items.add(new ItemStackCreator(Material.IRON_SWORD, "§dHerobrine Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Material.COOKED_BEEF, "§dHerobrine Steak").setAmount(3).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Utils.getPotionHeal(1, 1)).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
                 break;
             case 4:
-                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DURABILITY, 2).build());
-                items.add(new ItemStack(Material.COOKED_BEEF, 3));
-                items.add(Utils.getPotionHeal(1, 1));
-                items.add(Utils.getPotionSpeed(2));
+                items.add(new ItemStackCreator(Material.IRON_SWORD, "§dHerobrine Sword").addEnchantment(Enchantment.DURABILITY, 2).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Material.COOKED_BEEF, "§dHerobrine Steak").setAmount(3).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Utils.getPotionHeal(1, 1)).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Utils.getPotionSpeed(2)).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
                 break;
             case 5:
-                items.add(new ItemStack(Material.DIAMOND_SWORD));
-                items.add(new ItemStack(Material.COOKED_BEEF, 3));
-                items.add(Utils.getPotionHeal(1, 2));
-                items.add(Utils.getPotionSpeed(2));
-                items.add(new ItemStackCreator(Material.IRON_HELMET).addEnchantment(Enchantment.WATER_WORKER, 1).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build());
+                items.add(new ItemStackCreator(Material.DIAMOND_SWORD, "§dHerobrine Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Material.COOKED_BEEF, "§dHerobrine Steak").setAmount(3).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Utils.getPotionHeal(1, 2)).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Utils.getPotionSpeed(2)).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Material.IRON_HELMET, "§dHerobrine Helmet").addEnchantment(Enchantment.WATER_WORKER, 1).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
                 break;
         }
 
@@ -77,6 +78,7 @@ public class Herobrine extends MegaWallsClass {
     public void onInteract(Player p, PlayerInteractEvent event) {
         if (!event.getAction().name().contains("RIGHT")) return;
         if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
+        if (!p.getItemInHand().hasItemMeta() || !p.getItemInHand().getItemMeta().hasLore() || !p.getItemInHand().getItemMeta().getLore().contains(KitUtils.KIT_ITEM_LORE)) return;
         if (!Utils.isUsingSword(p.getItemInHand())) return;
 
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
@@ -118,6 +120,11 @@ public class Herobrine extends MegaWallsClass {
     @Override
     public Kit getKit() {
         return Kit.HEROBRINE;
+    }
+
+    @Override
+    public ItemStack getAbilityItem() {
+        return new ItemStackCreator(Material.STONE_SWORD, "§dHerobrine Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
     }
 
     @Override

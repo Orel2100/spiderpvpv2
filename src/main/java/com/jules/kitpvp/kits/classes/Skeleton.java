@@ -5,6 +5,7 @@ import com.jules.kitpvp.abilities.ExplosiveArrow;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
+import com.jules.kitpvp.util.KitUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -38,19 +39,21 @@ public class Skeleton extends MegaWallsClass {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
 
-        items.add(new ItemStack(Material.WOODEN_SWORD));
-        items.add(new ItemStack(Material.BOW));
-        items.add(new ItemStack(Material.ARROW, 16));
-        items.add(new ItemStack(Material.COOKED_BEEF, 2 + (level > 2 ? 1 : 0) + (level > 3 ? 1 : 0) + (level > 4 ? 1 : 0)));
+        ItemStack sword = new ItemStackCreator(Material.WOODEN_SWORD, "§fSkeleton Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
+        ItemStack bow = new ItemStackCreator(Material.BOW, "§fSkeleton Bow").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
+        items.add(new ItemStackCreator(Material.ARROW, "§fSkeleton Arrow").setAmount(16).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        items.add(new ItemStackCreator(Material.COOKED_BEEF, "§fSkeleton Steak").setAmount(2 + (level > 2 ? 1 : 0) + (level > 3 ? 1 : 0) + (level > 4 ? 1 : 0)).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
 
-        if (level > 1) items.set(0, new ItemStack(Material.STONE_SWORD));
-        if (level > 3) items.set(0, new ItemStack(Material.IRON_SWORD));
-        if (level > 4) items.get(0).addEnchantment(Enchantment.DAMAGE_ALL, 1);
+        if (level > 1) sword.setType(Material.STONE_SWORD);
+        if (level > 3) sword.setType(Material.IRON_SWORD);
+        if (level > 4) sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
 
-        ItemStack bow = items.get(1);
         if (level > 2) bow.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
         if (level > 3) bow.addEnchantment(Enchantment.ARROW_KNOCKBACK, 1);
         if (level > 4) bow.addEnchantment(Enchantment.ARROW_DAMAGE, 2);
+
+        items.add(0, sword);
+        items.add(1, bow);
 
         return items;
     }
@@ -59,6 +62,9 @@ public class Skeleton extends MegaWallsClass {
     public void onBowShoot(EntityShootBowEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player p = (Player) event.getEntity();
+
+        if (event.getBow() == null || !event.getBow().hasItemMeta() || !event.getBow().getItemMeta().hasLore() || !event.getBow().getItemMeta().getLore().contains(KitUtils.KIT_ITEM_LORE)) return;
+
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
 
         int salvagingLevel = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
@@ -89,6 +95,11 @@ public class Skeleton extends MegaWallsClass {
 
     @Override
     public Kit getKit() { return Kit.SKELETON; }
+
+    @Override
+    public ItemStack getAbilityItem() {
+        return new ItemStackCreator(Material.BOW, "§fSkeleton Bow").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
+    }
 
     @Override
     public Map<UpgradeCategory, List<Upgrade>> getUpgrades() {

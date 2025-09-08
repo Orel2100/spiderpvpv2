@@ -12,8 +12,6 @@ kits:
         costs: [1000, 2000, 3000, 4000, 5000]
       passive2:
         costs: [1000, 2000, 3000, 4000, 5000]
-      gathering:
-        costs: [500, 1000, 1500, 2000, 2500]
   dreadlord:
     cost: 9000
     upgrades:
@@ -25,8 +23,6 @@ kits:
         costs: [1000, 2000, 3000, 4000, 5000]
       passive2:
         costs: [1000, 2000, 3000, 4000, 5000]
-      gathering:
-        costs: [500, 1000, 1500, 2000, 2500]
   zombie:
     cost: 500
     upgrades:
@@ -38,8 +34,6 @@ kits:
         costs: [1000, 2000, 3000, 4000, 5000]
       passive2:
         costs: [1000, 2000, 3000, 4000, 5000]
-      gathering:
-        costs: [500, 1000, 1500, 2000, 2500]
   skeleton:
     cost: 1000
     upgrades:
@@ -51,8 +45,6 @@ kits:
         costs: [1000, 2000, 3000, 4000, 5000]
       passive2:
         costs: [1000, 2000, 3000, 4000, 5000]
-      gathering:
-        costs: [500, 1000, 1500, 2000, 2500]
   spider:
     cost: 2000
     upgrades:
@@ -64,8 +56,6 @@ kits:
         costs: [1000, 2000, 3000, 4000, 5000]
       passive2:
         costs: [1000, 2000, 3000, 4000, 5000]
-      gathering:
-        costs: [500, 1000, 1500, 2000, 2500]
   golem:
     cost: 3000
     upgrades:
@@ -77,8 +67,6 @@ kits:
         costs: [1000, 2000, 3000, 4000, 5000]
       passive2:
         costs: [1000, 2000, 3000, 4000, 5000]
-      gathering:
-        costs: [500, 1000, 1500, 2000, 2500]
   enderman:
     cost: 4000
     upgrades:
@@ -90,8 +78,6 @@ kits:
         costs: [1000, 2000, 3000, 4000, 5000]
       passive2:
         costs: [1000, 2000, 3000, 4000, 5000]
-      gathering:
-        costs: [500, 1000, 1500, 2000, 2500]
   pigman:
     cost: 7500
     upgrades:
@@ -103,5 +89,7 @@ kits:
         costs: [1000, 2000, 3000, 4000, 5000]
       passive2:
         costs: [1000, 2000, 3000, 4000, 5000]
-      gathering:
-        costs: [500, 1000, 1500, 2000, 2500]
+
+gathering:
+  coingathering:
+    costs: [1000, 2500, 5000, 7500, 12000]

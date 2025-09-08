@@ -5,6 +5,7 @@ import com.jules.kitpvp.abilities.Leap;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
+import com.jules.kitpvp.util.KitUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -41,15 +42,17 @@ public class Spider extends MegaWallsClass {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
 
-        items.add(new ItemStack(Material.STONE_SWORD));
-        items.add(new ItemStack(Material.COOKED_BEEF, 2 + (level > 1 ? 1 : 0) + (level > 3 ? 1 : 0) + (level > 4 ? 1 : 0)));
+        ItemStack sword = new ItemStackCreator(Material.STONE_SWORD, "§8Spider Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
+        items.add(new ItemStackCreator(Material.COOKED_BEEF, "§8Spider Steak").setAmount(2 + (level > 1 ? 1 : 0) + (level > 3 ? 1 : 0) + (level > 4 ? 1 : 0)).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
 
-        if (level > 2) items.set(0, new ItemStack(Material.IRON_SWORD));
-        if (level > 1) items.get(0).addEnchantment(Enchantment.DURABILITY, 1);
-        if (level > 3) items.get(0).addEnchantment(Enchantment.DURABILITY, 2);
-        if (level > 4) items.get(0).addEnchantment(Enchantment.DAMAGE_ALL, 1);
+        if (level > 2) sword.setType(Material.IRON_SWORD);
+        if (level > 1) sword.addEnchantment(Enchantment.DURABILITY, 1);
+        if (level > 3) sword.addEnchantment(Enchantment.DURABILITY, 2);
+        if (level > 4) sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
 
-        if (level > 4) items.add(new ItemStack(Material.LEATHER_HELMET));
+        items.add(0, sword);
+
+        if (level > 4) items.add(new ItemStackCreator(Material.LEATHER_HELMET, "§8Spider Helmet").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
 
         return items;
     }
@@ -58,6 +61,7 @@ public class Spider extends MegaWallsClass {
     public void onInteract(Player p, PlayerInteractEvent event) {
         if (!event.getAction().name().contains("RIGHT")) return;
         if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
+        if (!p.getItemInHand().hasItemMeta() || !p.getItemInHand().getItemMeta().hasLore() || !p.getItemInHand().getItemMeta().getLore().contains(KitUtils.KIT_ITEM_LORE)) return;
 
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.ABILITY).get(0));
@@ -102,6 +106,11 @@ public class Spider extends MegaWallsClass {
 
     @Override
     public Kit getKit() { return Kit.SPIDER; }
+
+    @Override
+    public ItemStack getAbilityItem() {
+        return new ItemStackCreator(Material.STONE_SWORD, "§8Spider Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
+    }
 
     @Override
     public Map<UpgradeCategory, List<Upgrade>> getUpgrades() {

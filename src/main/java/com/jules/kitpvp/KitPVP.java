@@ -47,6 +47,7 @@ public class KitPVP extends JavaPlugin {
         getCommand("lobby").setExecutor(new LobbyCommand());
         getCommand("gtest").setExecutor(new com.jules.kitpvp.commands.GatheringTestCommand());
         getCommand("addcoins").setExecutor(new com.jules.kitpvp.commands.AddCoinsCommand());
+        getCommand("atest").setExecutor(new com.jules.kitpvp.commands.ATestCommand());
 
         getServer().getPluginManager().registerEvents(new GUIListener(), this);
         getServer().getPluginManager().registerEvents(new OneOnOneListener(duelManager), this);

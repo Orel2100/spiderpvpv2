@@ -5,6 +5,7 @@ import com.jules.kitpvp.abilities.Beam;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
+import com.jules.kitpvp.util.KitUtils;
 import com.jules.kitpvp.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -42,7 +43,7 @@ public class Arcanist extends MegaWallsClass {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
 
-        items.add(new ItemStack(Material.STONE_SWORD));
+        items.add(new ItemStackCreator(Material.STONE_SWORD, "§bArcanist Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
         return items;
     }
 
@@ -50,6 +51,7 @@ public class Arcanist extends MegaWallsClass {
     public void onInteract(Player p, PlayerInteractEvent event) {
         if (!event.getAction().name().contains("RIGHT")) return;
         if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
+        if (!p.getItemInHand().hasItemMeta() || !p.getItemInHand().getItemMeta().hasLore() || !p.getItemInHand().getItemMeta().getLore().contains(KitUtils.KIT_ITEM_LORE)) return;
         if (!Utils.isUsingSword(p.getItemInHand())) return;
         if (p.getLevel() < 100) return;
 
@@ -89,6 +91,11 @@ public class Arcanist extends MegaWallsClass {
     @Override
     public Kit getKit() {
         return Kit.ARCANIST;
+    }
+
+    @Override
+    public ItemStack getAbilityItem() {
+        return new ItemStackCreator(Material.STONE_SWORD, "§bArcanist Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
     }
 
     @Override

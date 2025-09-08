@@ -5,6 +5,7 @@ import com.jules.kitpvp.abilities.Heal;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
+import com.jules.kitpvp.util.KitUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -41,20 +42,21 @@ public class Zombie extends MegaWallsClass {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
 
-        items.add(new ItemStack(Material.IRON_SWORD));
-        items.add(new ItemStack(Material.COOKED_BEEF, 2 + (level > 3 ? 1 : 0) + (level > 4 ? 1 : 0)));
+        ItemStack sword = new ItemStackCreator(Material.IRON_SWORD, "§2Zombie Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
+        items.add(new ItemStackCreator(Material.COOKED_BEEF, "§2Zombie Steak").setAmount(2 + (level > 3 ? 1 : 0) + (level > 4 ? 1 : 0)).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
 
-        ItemStack chestplate = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
+        ItemStack chestplate = new ItemStackCreator(Material.CHAINMAIL_CHESTPLATE, "§2Zombie Chestplate").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
         if (level > 1) chestplate.setType(Material.IRON_CHESTPLATE);
         if (level > 2) chestplate.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
         if (level > 4) chestplate.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
         items.add(chestplate);
 
         if (level > 3) {
-            ItemStack sword = items.get(0);
             sword.addEnchantment(Enchantment.DURABILITY, level - 3);
             if (level > 4) sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
         }
+
+        items.add(0, sword);
 
         return items;
     }
@@ -63,6 +65,7 @@ public class Zombie extends MegaWallsClass {
     public void onInteract(Player p, PlayerInteractEvent event) {
         if (!event.getAction().name().contains("RIGHT")) return;
         if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
+        if (!p.getItemInHand().hasItemMeta() || !p.getItemInHand().getItemMeta().hasLore() || !p.getItemInHand().getItemMeta().getLore().contains(KitUtils.KIT_ITEM_LORE)) return;
 
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.ABILITY).get(0));
@@ -103,6 +106,11 @@ public class Zombie extends MegaWallsClass {
 
     @Override
     public Kit getKit() { return Kit.ZOMBIE; }
+
+    @Override
+    public ItemStack getAbilityItem() {
+        return new ItemStackCreator(Material.IRON_SWORD, "§2Zombie Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
+    }
 
     @Override
     public Map<UpgradeCategory, List<Upgrade>> getUpgrades() {

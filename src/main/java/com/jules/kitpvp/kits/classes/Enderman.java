@@ -5,6 +5,7 @@ import com.jules.kitpvp.abilities.Teleport;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
+import com.jules.kitpvp.util.KitUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -42,25 +43,25 @@ public class Enderman extends MegaWallsClass {
 
         switch (level) {
             case 1:
-                items.add(new ItemStack(Material.IRON_SWORD));
-                items.add(new ItemStack(Material.COOKED_BEEF, 2));
+                items.add(new ItemStackCreator(Material.IRON_SWORD, "§5Enderman Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Material.COOKED_BEEF, "§5Enderman Steak").setAmount(2).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
                 break;
             case 2:
-                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DURABILITY, 1).build());
-                items.add(new ItemStack(Material.COOKED_BEEF, 2));
+                items.add(new ItemStackCreator(Material.IRON_SWORD, "§5Enderman Sword").addEnchantment(Enchantment.DURABILITY, 1).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Material.COOKED_BEEF, "§5Enderman Steak").setAmount(2).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
                 break;
             case 3:
-                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DURABILITY, 2).build());
-                items.add(new ItemStack(Material.COOKED_BEEF, 3));
+                items.add(new ItemStackCreator(Material.IRON_SWORD, "§5Enderman Sword").addEnchantment(Enchantment.DURABILITY, 2).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Material.COOKED_BEEF, "§5Enderman Steak").setAmount(3).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
                 break;
             case 4:
-                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 1).addEnchantment(Enchantment.DURABILITY, 2).build());
-                items.add(new ItemStack(Material.COOKED_BEEF, 3));
+                items.add(new ItemStackCreator(Material.IRON_SWORD, "§5Enderman Sword").addEnchantment(Enchantment.DAMAGE_ALL, 1).addEnchantment(Enchantment.DURABILITY, 2).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Material.COOKED_BEEF, "§5Enderman Steak").setAmount(3).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
                 break;
             case 5:
-                items.add(new ItemStack(Material.DIAMOND_SWORD));
-                items.add(new ItemStack(Material.COOKED_BEEF, 4));
-                items.add(new ItemStackCreator(Material.IRON_HELMET).addEnchantment(Enchantment.PROTECTION_FALL, 4).build());
+                items.add(new ItemStackCreator(Material.DIAMOND_SWORD, "§5Enderman Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Material.COOKED_BEEF, "§5Enderman Steak").setAmount(4).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+                items.add(new ItemStackCreator(Material.IRON_HELMET, "§5Enderman Helmet").addEnchantment(Enchantment.PROTECTION_FALL, 4).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
                 break;
         }
         return items;
@@ -70,6 +71,7 @@ public class Enderman extends MegaWallsClass {
     public void onInteract(Player p, PlayerInteractEvent event) {
         if (!event.getAction().name().contains("RIGHT")) return;
         if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
+        if (!p.getItemInHand().hasItemMeta() || !p.getItemInHand().getItemMeta().hasLore() || !p.getItemInHand().getItemMeta().getLore().contains(KitUtils.KIT_ITEM_LORE)) return;
 
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.ABILITY).get(0));
@@ -109,6 +111,11 @@ public class Enderman extends MegaWallsClass {
     @Override
     public Kit getKit() {
         return Kit.ENDERMAN;
+    }
+
+    @Override
+    public ItemStack getAbilityItem() {
+        return new ItemStackCreator(Material.IRON_SWORD, "§5Enderman Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
     }
 
     @Override

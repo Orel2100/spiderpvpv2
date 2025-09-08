@@ -42,3 +42,7 @@ commands:
     description: Adds coins to a player's balance
     usage: /addcoins <player> <amount>
     permission: kitpvp.admin
+  atest:
+    description: Opens the ability test GUI.
+    usage: /atest
+    permission: kitpvp.admin

@@ -2,6 +2,7 @@ package com.jules.kitpvp.kits.classes;
 
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.util.ItemStackCreator;
+import com.jules.kitpvp.util.KitUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -31,13 +32,13 @@ public class Hunter extends MegaWallsClass {
     @Override
     public List<ItemStack> getStartingItems(Player p) {
         List<ItemStack> items = new ArrayList<>();
-        items.add(new ItemStack(Material.STONE_SWORD));
-        items.add(new ItemStack(Material.BOW));
-        items.add(new ItemStack(Material.ARROW, 32));
-        items.add(new ItemStack(Material.LEATHER_HELMET));
-        items.add(new ItemStack(Material.LEATHER_CHESTPLATE));
-        items.add(new ItemStack(Material.LEATHER_LEGGINGS));
-        items.add(new ItemStack(Material.LEATHER_BOOTS));
+        items.add(new ItemStackCreator(Material.STONE_SWORD, "§aHunter Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        items.add(new ItemStackCreator(Material.BOW, "§aHunter Bow").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        items.add(new ItemStackCreator(Material.ARROW, "§aHunter Arrow").setAmount(32).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        items.add(new ItemStackCreator(Material.LEATHER_HELMET, "§aHunter Helmet").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        items.add(new ItemStackCreator(Material.LEATHER_CHESTPLATE, "§aHunter Chestplate").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        items.add(new ItemStackCreator(Material.LEATHER_LEGGINGS, "§aHunter Leggings").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        items.add(new ItemStackCreator(Material.LEATHER_BOOTS, "§aHunter Boots").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
         return items;
     }
 

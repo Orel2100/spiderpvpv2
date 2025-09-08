@@ -2,6 +2,7 @@ package com.jules.kitpvp.kits.classes;
 
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.util.ItemStackCreator;
+import com.jules.kitpvp.util.KitUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +32,7 @@ public class Pirate extends MegaWallsClass {
     @Override
     public List<ItemStack> getStartingItems(Player p) {
         List<ItemStack> items = new ArrayList<>();
-        items.add(new ItemStack(Material.IRON_SWORD));
+        items.add(new ItemStackCreator(Material.IRON_SWORD, "§cPirate Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
         return items;
     }
 

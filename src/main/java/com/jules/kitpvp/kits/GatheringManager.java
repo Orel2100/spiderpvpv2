@@ -2,13 +2,12 @@ package com.jules.kitpvp.kits;
 
 import com.jules.kitpvp.KitPVP;
 import org.bukkit.Material;
-import org.bukkit.event.Listener;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class GatheringManager implements Listener {
+public class GatheringManager {
 
     private final KitPVP plugin;
     private final List<Upgrade> gatheringUpgrades;
@@ -16,7 +15,6 @@ public class GatheringManager implements Listener {
     public GatheringManager(KitPVP plugin) {
         this.plugin = plugin;
         this.gatheringUpgrades = loadGatheringUpgrades();
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     private List<Upgrade> loadGatheringUpgrades() {

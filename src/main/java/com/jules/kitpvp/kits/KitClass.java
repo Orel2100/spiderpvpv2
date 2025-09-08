@@ -81,6 +81,6 @@ public abstract class KitClass {
     }
 
     public List<String> getLoreForUpgrade(Upgrade upgrade, int level) {
-        return Arrays.asList(upgrade.getDescription());
+        return new ArrayList<>(Arrays.asList(upgrade.getDescription()));
     }
 }

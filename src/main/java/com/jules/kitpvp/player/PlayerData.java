@@ -23,12 +23,14 @@ public class PlayerData {
         Configuration config = new Configuration(KitPVP.getInstance(), "playerdata/" + player.getUniqueId().toString());
 
         mPlayer.setCoins(config.getInt("coins"));
-        if (config.get("upgrades") != null) {
-            for (String upgradeName : config.getConfiguration().getConfigurationSection("upgrades").getKeys(false)) {
+        if (config.isConfigurationSection("upgrades")) {
+            for (String upgradeName : config.getConfigurationSection("upgrades").getKeys(false)) {
                 mPlayer.setUpgradeLevel(upgradeName, config.getInt("upgrades." + upgradeName));
             }
-        } else {
-            // New player, give default gathering upgrade
+        }
+
+        // Ensure every player has at least level 1 of Coin Gathering if they don't have it already.
+        if (mPlayer.getUpgradeLevel("Coin Gathering") == 0) {
             mPlayer.setUpgradeLevel("Coin Gathering", 1);
         }
     }

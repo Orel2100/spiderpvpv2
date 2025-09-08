@@ -40,6 +40,10 @@ public class MPlayer {
         return upgradeLevels.getOrDefault(upgrade.getName(), 0);
     }
 
+    public int getUpgradeLevel(String name) {
+        return upgradeLevels.getOrDefault(name, 0);
+    }
+
     public void setUpgradeLevel(Upgrade upgrade, int level) {
         upgradeLevels.put(upgrade.getName(), level);
     }

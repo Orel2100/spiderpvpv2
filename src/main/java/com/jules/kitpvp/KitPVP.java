@@ -64,6 +64,7 @@ public class KitPVP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EntityExplodeListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerItemConsumeListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
 
 
         getLogger().info("KitPVP has been enabled!");

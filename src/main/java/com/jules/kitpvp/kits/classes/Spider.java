@@ -62,24 +62,26 @@ public class Spider extends MegaWallsClass {
         if (!event.getAction().name().contains("RIGHT")) return;
         if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
         if (!p.getItemInHand().hasItemMeta() || !p.getItemInHand().getItemMeta().hasLore() || !p.getItemInHand().getItemMeta().getLore().contains(KitUtils.KIT_ITEM_LORE)) return;
-
+        if(p.getLevel() < 100) {
+            p.sendMessage(ChatColor.RED + "You don't have enough energy to use this ability!");
+            return;
+        }
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.ABILITY).get(0));
         Leap.use(p, 10 + (level - 1) * 5);
+        p.setLevel(0);
     }
 
     @Override
-    public void onDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player) || event.getCause() != EntityDamageEvent.DamageCause.FALL) return;
-        Player p = (Player) event.getEntity();
+    public void onLand(Player p) {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
-        if (level > 0 && event.getDamage() >= 4) {
+        if (level > 0) {
             double multiplier = level < 4 ? 2.0 : 2.5;
             double radius = 2.0 + (level - 1) * 0.5;
             p.getNearbyEntities(radius, radius, radius).forEach(entity -> {
                 if (entity instanceof Player && entity != p) {
-                    ((Player) entity).damage(event.getDamage() * multiplier, p);
+                    ((Player) entity).damage(4 * multiplier, p);
                 }
             });
         }

@@ -21,6 +21,10 @@ public class PlayerDamageListener implements Listener {
     public void onPlayerDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
+            if (event.getCause() == EntityDamageEvent.DamageCause.FALL && com.jules.kitpvp.abilities.Leap.leaping.contains(player)) {
+                event.setCancelled(true);
+                com.jules.kitpvp.abilities.Leap.leaping.remove(player);
+            }
             MPlayer mPlayer = MPlayer.getMPlayer(player.getUniqueId());
             if (mPlayer.getKitClass() != null) {
                 mPlayer.getKitClass().onDamage(event);

@@ -75,8 +75,13 @@ public class Skeleton extends MegaWallsClass {
             }
         }
 
+        if (p.getLevel() < 100) {
+            p.sendMessage(ChatColor.RED + "You don't have enough energy to use this ability!");
+            return;
+        }
         int explosiveLevel = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.ABILITY).get(0));
-        ExplosiveArrow.use(p, explosiveLevel);
+        ExplosiveArrow.use(p, explosiveLevel, event);
+        p.setLevel(0);
     }
 
     @Override
@@ -87,6 +92,23 @@ public class Skeleton extends MegaWallsClass {
             int duration = 2 + (level > 1 ? 1 : 0) + (level > 3 ? 1 : 0) + (level > 4 ? 1 : 0);
             int regenLevel = level < 3 ? 1 : 2;
             p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * duration, regenLevel - 1));
+        }
+    }
+
+    @Override
+    public void onProjectileHit(org.bukkit.event.entity.ProjectileHitEvent event) {
+        if (event.getEntity() instanceof org.bukkit.entity.Arrow) {
+            org.bukkit.entity.Arrow arrow = (org.bukkit.entity.Arrow) event.getEntity();
+            if (ExplosiveArrow.exArrow.containsKey(arrow)) {
+                arrow.getWorld().createExplosion(arrow.getLocation(), 2.0f, false);
+                double damage = ExplosiveArrow.exArrow.get(arrow);
+                for (org.bukkit.entity.Entity entity : arrow.getNearbyEntities(2.0, 2.0, 2.0)) {
+                    if (entity instanceof org.bukkit.entity.Player && entity != arrow.getShooter()) {
+                        ((org.bukkit.entity.Player) entity).damage(damage, (org.bukkit.entity.Player) arrow.getShooter());
+                    }
+                }
+                ExplosiveArrow.exArrow.remove(arrow);
+            }
         }
     }
 

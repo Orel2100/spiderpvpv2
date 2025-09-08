@@ -66,10 +66,15 @@ public class Zombie extends MegaWallsClass {
         if (!event.getAction().name().contains("RIGHT")) return;
         if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
         if (!p.getItemInHand().hasItemMeta() || !p.getItemInHand().getItemMeta().hasLore() || !p.getItemInHand().getItemMeta().getLore().contains(KitUtils.KIT_ITEM_LORE)) return;
+        if (p.getLevel() < 100) {
+            p.sendMessage(ChatColor.RED + "You don't have enough energy to use this ability!");
+            return;
+        }
 
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.ABILITY).get(0));
         Heal.use(p, (int) (2.0 + (level - 1) * 0.5));
+        p.setLevel(0);
     }
 
     @Override

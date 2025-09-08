@@ -21,10 +21,12 @@ public class EffectUtils {
     }
 
     public static void playFirework(org.bukkit.World world, org.bukkit.Location location, org.bukkit.FireworkEffect fireworkEffect) {
-        org.bukkit.entity.Firework fw = (org.bukkit.entity.Firework) world.spawnEntity(location, org.bukkit.entity.EntityType.FIREWORK);
-        org.bukkit.inventory.meta.FireworkMeta fwm = fw.getFireworkMeta();
-        fwm.addEffect(fireworkEffect);
-        fwm.setPower(1);
-        fw.setFireworkMeta(fwm);
+        org.bukkit.entity.Firework fw = (org.bukkit.entity.Firework) world.spawn(location, org.bukkit.entity.Firework.class, firework -> {
+            org.bukkit.inventory.meta.FireworkMeta fwm = firework.getFireworkMeta();
+            fwm.addEffect(fireworkEffect);
+            fwm.setPower(0);
+            firework.setFireworkMeta(fwm);
+            firework.detonate();
+        });
     }
 }

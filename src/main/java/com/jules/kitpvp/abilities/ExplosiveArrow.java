@@ -14,9 +14,8 @@ public class ExplosiveArrow {
 
     public static HashMap<Arrow, Double> exArrow = new HashMap<>();
 
-    public static void use(final Player p, final int upgrade) {
-        final Arrow a = p.launchProjectile(Arrow.class);
-        a.setVelocity(p.getEyeLocation().getDirection().multiply(2.5));
+    public static void use(final Player p, final int upgrade, org.bukkit.event.entity.EntityShootBowEvent event) {
+        final Arrow a = (Arrow) event.getProjectile();
         a.setShooter(p);
         double damage = 4.0 + (upgrade - 1) * 0.5;
         exArrow.put(a, damage);

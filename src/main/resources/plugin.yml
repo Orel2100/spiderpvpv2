@@ -38,3 +38,7 @@ commands:
   gtest:
     description: Gives you a pickaxe and some iron ores to test the gathering ability
     usage: /gtest
+  addcoins:
+    description: Adds coins to a player's balance
+    usage: /addcoins <player> <amount>
+    permission: kitpvp.admin

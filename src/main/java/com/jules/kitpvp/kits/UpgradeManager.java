@@ -55,4 +55,25 @@ public class UpgradeManager {
             }
         }
     }
+
+    public void attemptGlobalUpgrade(Player player) {
+        MPlayer mPlayer = MPlayer.getMPlayer(player.getUniqueId());
+        int currentLevel = mPlayer.getGatheringLevel();
+        List<Integer> costs = com.jules.kitpvp.KitPVP.getInstance().getConfig().getIntegerList("global-upgrades.gathering.costs");
+
+        if (currentLevel >= costs.size()) {
+            player.sendMessage(ChatColor.RED + "You have already reached the maximum level for this upgrade!");
+            return;
+        }
+
+        int cost = costs.get(currentLevel);
+        if (mPlayer.getCoins() >= cost) {
+            mPlayer.setCoins(mPlayer.getCoins() - cost);
+            mPlayer.setGatheringLevel(currentLevel + 1);
+            player.sendMessage(ChatColor.GREEN + "You have upgraded Gathering to level " + (currentLevel + 1) + "!");
+            new com.jules.kitpvp.gui.GatheringUpgradeGUI(player).open(player); // Re-open the GUI
+        } else {
+            player.sendMessage(ChatColor.RED + "You cannot afford this upgrade!");
+        }
+    }
 }

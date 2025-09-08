@@ -5,13 +5,12 @@ import com.jules.kitpvp.abilities.Leap;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
+import com.jules.kitpvp.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -24,9 +23,9 @@ public class Spider extends MegaWallsClass {
     public Spider() {
         super(
                 "Spider",
-                new String[]{"An agile class with a focus on", "mobility and sudden, high-impact attacks."},
+                new String[]{"A nimble and venomous creature."},
                 KitPVP.getInstance().getConfig().getInt("kits.spider.cost", 2000),
-                new ItemStackCreator(Material.SPIDER_EYE, "§8Spider").build()
+                new ItemStackCreator(Material.SPIDER_EYE, "§cSpider").build()
         );
     }
 
@@ -41,16 +40,23 @@ public class Spider extends MegaWallsClass {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
 
-        items.add(new ItemStack(Material.STONE_SWORD));
-        items.add(new ItemStack(Material.COOKED_BEEF, 2 + (level > 1 ? 1 : 0) + (level > 3 ? 1 : 0) + (level > 4 ? 1 : 0)));
+        items.add(new ItemStack(Material.IRON_SWORD));
+        items.add(new ItemStack(Material.COOKED_BEEF, 2));
 
-        if (level > 2) items.set(0, new ItemStack(Material.IRON_SWORD));
-        if (level > 1) items.get(0).addEnchantment(Enchantment.DURABILITY, 1);
-        if (level > 3) items.get(0).addEnchantment(Enchantment.DURABILITY, 2);
-        if (level > 4) items.get(0).addEnchantment(Enchantment.DAMAGE_ALL, 1);
-
-        if (level > 4) items.add(new ItemStack(Material.LEATHER_HELMET));
-
+        switch (level) {
+            case 2:
+                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DURABILITY, 1).build());
+                break;
+            case 3:
+                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 1).build());
+                break;
+            case 4:
+                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 1).addEnchantment(Enchantment.DURABILITY, 1).build());
+                break;
+            case 5:
+                items.add(new ItemStackCreator(Material.DIAMOND_SWORD).build());
+                break;
+        }
         return items;
     }
 
@@ -58,50 +64,39 @@ public class Spider extends MegaWallsClass {
     public void onInteract(Player p, PlayerInteractEvent event) {
         if (!event.getAction().name().contains("RIGHT")) return;
         if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
+        if (!Utils.isUsingSword(p.getItemInHand())) return;
 
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.ABILITY).get(0));
-        Leap.use(p, 10 + (level - 1) * 5);
+        Leap.use(p, level);
     }
 
     @Override
-    public void onDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player) || event.getCause() != EntityDamageEvent.DamageCause.FALL) return;
-        Player p = (Player) event.getEntity();
-        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
-        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
-        if (level > 0 && event.getDamage() >= 4) {
-            double multiplier = level < 4 ? 2.0 : 2.5;
-            double radius = 2.0 + (level - 1) * 0.5;
-            p.getNearbyEntities(radius, radius, radius).forEach(entity -> {
-                if (entity instanceof Player && entity != p) {
-                    ((Player) entity).damage(event.getDamage() * multiplier, p);
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onDeath(PlayerDeathEvent event) {
-        Player p = event.getEntity();
-        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
-        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_2).get(0));
-        if (level > 0) {
-            double chance = 0.1 + (level - 1) * 0.05;
-            if (new Random().nextDouble() < chance) {
-                int spiderCount = level < 3 ? 1 : (level < 5 ? 2 : 3);
-                for (int i = 0; i < spiderCount; i++) {
-                    p.getWorld().spawnEntity(p.getLocation(), EntityType.SPIDER);
+    public void onDamageByEntity(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player) {
+            Player p = (Player) event.getDamager();
+            MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
+            if (level > 0) {
+                double chance = 0.1 + (level - 1) * 0.05;
+                if (new Random().nextDouble() < chance) {
+                    if (event.getEntity() instanceof Player) {
+                        ((Player) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.POISON, 20 * 3, 0));
+                    }
                 }
             }
         }
     }
 
     @Override
-    public List<PotionEffect> getPassiveEffects(Player p) { return new ArrayList<>(); }
+    public List<PotionEffect> getPassiveEffects(Player p) {
+        return new ArrayList<>();
+    }
 
     @Override
-    public Kit getKit() { return Kit.SPIDER; }
+    public Kit getKit() {
+        return Kit.SPIDER;
+    }
 
     @Override
     public Map<UpgradeCategory, List<Upgrade>> getUpgrades() {
@@ -111,33 +106,46 @@ public class Spider extends MegaWallsClass {
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
                 new Upgrade("Spider Kit", "Upgrade your starting kit.", 5,
                         plugin.getConfig().getIntegerList("kits.spider.upgrades.kit.costs"),
-                        Arrays.asList(Material.STONE_SWORD, Material.STONE_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.LEATHER_HELMET))
+                        Arrays.asList(Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.DIAMOND_SWORD, Material.DIAMOND_SWORD))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Leap", "Leap up to " + ChatColor.GREEN + "10" + ChatColor.GRAY + " blocks forward.", 5,
+                new Upgrade("Leap", "Leap forward a short distance.", 5,
                         plugin.getConfig().getIntegerList("kits.spider.upgrades.ability.costs"),
                         Arrays.asList(Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Drop Shock", "Deals " + ChatColor.RED + "200%" + ChatColor.GRAY + " of the fall damage you take in a 2-block radius upon landing.", 5,
+                new Upgrade("Venom Strike", "Chance to apply Poison on hit.", 5,
                         plugin.getConfig().getIntegerList("kits.spider.upgrades.passive1.costs"),
-                        Arrays.asList(Material.ANVIL, Material.ANVIL, Material.ANVIL, Material.ANVIL, Material.ANVIL))
-        ));
-
-        upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Nest Egg", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to spawn 1 spider upon death.", 5,
-                        plugin.getConfig().getIntegerList("kits.spider.upgrades.passive2.costs"),
                         Arrays.asList(Material.SPIDER_EYE, Material.SPIDER_EYE, Material.SPIDER_EYE, Material.SPIDER_EYE, Material.SPIDER_EYE))
         ));
 
-        upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Spiderman", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to find an extra string when mining stone.", 5,
-                        plugin.getConfig().getIntegerList("kits.spider.upgrades.gathering.costs"),
-                        Arrays.asList(Material.STRING, Material.STRING, Material.STRING, Material.STRING, Material.STRING))
+        upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
+                new Upgrade("Spiderling", "Chance to spawn a friendly spider on hit.", 5,
+                        plugin.getConfig().getIntegerList("kits.spider.upgrades.passive2.costs"),
+                        Arrays.asList(Material.SPAWNER, Material.SPAWNER, Material.SPAWNER, Material.SPAWNER, Material.SPAWNER))
         ));
 
         return upgrades;
+    }
+
+    @Override
+    public List<String> getLoreForUpgrade(Upgrade upgrade, int level) {
+        List<String> lore = new ArrayList<>();
+        lore.add(upgrade.getDescription());
+        lore.add("");
+        switch (upgrade.getName()) {
+            case "Leap":
+                lore.add(ChatColor.GRAY + "Distance: " + ChatColor.GREEN + (5 + level) + " blocks");
+                break;
+            case "Venom Strike":
+                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (10 + (level - 1) * 5) + "%");
+                break;
+            case "Spiderling":
+                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (5 + (level - 1) * 2.5) + "%");
+                break;
+        }
+        return lore;
     }
 }

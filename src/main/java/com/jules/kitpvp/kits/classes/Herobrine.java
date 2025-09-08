@@ -10,7 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -111,19 +110,6 @@ public class Herobrine extends MegaWallsClass {
     }
 
     @Override
-    public void onBlockBreak(BlockBreakEvent e) {
-        if (e.getBlock().getType().name().endsWith("_ORE")) {
-            MPlayer mPlayer = MPlayer.getMPlayer(e.getPlayer().getUniqueId());
-            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.GATHERING).get(0));
-            if (level > 0) {
-                mPlayer.setCoins(mPlayer.getCoins() + level * 10);
-                e.getPlayer().sendMessage(ChatColor.GOLD + "+ " + level * 10 + " coins!");
-            }
-        }
-    }
-
-
-    @Override
     public List<PotionEffect> getPassiveEffects(Player p) {
         return new ArrayList<>();
     }
@@ -162,12 +148,6 @@ public class Herobrine extends MegaWallsClass {
                         Arrays.asList(Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER))
         ));
 
-        upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Treasure Hunter", "Chance to find extra treasures when mining.", 5,
-                        plugin.getConfig().getIntegerList("kits.herobrine.upgrades.gathering.costs"),
-                        Arrays.asList(Material.GOLD_INGOT, Material.GOLD_INGOT, Material.GOLD_INGOT, Material.GOLD_INGOT, Material.GOLD_INGOT))
-        ));
-
         return upgrades;
     }
 
@@ -185,9 +165,6 @@ public class Herobrine extends MegaWallsClass {
                 break;
             case "Flurry":
                 lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (27 + (level - 1) * 6) + "%");
-                break;
-            case "Treasure Hunter":
-                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (10 + (level - 1) * 11) + "%");
                 break;
         }
         return lore;

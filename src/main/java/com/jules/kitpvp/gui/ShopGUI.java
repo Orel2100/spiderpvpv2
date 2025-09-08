@@ -34,6 +34,13 @@ public class ShopGUI implements InventoryHolder {
         heroKitsMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click to view hero kits."));
         heroKits.setItemMeta(heroKitsMeta);
         inventory.setItem(14, heroKits);
+
+        ItemStack gatheringUpgrades = new ItemStack(Material.GOLDEN_PICKAXE);
+        ItemMeta gatheringMeta = gatheringUpgrades.getItemMeta();
+        gatheringMeta.setDisplayName(ChatColor.GOLD + "Global Gathering Upgrades");
+        gatheringMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click to upgrade your gathering ability."));
+        gatheringUpgrades.setItemMeta(gatheringMeta);
+        inventory.setItem(22, gatheringUpgrades);
     }
 
     public void open(Player player) {

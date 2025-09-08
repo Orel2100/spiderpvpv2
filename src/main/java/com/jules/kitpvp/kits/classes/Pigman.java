@@ -5,13 +5,12 @@ import com.jules.kitpvp.abilities.BurningSoul;
 import com.jules.kitpvp.kits.*;
 import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
+import com.jules.kitpvp.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -24,7 +23,7 @@ public class Pigman extends MegaWallsClass {
     public Pigman() {
         super(
                 "Pigman",
-                new String[]{"A strong and tanky kit that gets", "stronger as it takes damage."},
+                new String[]{"A powerful warrior with a fiery soul."},
                 KitPVP.getInstance().getConfig().getInt("kits.pigman.cost", 7500),
                 new ItemStackCreator(Material.PORKCHOP, "§dPigman").build()
         );
@@ -32,7 +31,7 @@ public class Pigman extends MegaWallsClass {
 
     @Override
     public KitStat getKitStat() {
-        return new KitStat(3, 4, 2, 3, 3);
+        return new KitStat(3, 4, 2, 3, 4);
     }
 
     @Override
@@ -44,24 +43,24 @@ public class Pigman extends MegaWallsClass {
         switch (level) {
             case 1:
                 items.add(new ItemStack(Material.IRON_SWORD));
-                items.add(new ItemStack(Material.COOKED_BEEF, 2));
+                items.add(new ItemStack(Material.COOKED_PORKCHOP, 2));
                 break;
             case 2:
                 items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DURABILITY, 1).build());
-                items.add(new ItemStack(Material.COOKED_BEEF, 3));
+                items.add(new ItemStack(Material.COOKED_PORKCHOP, 2));
                 break;
             case 3:
-                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DURABILITY, 2).build());
-                items.add(new ItemStack(Material.COOKED_BEEF, 3));
+                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 1).build());
+                items.add(new ItemStack(Material.COOKED_PORKCHOP, 3));
                 break;
             case 4:
-                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 1).addEnchantment(Enchantment.DURABILITY, 2).build());
-                items.add(new ItemStack(Material.COOKED_BEEF, 4));
+                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 1).addEnchantment(Enchantment.DURABILITY, 1).build());
+                items.add(new ItemStack(Material.COOKED_PORKCHOP, 3));
                 break;
             case 5:
-                items.add(new ItemStackCreator(Material.IRON_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 2).addEnchantment(Enchantment.DURABILITY, 3).build());
-                items.add(new ItemStack(Material.COOKED_BEEF, 5));
-                items.add(new ItemStack(Material.IRON_CHESTPLATE));
+                items.add(new ItemStackCreator(Material.DIAMOND_SWORD).build());
+                items.add(new ItemStack(Material.COOKED_PORKCHOP, 4));
+                items.add(Utils.getPotionRegen(1, 1));
                 break;
         }
         return items;
@@ -71,6 +70,7 @@ public class Pigman extends MegaWallsClass {
     public void onInteract(Player p, PlayerInteractEvent event) {
         if (!event.getAction().name().contains("RIGHT")) return;
         if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
+        if (!Utils.isUsingSword(p.getItemInHand())) return;
 
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.ABILITY).get(0));
@@ -78,40 +78,23 @@ public class Pigman extends MegaWallsClass {
     }
 
     @Override
-    public void onDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
-        Player p = (Player) event.getEntity();
-        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
-        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_2).get(0));
-        if (level > 0 && p.getHealth() <= 12) {
-            int duration = (int) (2 + (level - 1) * 0.5);
-            int resistanceLevel = level < 5 ? 2 : 3;
-            p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * duration, resistanceLevel -1));
-        }
-    }
-
-    @Override
     public void onDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) {
-            return;
+        if (event.getDamager() instanceof Player) {
+            Player p = (Player) event.getDamager();
+            MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
+            if (level > 0) {
+                p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * (int) (1 + (level * 0.5)), 0));
+            }
         }
-        Player p = (Player) event.getDamager();
-        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
-        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
-        if (level > 0) {
-            double chance = 0.02 + (level - 1) * 0.01;
-            if (new Random().nextDouble() < chance) {
-                int resistanceLevel = level < 4 ? 1 : 2;
-                int regenLevel = level < 5 ? 1 : 2;
-                p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 8, resistanceLevel - 1));
-                p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 8, regenLevel - 1));
-                for (Entity entity : p.getNearbyEntities(5, 5, 5)) {
-                    if (entity instanceof Player && entity != p) {
-                        ((Player) entity).addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 8, resistanceLevel - 1));
-                        ((Player) entity).addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * 8, regenLevel - 1));
-                    }
+        if (event.getEntity() instanceof Player) {
+            Player p = (Player) event.getEntity();
+            MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_2).get(0));
+            if (level > 0) {
+                double chance = 0.05 + (level - 1) * 0.025;
+                if (new Random().nextDouble() < chance) {
+                    p.setFireTicks(20 * 3);
                 }
             }
         }
@@ -135,32 +118,27 @@ public class Pigman extends MegaWallsClass {
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
                 new Upgrade("Pigman Kit", "Upgrade your starting kit.", 5,
                         plugin.getConfig().getIntegerList("kits.pigman.upgrades.kit.costs"),
-                        Arrays.asList(Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_CHESTPLATE))
+                        Arrays.asList(Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.DIAMOND_SWORD, Material.DIAMOND_SWORD))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Burning Soul", "Summons a fire bubble that deals damage over time.", 5,
+                new Upgrade("Burning Soul", "Gain Regeneration and Resistance.", 5,
                         plugin.getConfig().getIntegerList("kits.pigman.upgrades.ability.costs"),
-                        Arrays.asList(Material.FIRE_CHARGE, Material.FIRE_CHARGE, Material.FIRE_CHARGE, Material.FIRE_CHARGE, Material.FIRE_CHARGE))
+                        Arrays.asList(Material.BLAZE_POWDER, Material.BLAZE_POWDER, Material.BLAZE_POWDER, Material.BLAZE_POWDER, Material.BLAZE_POWDER))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Valor", "Chance to give Resistance and Regen to you and nearby teammates.", 5,
+                new Upgrade("Endurance", "Gain Strength on hit.", 5,
                         plugin.getConfig().getIntegerList("kits.pigman.upgrades.passive1.costs"),
-                        Arrays.asList(Material.GOLDEN_APPLE, Material.GOLDEN_APPLE, Material.GOLDEN_APPLE, Material.GOLDEN_APPLE, Material.GOLDEN_APPLE))
+                        Arrays.asList(Material.PORKCHOP, Material.PORKCHOP, Material.PORKCHOP, Material.PORKCHOP, Material.PORKCHOP))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Endurance", "Gain Resistance when below 6 hearts.", 5,
+                new Upgrade("Valor", "Chance to set enemies on fire.", 5,
                         plugin.getConfig().getIntegerList("kits.pigman.upgrades.passive2.costs"),
-                        Arrays.asList(Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE))
+                        Arrays.asList(Material.FLINT_AND_STEEL, Material.FLINT_AND_STEEL, Material.FLINT_AND_STEEL, Material.FLINT_AND_STEEL, Material.FLINT_AND_STEEL))
         ));
 
-        upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
-                new Upgrade("Resourcefulness", "Chance to find an extra piece of iron armor in mining chests.", 5,
-                        plugin.getConfig().getIntegerList("kits.pigman.upgrades.gathering.costs"),
-                        Arrays.asList(Material.CHEST, Material.CHEST, Material.CHEST, Material.CHEST, Material.CHEST))
-        ));
         return upgrades;
     }
 
@@ -171,19 +149,13 @@ public class Pigman extends MegaWallsClass {
         lore.add("");
         switch (upgrade.getName()) {
             case "Burning Soul":
-                lore.add(ChatColor.GRAY + "Damage: " + ChatColor.RED + (2.0 + (level - 1) * 0.5));
-                break;
-            case "Valor":
-                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (2.0 + (level - 1) * 1.0) + "%");
-                lore.add(ChatColor.GRAY + "Resistance: " + ChatColor.AQUA + (level < 4 ? "I" : "II"));
-                lore.add(ChatColor.GRAY + "Regen: " + ChatColor.AQUA + (level < 5 ? "I" : "II"));
+                lore.add(ChatColor.GRAY + "Duration: " + ChatColor.GREEN + (4 + level) + "s");
                 break;
             case "Endurance":
-                lore.add(ChatColor.GRAY + "Duration: " + ChatColor.GREEN + (2.0 + (level - 1) * 0.5) + "s");
-                lore.add(ChatColor.GRAY + "Resistance: " + ChatColor.AQUA + (level < 5 ? "II" : "III"));
+                lore.add(ChatColor.GRAY + "Duration: " + ChatColor.GREEN + (1.0 + (level - 1) * 0.5) + "s");
                 break;
-            case "Resourcefulness":
-                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (10 + (level - 1) * 10) + "%");
+            case "Valor":
+                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (5 + (level - 1) * 2.5) + "%");
                 break;
         }
         return lore;

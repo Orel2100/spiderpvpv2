@@ -23,9 +23,9 @@ public class GatheringManager implements Listener {
         List<Upgrade> upgrades = new java.util.ArrayList<>();
         org.bukkit.configuration.file.FileConfiguration config = plugin.getConfig();
 
-        upgrades.add(new Upgrade("Fortune", "Chance to get double ores.", 3,
+        upgrades.add(new Upgrade("Fortune", "Chance to get double ores.", 5,
                 config.getIntegerList("gathering.fortune.costs"),
-                Arrays.asList(Material.COAL_ORE, Material.IRON_ORE, Material.GOLD_ORE)));
+                Arrays.asList(Material.COAL_ORE, Material.IRON_ORE, Material.GOLD_ORE, Material.DIAMOND_ORE, Material.EMERALD_ORE)));
 
         upgrades.add(new Upgrade("Excavator", "Chance to get triple ores.", 3,
                 config.getIntegerList("gathering.excavator.costs"),
@@ -85,7 +85,11 @@ public class GatheringManager implements Listener {
         // Fortune
         int fortuneLevel = mPlayer.getUpgradeLevel(gatheringUpgrades.get(0));
         if (fortuneLevel > 0) {
-            if (event.getBlock().getType().name().endsWith("_ORE")) {
+            if (event.getBlock().getType() == Material.IRON_ORE) {
+                int coins = (int) (10 * Math.pow(2, fortuneLevel - 1));
+                mPlayer.setCoins(mPlayer.getCoins() + coins);
+                event.getPlayer().sendMessage(org.bukkit.ChatColor.GOLD + "+ " + coins + " coins!");
+            } else if (event.getBlock().getType().name().endsWith("_ORE")) {
                 double chance = 0.1 + (fortuneLevel - 1) * 0.1;
                 if (new java.util.Random().nextDouble() < chance) {
                     event.getBlock().getDrops().forEach(itemStack -> event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), itemStack));

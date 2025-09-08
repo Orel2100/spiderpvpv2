@@ -43,6 +43,7 @@ public class KitPVP extends JavaPlugin {
         getCommand("set1v1").setExecutor(new Set1v1Command());
         getCommand("upgrade").setExecutor(new UpgradeCommand());
         getCommand("lobby").setExecutor(new LobbyCommand());
+        getCommand("gtest").setExecutor(new com.jules.kitpvp.commands.GatheringTestCommand());
 
         getServer().getPluginManager().registerEvents(new GUIListener(), this);
         getServer().getPluginManager().registerEvents(new OneOnOneListener(duelManager), this);

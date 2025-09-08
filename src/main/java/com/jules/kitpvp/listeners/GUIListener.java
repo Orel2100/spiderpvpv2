@@ -29,13 +29,19 @@ public class GUIListener implements Listener {
             MPlayer mPlayer = MPlayer.getMPlayer(player.getUniqueId());
             mPlayer.setKit(kit);
             new UpgradeGUI(mPlayer).open(player);
-        } else if (holder instanceof UpgradeGUI) {
+        } else if (holder instanceof com.jules.kitpvp.gui.ShopGUI) {
             event.setCancelled(true);
             if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
                 return;
             }
             if (event.getCurrentItem().getType() == Material.GOLDEN_PICKAXE) {
                 new com.jules.kitpvp.gui.GatheringGUI(MPlayer.getMPlayer(player.getUniqueId())).open(player);
+                return;
+            }
+            // Handle other shop items if necessary
+        } else if (holder instanceof UpgradeGUI) {
+            event.setCancelled(true);
+            if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
                 return;
             }
             KitPVP.getInstance().getUpgradeManager().attemptPurchase(player, event.getCurrentItem().getItemMeta().getDisplayName());

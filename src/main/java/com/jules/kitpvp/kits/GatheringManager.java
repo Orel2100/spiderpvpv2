@@ -23,17 +23,9 @@ public class GatheringManager implements Listener {
         List<Upgrade> upgrades = new java.util.ArrayList<>();
         org.bukkit.configuration.file.FileConfiguration config = plugin.getConfig();
 
-        upgrades.add(new Upgrade("Fortune", "Chance to get double ores.", 5,
-                config.getIntegerList("gathering.fortune.costs"),
-                Arrays.asList(Material.COAL_ORE, Material.IRON_ORE, Material.GOLD_ORE, Material.DIAMOND_ORE, Material.EMERALD_ORE)));
-
-        upgrades.add(new Upgrade("Excavator", "Chance to get triple ores.", 3,
-                config.getIntegerList("gathering.excavator.costs"),
-                Arrays.asList(Material.DIAMOND_PICKAXE, Material.DIAMOND_PICKAXE, Material.DIAMOND_PICKAXE)));
-
-        upgrades.add(new Upgrade("Prospector", "Chance to find gold nuggets when mining stone.", 3,
-                config.getIntegerList("gathering.prospector.costs"),
-                Arrays.asList(Material.GOLD_NUGGET, Material.GOLD_NUGGET, Material.GOLD_NUGGET)));
+        upgrades.add(new Upgrade("Coin Gathering", "Grants coins for mining iron ore.", 5,
+                config.getIntegerList("gathering.coingathering.costs"),
+                Arrays.asList(Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE)));
 
         return upgrades;
     }
@@ -82,41 +74,13 @@ public class GatheringManager implements Listener {
     public void onBlockBreak(org.bukkit.event.block.BlockBreakEvent event) {
         com.jules.kitpvp.player.MPlayer mPlayer = com.jules.kitpvp.player.MPlayer.getMPlayer(event.getPlayer().getUniqueId());
 
-        // Fortune
-        int fortuneLevel = mPlayer.getUpgradeLevel(gatheringUpgrades.get(0));
-        if (fortuneLevel > 0) {
+        int coinGatheringLevel = mPlayer.getUpgradeLevel(gatheringUpgrades.get(0));
+        if (coinGatheringLevel > 0) {
             if (event.getBlock().getType() == Material.IRON_ORE) {
-                int coins = (int) (10 * Math.pow(2, fortuneLevel - 1));
+                event.setDropItems(false);
+                int coins = (int) (10 * Math.pow(2, coinGatheringLevel - 1));
                 mPlayer.setCoins(mPlayer.getCoins() + coins);
                 event.getPlayer().sendMessage(org.bukkit.ChatColor.GOLD + "+ " + coins + " coins!");
-            } else if (event.getBlock().getType().name().endsWith("_ORE")) {
-                double chance = 0.1 + (fortuneLevel - 1) * 0.1;
-                if (new java.util.Random().nextDouble() < chance) {
-                    event.getBlock().getDrops().forEach(itemStack -> event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), itemStack));
-                }
-            }
-        }
-
-        // Excavator
-        int excavatorLevel = mPlayer.getUpgradeLevel(gatheringUpgrades.get(1));
-        if (excavatorLevel > 0) {
-            if (event.getBlock().getType().name().endsWith("_ORE")) {
-                double chance = 0.05 + (excavatorLevel - 1) * 0.05;
-                if (new java.util.Random().nextDouble() < chance) {
-                    event.getBlock().getDrops().forEach(itemStack -> event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), itemStack));
-                    event.getBlock().getDrops().forEach(itemStack -> event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), itemStack));
-                }
-            }
-        }
-
-        // Prospector
-        int prospectorLevel = mPlayer.getUpgradeLevel(gatheringUpgrades.get(2));
-        if (prospectorLevel > 0) {
-            if (event.getBlock().getType() == Material.STONE) {
-                double chance = 0.01 + (prospectorLevel - 1) * 0.01;
-                if (new java.util.Random().nextDouble() < chance) {
-                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new org.bukkit.inventory.ItemStack(Material.GOLD_NUGGET));
-                }
             }
         }
     }

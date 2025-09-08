@@ -62,9 +62,6 @@ public class UpgradeGUI implements InventoryHolder {
         // Set up stats and prestige
         setupStats();
         setupPrestige();
-
-        // Add gathering upgrades button
-        inv.setItem(45, new ItemStackCreator(Material.GOLDEN_PICKAXE, "§aGathering Upgrades").addLoreLine("§7Click to view gathering upgrades.").build());
     }
 
     private ItemStack createUpgradeItem(Upgrade upgrade, int tier, int currentLevel) {

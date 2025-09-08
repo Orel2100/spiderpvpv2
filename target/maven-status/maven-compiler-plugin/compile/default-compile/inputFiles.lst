@@ -6,8 +6,8 @@
 /app/src/main/java/com/jules/kitpvp/listeners/PlayerDeathListener.java
 /app/src/main/java/com/jules/kitpvp/kits/UpgradeCategory.java
 /app/src/main/java/com/jules/kitpvp/player/PlayerData.java
-/app/src/main/java/com/jules/kitpvp/gui/GatheringUpgradeGUI.java
 /app/src/main/java/com/jules/kitpvp/commands/Set1v1Command.java
+/app/src/main/java/com/jules/kitpvp/commands/SetSpawnCommand.java
 /app/src/main/java/com/jules/kitpvp/abilities/Heal.java
 /app/src/main/java/com/jules/kitpvp/listeners/PlayerJoinListener.java
 /app/src/main/java/com/jules/kitpvp/listeners/PlayerItemConsumeListener.java
@@ -61,6 +61,7 @@
 /app/src/main/java/com/jules/kitpvp/kits/classes/Dreadlord.java
 /app/src/main/java/com/jules/kitpvp/kits/KitClass.java
 /app/src/main/java/com/jules/kitpvp/gui/UpgradeGUI.java
+/app/src/main/java/com/jules/kitpvp/game/GameManager.java
 /app/src/main/java/com/jules/kitpvp/kits/classes/Skeleton.java
 /app/src/main/java/com/jules/kitpvp/commands/ClassCommand.java
 /app/src/main/java/com/jules/kitpvp/abilities/IronPunch.java

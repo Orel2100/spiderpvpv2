@@ -8,6 +8,7 @@ import com.jules.kitpvp.commands.Set1v1Command;
 import com.jules.kitpvp.commands.SetLobbyCommand;
 import com.jules.kitpvp.commands.UpgradeCommand;
 import com.jules.kitpvp.duel.DuelManager;
+import com.jules.kitpvp.game.GameManager;
 import com.jules.kitpvp.listeners.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,6 +23,7 @@ public class KitPVP extends JavaPlugin {
     private ArenaManager arenaManager;
     private UpgradeManager upgradeManager;
     private DuelManager duelManager;
+    private GameManager gameManager;
 
     @Override
     public void onEnable() {
@@ -32,6 +34,7 @@ public class KitPVP extends JavaPlugin {
         this.arenaManager = new ArenaManager();
         this.upgradeManager = new UpgradeManager();
         this.duelManager = new DuelManager();
+        this.gameManager = new GameManager(this);
 
         getCommand("arena").setExecutor(new com.jules.kitpvp.commands.ArenaCommands(this, arenaManager));
         getCommand("class").setExecutor(new com.jules.kitpvp.commands.ClassCommand());
@@ -39,6 +42,7 @@ public class KitPVP extends JavaPlugin {
         getCommand("coins").setExecutor(new com.jules.kitpvp.commands.CoinCommand());
         getCommand("setlobby").setExecutor(new SetLobbyCommand());
         getCommand("set1v1").setExecutor(new Set1v1Command());
+        getCommand("setspawn").setExecutor(new com.jules.kitpvp.commands.SetSpawnCommand());
         getCommand("upgrade").setExecutor(new UpgradeCommand());
         getCommand("lobby").setExecutor(new LobbyCommand());
 
@@ -47,7 +51,7 @@ public class KitPVP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(this, duelManager), this);
         getServer().getPluginManager().registerEvents(new PlayerDamageListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
         getServer().getPluginManager().registerEvents(new AssistListener(this), this);
         getServer().getPluginManager().registerEvents(new TempBlocksListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityShootBowListener(), this);
@@ -81,5 +85,9 @@ public class KitPVP extends JavaPlugin {
 
     public UpgradeManager getUpgradeManager() {
         return upgradeManager;
+    }
+
+    public GameManager getGameManager() {
+        return gameManager;
     }
 }

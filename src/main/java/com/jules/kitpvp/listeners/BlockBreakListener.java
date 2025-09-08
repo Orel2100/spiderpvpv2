@@ -16,14 +16,5 @@ public class BlockBreakListener implements Listener {
         if (mPlayer.getKitClass() != null) {
             mPlayer.getKitClass().onBlockBreak(event);
         }
-
-        if (event.getBlock().getType().name().endsWith("_ORE")) {
-            int level = mPlayer.getGatheringLevel();
-            if (level > 0) {
-                int coins = level * 5;
-                mPlayer.setCoins(mPlayer.getCoins() + coins);
-                player.sendMessage(org.bukkit.ChatColor.GOLD + "+ " + coins + " coins!");
-            }
-        }
     }
 }

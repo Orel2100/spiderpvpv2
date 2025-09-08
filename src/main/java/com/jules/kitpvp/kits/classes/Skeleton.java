@@ -9,10 +9,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -21,15 +21,15 @@ public class Skeleton extends MegaWallsClass {
     public Skeleton() {
         super(
                 "Skeleton",
-                new String[]{"A master of the bow."},
+                new String[]{"A ranged damage class with a focus", "on using its bow to pick off targets."},
                 KitPVP.getInstance().getConfig().getInt("kits.skeleton.cost", 1000),
-                new ItemStackCreator(Material.BOW, "§fSkeleton").build()
+                new ItemStackCreator(Material.BONE, "§fSkeleton").build()
         );
     }
 
     @Override
     public KitStat getKitStat() {
-        return new KitStat(3, 2, 4, 3, 2);
+        return new KitStat(3, 2, 3, 2, 1);
     }
 
     @Override
@@ -41,60 +41,54 @@ public class Skeleton extends MegaWallsClass {
         items.add(new ItemStack(Material.WOODEN_SWORD));
         items.add(new ItemStack(Material.BOW));
         items.add(new ItemStack(Material.ARROW, 16));
+        items.add(new ItemStack(Material.COOKED_BEEF, 2 + (level > 2 ? 1 : 0) + (level > 3 ? 1 : 0) + (level > 4 ? 1 : 0)));
 
-        switch (level) {
-            case 2:
-                items.add(new ItemStackCreator(Material.BOW).addEnchantment(Enchantment.ARROW_DAMAGE, 1).build());
-                break;
-            case 3:
-                items.add(new ItemStackCreator(Material.BOW).addEnchantment(Enchantment.ARROW_DAMAGE, 1).build());
-                items.add(new ItemStack(Material.ARROW, 32));
-                break;
-            case 4:
-                items.add(new ItemStackCreator(Material.BOW).addEnchantment(Enchantment.ARROW_DAMAGE, 2).build());
-                items.add(new ItemStack(Material.ARROW, 32));
-                break;
-            case 5:
-                items.add(new ItemStackCreator(Material.BOW).addEnchantment(Enchantment.ARROW_DAMAGE, 2).addEnchantment(Enchantment.ARROW_KNOCKBACK, 1).build());
-                items.add(new ItemStack(Material.ARROW, 64));
-                break;
-        }
+        if (level > 1) items.set(0, new ItemStack(Material.STONE_SWORD));
+        if (level > 3) items.set(0, new ItemStack(Material.IRON_SWORD));
+        if (level > 4) items.get(0).addEnchantment(Enchantment.DAMAGE_ALL, 1);
+
+        ItemStack bow = items.get(1);
+        if (level > 2) bow.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
+        if (level > 3) bow.addEnchantment(Enchantment.ARROW_KNOCKBACK, 1);
+        if (level > 4) bow.addEnchantment(Enchantment.ARROW_DAMAGE, 2);
+
         return items;
     }
 
-    public void onEntityShootBow(EntityShootBowEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
+    @Override
+    public void onBowShoot(EntityShootBowEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
         Player p = (Player) event.getEntity();
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
-        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.ABILITY).get(0));
-        ExplosiveArrow.use(p, level);
+
+        int salvagingLevel = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
+        if (salvagingLevel > 0) {
+            double chance = 0.1 + (salvagingLevel - 1) * 0.05;
+            if (new Random().nextDouble() < chance) {
+                p.getInventory().addItem(new ItemStack(Material.ARROW, 1));
+            }
+        }
+
+        int explosiveLevel = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.ABILITY).get(0));
+        ExplosiveArrow.use(p, explosiveLevel);
     }
 
     @Override
-    public void onDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Player) {
-            Player p = (Player) event.getDamager();
-            MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
-            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
-            if (level > 0) {
-                if (p.getInventory().getItemInHand().getType() == Material.BOW) {
-                    event.setDamage(event.getDamage() * (1 + (level * 0.05)));
-                }
-            }
+    public void onKill(Player p, Player killed) {
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_2).get(0));
+        if (level > 0) {
+            int duration = 2 + (level > 1 ? 1 : 0) + (level > 3 ? 1 : 0) + (level > 4 ? 1 : 0);
+            int regenLevel = level < 3 ? 1 : 2;
+            p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * duration, regenLevel - 1));
         }
     }
 
     @Override
-    public List<PotionEffect> getPassiveEffects(Player p) {
-        return new ArrayList<>();
-    }
+    public List<PotionEffect> getPassiveEffects(Player p) { return new ArrayList<>(); }
 
     @Override
-    public Kit getKit() {
-        return Kit.SKELETON;
-    }
+    public Kit getKit() { return Kit.SKELETON; }
 
     @Override
     public Map<UpgradeCategory, List<Upgrade>> getUpgrades() {
@@ -104,46 +98,33 @@ public class Skeleton extends MegaWallsClass {
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
                 new Upgrade("Skeleton Kit", "Upgrade your starting kit.", 5,
                         plugin.getConfig().getIntegerList("kits.skeleton.upgrades.kit.costs"),
-                        Arrays.asList(Material.BOW, Material.BOW, Material.ARROW, Material.ARROW, Material.BOW))
+                        Arrays.asList(Material.BOW, Material.STONE_SWORD, Material.BOW, Material.IRON_SWORD, Material.BOW))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Explosive Arrow", "Your arrows explode on impact.", 5,
+                new Upgrade("Explosive Arrow", "Fires an explosive arrow that deals " + ChatColor.RED + "4.0" + ChatColor.GRAY + " health damage.", 5,
                         plugin.getConfig().getIntegerList("kits.skeleton.upgrades.ability.costs"),
                         Arrays.asList(Material.TNT, Material.TNT, Material.TNT, Material.TNT, Material.TNT))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Agile", "Deal more damage with your bow.", 5,
+                new Upgrade("Salvaging", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to get an arrow back when you shoot a bow.", 5,
                         plugin.getConfig().getIntegerList("kits.skeleton.upgrades.passive1.costs"),
-                        Arrays.asList(Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER, Material.FEATHER))
-        ));
-
-        upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Salvaging", "Chance to get back an arrow on hit.", 5,
-                        plugin.getConfig().getIntegerList("kits.skeleton.upgrades.passive2.costs"),
                         Arrays.asList(Material.ARROW, Material.ARROW, Material.ARROW, Material.ARROW, Material.ARROW))
         ));
 
-        return upgrades;
-    }
+        upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
+                new Upgrade("Bone Shield", "Gain " + ChatColor.AQUA + "Regeneration I" + ChatColor.GRAY + " for 2 seconds after killing a player.", 5,
+                        plugin.getConfig().getIntegerList("kits.skeleton.upgrades.passive2.costs"),
+                        Arrays.asList(Material.BONE, Material.BONE, Material.BONE, Material.BONE, Material.BONE))
+        ));
 
-    @Override
-    public List<String> getLoreForUpgrade(Upgrade upgrade, int level) {
-        List<String> lore = new ArrayList<>();
-        lore.add(upgrade.getDescription());
-        lore.add("");
-        switch (upgrade.getName()) {
-            case "Explosive Arrow":
-                lore.add(ChatColor.GRAY + "Radius: " + ChatColor.GREEN + (2 + (level - 1) * 0.5) + " blocks");
-                break;
-            case "Agile":
-                lore.add(ChatColor.GRAY + "Damage: " + ChatColor.GREEN + (5 + (level - 1) * 5) + "%");
-                break;
-            case "Salvaging":
-                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (10 + (level - 1) * 10) + "%");
-                break;
-        }
-        return lore;
+        upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
+                new Upgrade("Arrow Crafting", ChatColor.GREEN + "10%" + ChatColor.GRAY + " chance to craft 2 arrows instead of 1.", 5,
+                        plugin.getConfig().getIntegerList("kits.skeleton.upgrades.gathering.costs"),
+                        Arrays.asList(Material.FLINT, Material.FLINT, Material.FLINT, Material.FLINT, Material.FLINT))
+        ));
+
+        return upgrades;
     }
 }

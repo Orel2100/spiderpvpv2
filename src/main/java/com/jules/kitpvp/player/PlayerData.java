@@ -23,8 +23,8 @@ public class PlayerData {
         Configuration config = new Configuration(KitPVP.getInstance(), "playerdata/" + player.getUniqueId().toString());
 
         mPlayer.setCoins(config.getInt("coins"));
-        if (config.isConfigurationSection("upgrades")) {
-            for (String upgradeName : config.getConfigurationSection("upgrades").getKeys(false)) {
+        if (config.getConfiguration().isConfigurationSection("upgrades")) {
+            for (String upgradeName : config.getConfiguration().getConfigurationSection("upgrades").getKeys(false)) {
                 mPlayer.setUpgradeLevel(upgradeName, config.getInt("upgrades." + upgradeName));
             }
         }

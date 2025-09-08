@@ -6,7 +6,6 @@
 /app/src/main/java/com/jules/kitpvp/listeners/PlayerDeathListener.java
 /app/src/main/java/com/jules/kitpvp/kits/UpgradeCategory.java
 /app/src/main/java/com/jules/kitpvp/player/PlayerData.java
-/app/src/main/java/com/jules/kitpvp/gui/GatheringUpgradeGUI.java
 /app/src/main/java/com/jules/kitpvp/commands/Set1v1Command.java
 /app/src/main/java/com/jules/kitpvp/abilities/Heal.java
 /app/src/main/java/com/jules/kitpvp/listeners/PlayerJoinListener.java

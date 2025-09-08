@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -110,6 +111,18 @@ public class Golem extends MegaWallsClass {
     }
 
     @Override
+    public void onBlockBreak(BlockBreakEvent e) {
+        if (e.getBlock().getType().name().endsWith("_ORE")) {
+            MPlayer mPlayer = MPlayer.getMPlayer(e.getPlayer().getUniqueId());
+            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.GATHERING).get(0));
+            if (level > 0) {
+                mPlayer.setCoins(mPlayer.getCoins() + level * 10);
+                e.getPlayer().sendMessage(ChatColor.GOLD + "+ " + level * 10 + " coins!");
+            }
+        }
+    }
+
+    @Override
     public List<PotionEffect> getPassiveEffects(Player p) {
         List<PotionEffect> effects = new ArrayList<>();
         effects.add(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0));
@@ -151,6 +164,11 @@ public class Golem extends MegaWallsClass {
                         Arrays.asList(Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON))
         ));
 
+        upgrades.put(UpgradeCategory.GATHERING, Arrays.asList(
+                new Upgrade("Ore Finder", "Chance to find an extra iron ingot when mining iron ore.", 5,
+                        plugin.getConfig().getIntegerList("kits.golem.upgrades.gathering.costs"),
+                        Arrays.asList(Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE, Material.IRON_ORE))
+        ));
         return upgrades;
     }
 
@@ -170,6 +188,9 @@ public class Golem extends MegaWallsClass {
                 break;
             case "Stomper":
                 lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (5 + (level - 1) * 2.5) + "%");
+                break;
+            case "Ore Finder":
+                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (10 + (level - 1) * 5) + "%");
                 break;
         }
         return lore;

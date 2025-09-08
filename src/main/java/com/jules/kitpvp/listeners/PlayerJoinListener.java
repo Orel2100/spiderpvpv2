@@ -35,17 +35,17 @@ public class PlayerJoinListener implements Listener {
         if (locations.get("lobby.world") != null) {
             Location loc = new Location(
                     Bukkit.getWorld(locations.get("lobby.world").toString()),
-                    locations.getInt("lobby.x"),
-                    locations.getInt("lobby.y"),
-                    locations.getInt("lobby.z"),
-                    (float) locations.get("lobby.yaw"),
-                    (float) locations.get("lobby.pitch")
+                    locations.getConfiguration().getDouble("lobby.x"),
+                    locations.getConfiguration().getDouble("lobby.y"),
+                    locations.getConfiguration().getDouble("lobby.z"),
+                    (float) locations.getConfiguration().getDouble("lobby.yaw"),
+                    (float) locations.getConfiguration().getDouble("lobby.pitch")
             );
             player.teleport(loc);
         }
 
 
-        ItemStack playItem = new ItemStack(Material.COMMAND_BLOCK);
+        ItemStack playItem = new ItemStack(Material.CAKE);
         ItemMeta playMeta = playItem.getItemMeta();
         playMeta.setDisplayName(ChatColor.GREEN + "PLAY!");
         playItem.setItemMeta(playMeta);

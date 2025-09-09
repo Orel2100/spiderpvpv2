@@ -70,18 +70,23 @@ public class Spider extends MegaWallsClass {
 
     @Override
     public void onLand(Player p, float fallDistance) {
+        // As per the new design, the Spider now takes its own fall damage.
+        // This is handled by vanilla mechanics since we no longer cancel the fall damage event.
+
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
         double multiplier = level < 4 ? 2.0 : 2.5;
 
-        // Damage entities
+        // Damage and apply slowness to nearby enemies
         p.getNearbyEntities(LANDING_RADIUS, LANDING_RADIUS, LANDING_RADIUS).forEach(entity -> {
             if (entity instanceof Player && entity != p) {
-                ((Player) entity).damage(fallDistance * multiplier, p);
+                Player target = (Player) entity;
+                target.damage(fallDistance * multiplier, p);
+                target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 1)); // 1 second of Slowness II
             }
         });
 
-        // Spawn visual-only "falling" cobwebs in random spots
+        // Visual falling cobweb effect remains the same
         Location center = p.getLocation();
         int cobwebCount = 6;
 

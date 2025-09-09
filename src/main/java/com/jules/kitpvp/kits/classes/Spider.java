@@ -12,13 +12,13 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
@@ -81,24 +81,27 @@ public class Spider extends MegaWallsClass {
             }
         });
 
-        // Spawn falling cobwebs and particles
+        // Spawn visual-only "falling" cobwebs
         Location center = p.getLocation();
         for (int x = -1; x <= 1; x++) { // 3x3 area
             for (int z = -1; z <= 1; z++) {
-                Location blockLoc = center.clone().add(x, 0, z);
+                if (random.nextFloat() > 0.7) continue; // 70% chance to spawn a cobweb in a spot
 
-                for (int y = blockLoc.getBlockY() + 1; y > 0; y--) {
-                    Location checkLoc = new Location(blockLoc.getWorld(), blockLoc.getX(), y, blockLoc.getZ());
-                    if (checkLoc.getBlock().getType().isSolid()) {
-                        Location cobwebLoc = checkLoc.add(0, 1, 0);
-                        if (cobwebLoc.getBlock().getType() == Material.AIR) {
-                            cobwebLoc.getBlock().setType(Material.COBWEB);
-                            cobwebLoc.getWorld().spawnParticle(Particle.SQUID_INK, cobwebLoc.clone().add(0.5, 0.5, 0.5), 10, 0.2, 0.2, 0.2, 0);
-                            cobwebLoc.getWorld().spawnParticle(Particle.BLOCK_DUST, cobwebLoc.clone().add(0.5, 0.5, 0.5), 5, 0.2, 0.2, 0.2, 0, Material.COBWEB.createBlockData());
-                        }
-                        break;
+                Location spawnLoc = center.clone().add(x, 2, z);
+
+                FallingBlock fallingCobweb = spawnLoc.getWorld().spawnFallingBlock(spawnLoc, Material.COBWEB.createBlockData());
+                fallingCobweb.setDropItem(false);
+                fallingCobweb.setHurtEntities(false);
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        fallingCobweb.remove();
                     }
-                }
+                }.runTaskLater(KitPVP.getInstance(), 15L); // Remove after 0.75 seconds
+
+                Location particleLoc = center.clone().add(x, 0, z);
+                particleLoc.getWorld().spawnParticle(Particle.SQUID_INK, particleLoc, 10, 0.5, 0.5, 0.5, 0);
             }
         }
     }

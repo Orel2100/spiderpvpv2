@@ -14,7 +14,8 @@ import java.util.Random;
 public class Tornado {
 
     private static final double PULL_STRENGTH = 0.4;
-    private static final int RADIUS = 4; // Made smaller
+    private static final int RADIUS = 7; // Wider
+    private static final double MOVE_SPEED = 0.12; // Faster movement
     private static final double DAMAGE_TICK_RATE = 0.25;
     private static final int TICKS_PER_SECOND = 20;
     private static final Random random = new Random();
@@ -28,6 +29,11 @@ public class Tornado {
         double damagePerSecond = 1.0 + (level * 0.5);
         final double damagePerTick = damagePerSecond / (1.0 / DAMAGE_TICK_RATE);
 
+        Random random = new Random();
+        double xDir = random.nextDouble() - 0.5;
+        double zDir = random.nextDouble() - 0.5;
+        final Vector moveDirection = new Vector(xDir, 0, zDir).normalize().multiply(MOVE_SPEED);
+
         new BukkitRunnable() {
             int ticks = 0;
 
@@ -38,8 +44,8 @@ public class Tornado {
                     return;
                 }
 
-                // Reworked sound
-                tornadoCenter.getWorld().playSound(tornadoCenter, Sound.ENTITY_ENDER_DRAGON_FLAP, 0.3f, 1.9f);
+                tornadoCenter.add(moveDirection);
+                tornadoCenter.getWorld().playSound(tornadoCenter, Sound.ENTITY_ENDER_DRAGON_FLAP, 0.2f, 1.9f);
 
                 for (Entity e : tornadoCenter.getWorld().getNearbyEntities(tornadoCenter, RADIUS, 10, RADIUS)) {
                     if (e instanceof LivingEntity && !e.equals(caster)) {
@@ -53,32 +59,25 @@ public class Tornado {
                     }
                 }
 
-                // --- Polished Visuals ---
-                double tornadoHeight = ticks * 0.2;
-                if (tornadoHeight > 8) tornadoHeight = 8; // Capped height since radius is smaller
+                // --- Refined Visuals ---
+                double tornadoHeight = ticks * 0.3; // Faster rise
+                if (tornadoHeight > 9) tornadoHeight = 9;
 
                 for (double y = 0; y < tornadoHeight; y += 0.5) {
                     double currentRadius = (y / tornadoHeight) * RADIUS;
-                    if (currentRadius < 1.5) currentRadius = 1.5; // Wider base
+                    if (currentRadius < 1.5) currentRadius = 1.5;
 
-                    int particleCount = (int)(currentRadius * 5);
+                    int particleCount = (int)(currentRadius * 2); // Less particles for a delicate look
 
                     for (int i = 0; i < particleCount; i++) {
-                        double angle = (ticks * 0.3) + (y * 0.5) + (i * (2 * Math.PI / particleCount));
+                        double angle = (ticks * 0.5) + (y * 0.5) + (i * (2 * Math.PI / particleCount)); // Faster swirl
                         double x = tornadoCenter.getX() + currentRadius * Math.cos(angle);
                         double z = tornadoCenter.getZ() + currentRadius * Math.sin(angle);
                         Location particleLoc = new Location(tornadoCenter.getWorld(), x, tornadoCenter.getY() + y, z);
 
                         tornadoCenter.getWorld().spawnParticle(Particle.CLOUD, particleLoc, 0, 0, 0, 0, 0.1);
-                        // SWEEP_ATTACK particle removed
                     }
                 }
-
-                Material groundMaterial = tornadoCenter.clone().subtract(0, 1, 0).getBlock().getType();
-                if (groundMaterial.isSolid()) {
-                    tornadoCenter.getWorld().spawnParticle(Particle.BLOCK_DUST, tornadoCenter, 20, 1.0, 0.5, 1.0, 0, groundMaterial.createBlockData());
-                }
-
                 ticks++;
             }
         }.runTaskTimer(KitPVP.getInstance(), 0L, 1L);

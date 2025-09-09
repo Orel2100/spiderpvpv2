@@ -10,12 +10,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import java.util.Random;
+
 public class Tornado {
 
     private static final double PULL_STRENGTH = 0.4;
-    private static final int RADIUS = 8;
+    private static final int RADIUS = 6;
+    private static final double MOVE_SPEED = 0.1;
 
     public static void use(Player p, int level) {
+        Location tornadoCenter = p.getLocation();
+
+        // Generate a random horizontal direction for the tornado to move
+        Random random = new Random();
+        double xDir = random.nextDouble() - 0.5;
+        double zDir = random.nextDouble() - 0.5;
+        final Vector moveDirection = new Vector(xDir, 0, zDir).normalize().multiply(MOVE_SPEED);
+
         new BukkitRunnable() {
             int ticks = 0;
             double damage = 0.5 + (level * 0.1);
@@ -27,35 +38,41 @@ public class Tornado {
                     cancel();
                 }
 
+                // Move the tornado's center
+                tornadoCenter.add(moveDirection);
+
                 // --- Mechanics ---
-                // Play sound
-                p.getWorld().playSound(p.getLocation(), Sound.ITEM_ELYTRA_FLYING, 0.5f, 1.5f);
+                tornadoCenter.getWorld().playSound(tornadoCenter, Sound.ITEM_ELYTRA_FLYING, 0.5f, 1.5f);
 
-                // Pull and damage enemies
-                for (Entity e : p.getNearbyEntities(RADIUS, RADIUS, RADIUS)) {
+                for (Entity e : tornadoCenter.getWorld().getNearbyEntities(tornadoCenter, RADIUS, RADIUS, RADIUS)) {
                     if (e instanceof LivingEntity && e != p) {
-                        // Damage
                         ((LivingEntity) e).damage(damage, p);
-
-                        // Pull
-                        Vector pullVector = p.getLocation().toVector().subtract(e.getLocation().toVector()).normalize().multiply(PULL_STRENGTH);
-                        // Add a slight upward lift to make it feel more like a vortex
+                        Vector pullVector = tornadoCenter.toVector().subtract(e.getLocation().toVector()).normalize().multiply(PULL_STRENGTH);
                         pullVector.setY(pullVector.getY() + 0.1);
                         e.setVelocity(pullVector);
                     }
                 }
 
                 // --- Visuals ---
-                // Spawn swirling particles
-                for (int j = 0; j < 6; j++) { // spawn 6 particles per tick
-                    double angle = ticks * 0.2 + (j * Math.PI / 3); // 0.2 rad/tick speed
-                    double particleRadius = RADIUS * (1 - (ticks / 100.0)); // Tornado shrinks over time
-                    double x = p.getLocation().getX() + particleRadius * Math.cos(angle);
-                    double z = p.getLocation().getZ() + particleRadius * Math.sin(angle);
-                    double y = p.getLocation().getY() + (ticks * 0.05); // particles rise slowly
+                for (int j = 0; j < 12; j++) {
+                    double angle = ticks * 0.25 + (j * Math.PI / 6);
+                    double particleRadius = RADIUS * (1 - (ticks / 120.0));
 
-                    Location particleLoc = new Location(p.getWorld(), x, y, z);
-                    p.getWorld().spawnParticle(Particle.COMPOSTER, particleLoc, 0, 0, 0, 0, 1);
+                    double x = tornadoCenter.getX() + particleRadius * Math.cos(angle);
+                    double z = tornadoCenter.getZ() + particleRadius * Math.sin(angle);
+                    double y = tornadoCenter.getY() + (ticks * 0.05);
+                    Location particleLoc = new Location(tornadoCenter.getWorld(), x, y, z);
+                    tornadoCenter.getWorld().spawnParticle(Particle.COMPOSTER, particleLoc, 0, 0, 0, 0, 1);
+
+                    if (j % 2 == 0) {
+                        double airRadius = particleRadius * 0.5;
+                        double airAngle = ticks * -0.3 + (j * Math.PI / 6);
+                        double airX = tornadoCenter.getX() + airRadius * Math.cos(airAngle);
+                        double airZ = tornadoCenter.getZ() + airRadius * Math.sin(airAngle);
+                        double airY = tornadoCenter.getY() + (j * 0.4);
+                        Location airParticleLoc = new Location(tornadoCenter.getWorld(), airX, airY, airZ);
+                        tornadoCenter.getWorld().spawnParticle(Particle.SPORE_BLOSSOM_AIR, airParticleLoc, 0, 0, 0, 0, 1);
+                    }
                 }
 
                 ticks++;

@@ -81,28 +81,31 @@ public class Spider extends MegaWallsClass {
             }
         });
 
-        // Spawn visual-only "falling" cobwebs
+        // Spawn visual-only "falling" cobwebs in random spots
         Location center = p.getLocation();
-        for (int x = -1; x <= 1; x++) { // 3x3 area
-            for (int z = -1; z <= 1; z++) {
-                if (random.nextFloat() > 0.7) continue; // 70% chance to spawn a cobweb in a spot
+        int cobwebCount = 6;
 
-                Location spawnLoc = center.clone().add(x, 2, z);
+        for (int i = 0; i < cobwebCount; i++) {
+            double angle = random.nextDouble() * 2 * Math.PI;
+            double distance = random.nextDouble() * LANDING_RADIUS;
+            double xOffset = distance * Math.cos(angle);
+            double zOffset = distance * Math.sin(angle);
 
-                FallingBlock fallingCobweb = spawnLoc.getWorld().spawnFallingBlock(spawnLoc, Material.COBWEB.createBlockData());
-                fallingCobweb.setDropItem(false);
-                fallingCobweb.setHurtEntities(false);
+            Location spawnLoc = center.clone().add(xOffset, 2, zOffset);
 
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        fallingCobweb.remove();
-                    }
-                }.runTaskLater(KitPVP.getInstance(), 15L); // Remove after 0.75 seconds
+            FallingBlock fallingCobweb = spawnLoc.getWorld().spawnFallingBlock(spawnLoc, Material.COBWEB.createBlockData());
+            fallingCobweb.setDropItem(false);
+            fallingCobweb.setHurtEntities(false);
 
-                Location particleLoc = center.clone().add(x, 0, z);
-                particleLoc.getWorld().spawnParticle(Particle.SQUID_INK, particleLoc, 10, 0.5, 0.5, 0.5, 0);
-            }
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    fallingCobweb.remove();
+                }
+            }.runTaskLater(KitPVP.getInstance(), 15L);
+
+            Location particleLoc = center.clone().add(xOffset, 0, zOffset);
+            particleLoc.getWorld().spawnParticle(Particle.SQUID_INK, particleLoc, 5, 0.5, 0.5, 0.5, 0);
         }
     }
 

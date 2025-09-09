@@ -2,12 +2,14 @@ package com.jules.kitpvp.abilities;
 
 import com.jules.kitpvp.KitPVP;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import java.util.Random;
 
 public class Tornado {
 
@@ -15,16 +17,14 @@ public class Tornado {
     private static final int RADIUS = 6;
     private static final double DAMAGE_TICK_RATE = 0.25; // 0.25 seconds per tick
     private static final int TICKS_PER_SECOND = 20;
+    private static final Random random = new Random();
 
     public static void use(LivingEntity caster, int level) {
-        // The tornado is static at the caster's location when used.
         final Location tornadoCenter = caster.getLocation().clone();
 
-        // Duration in ticks, based on the Canvas tier table.
         double durationSeconds = 3.0 + (level * 0.5);
         final int totalTicks = (int) (durationSeconds * TICKS_PER_SECOND);
 
-        // Damage per tick
         double damagePerSecond = 1.0 + (level * 0.5);
         final double damagePerTick = damagePerSecond / (1.0 / DAMAGE_TICK_RATE);
 
@@ -33,45 +33,51 @@ public class Tornado {
 
             @Override
             public void run() {
-                // Cancel after the specified duration
                 if (ticks >= totalTicks) {
                     cancel();
                     return;
                 }
 
-                // Play sound effect
-                tornadoCenter.getWorld().playSound(tornadoCenter, Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 0.5f, 1.5f);
+                tornadoCenter.getWorld().playSound(tornadoCenter, Sound.ITEM_ELYTRA_FLYING, 0.6f, 1.0f);
 
-                // Apply pull and damage to nearby entities
-                for (Entity e : tornadoCenter.getWorld().getNearbyEntities(tornadoCenter, RADIUS, RADIUS, RADIUS)) {
+                for (Entity e : tornadoCenter.getWorld().getNearbyEntities(tornadoCenter, RADIUS, 10, RADIUS)) {
                     if (e instanceof LivingEntity && !e.equals(caster)) {
                         LivingEntity target = (LivingEntity) e;
-
-                        // Apply damage every 5 ticks (0.25s) to match the Canvas.
-                        if (ticks % (TICKS_PER_SECOND * DAMAGE_TICK_RATE) == 0) {
+                        if (ticks % (int)(TICKS_PER_SECOND * DAMAGE_TICK_RATE) == 0) {
                             target.damage(damagePerTick, caster);
                         }
-
-                        // Pull entity towards the center of the tornado
                         Vector pullVector = tornadoCenter.toVector().subtract(target.getLocation().toVector()).normalize().multiply(PULL_STRENGTH);
-                        // Make the pull slightly upward to create a swirling effect
-                        pullVector.setY(pullVector.getY() + 0.1);
+                        pullVector.setY(pullVector.getY() + 0.15);
                         target.setVelocity(pullVector);
                     }
                 }
 
-                // --- Visuals: Enhanced Tornado Shape ---
-                // Increase the size of the tornado as it progresses
-                double currentRadius = RADIUS * (1 - (double) ticks / totalTicks);
-                if (currentRadius < 1.0) currentRadius = 1.0;
+                // --- Enhanced Visuals ---
+                double tornadoHeight = ticks * 0.2;
+                if (tornadoHeight > 10) tornadoHeight = 10;
 
-                for (double y = 0; y < (totalTicks - ticks) * 0.1; y += 0.5) {
-                    double angle = ticks * 0.2 + (y * 2.5);
-                    double x = tornadoCenter.getX() + currentRadius * Math.cos(angle);
-                    double z = tornadoCenter.getZ() + currentRadius * Math.sin(angle);
+                for (double y = 0; y < tornadoHeight; y += 0.5) {
+                    double currentRadius = (y / tornadoHeight) * RADIUS;
+                    if (currentRadius < 1.0) currentRadius = 1.0;
 
-                    tornadoCenter.getWorld().spawnParticle(Particle.CLOUD, new Location(tornadoCenter.getWorld(), x, tornadoCenter.getY() + y, z), 0, 0, 0, 0, 1);
-                    tornadoCenter.getWorld().spawnParticle(Particle.SWEEP_ATTACK, new Location(tornadoCenter.getWorld(), x, tornadoCenter.getY() + y, z), 0, 0, 0, 0, 1);
+                    int particleCount = (int)(currentRadius * 5);
+
+                    for (int i = 0; i < particleCount; i++) {
+                        double angle = (ticks * 0.3) + (y * 0.5) + (i * (2 * Math.PI / particleCount));
+                        double x = tornadoCenter.getX() + currentRadius * Math.cos(angle);
+                        double z = tornadoCenter.getZ() + currentRadius * Math.sin(angle);
+                        Location particleLoc = new Location(tornadoCenter.getWorld(), x, tornadoCenter.getY() + y, z);
+
+                        tornadoCenter.getWorld().spawnParticle(Particle.CLOUD, particleLoc, 0, 0, 0, 0, 0.1);
+                        if (random.nextInt(5) == 0) {
+                             tornadoCenter.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLoc, 0);
+                        }
+                    }
+                }
+
+                Material groundMaterial = tornadoCenter.clone().subtract(0, 1, 0).getBlock().getType();
+                if (groundMaterial.isSolid()) {
+                    tornadoCenter.getWorld().spawnParticle(Particle.BLOCK_DUST, tornadoCenter, 30, 1.0, 0.5, 1.0, 0, groundMaterial.createBlockData());
                 }
 
                 ticks++;

@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class Tornado {
 
-    private static final double PULL_STRENGTH = 0.4;
+    private static final double PULL_STRENGTH = 0.2; // Weaker pull
     private static final int RADIUS = 7;
     private static final double MOVE_SPEED = 0.12;
     private static final double DAMAGE_TICK_RATE = 0.25;
@@ -21,7 +21,16 @@ public class Tornado {
     private static final Random random = new Random();
 
     public static void use(LivingEntity caster, int level) {
-        final Location tornadoCenter = caster.getLocation().clone();
+        // Find the ground location below the caster
+        Location groundLoc = caster.getLocation().clone();
+        for (int y = groundLoc.getBlockY(); y > 0; y--) {
+            Location checkLoc = new Location(groundLoc.getWorld(), groundLoc.getX(), y, groundLoc.getZ());
+            if (checkLoc.getBlock().getType().isSolid()) {
+                groundLoc.setY(y + 1); // Set tornado base to be 1 block above the ground
+                break;
+            }
+        }
+        final Location tornadoCenter = groundLoc;
 
         double durationSeconds = 3.0 + (level * 0.5);
         final int totalTicks = (int) (durationSeconds * TICKS_PER_SECOND);
@@ -59,15 +68,15 @@ public class Tornado {
                     }
                 }
 
-                // --- More Delicate Visuals ---
+                // --- Visuals ---
                 double tornadoHeight = ticks * 0.3;
                 if (tornadoHeight > 9) tornadoHeight = 9;
 
-                for (double y = 0; y < tornadoHeight; y += 0.75) { // Increased vertical spacing
+                for (double y = 0; y < tornadoHeight; y += 0.75) {
                     double currentRadius = (y / tornadoHeight) * RADIUS;
                     if (currentRadius < 1.5) currentRadius = 1.5;
 
-                    int particleCount = (int)(currentRadius * 1.5); // Less particles for a delicate look
+                    int particleCount = (int)(currentRadius * 1.5);
 
                     for (int i = 0; i < particleCount; i++) {
                         double angle = (ticks * 0.5) + (y * 0.5) + (i * (2 * Math.PI / particleCount));

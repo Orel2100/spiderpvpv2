@@ -52,7 +52,7 @@ public class Beam {
                 Location beamLoc = startLoc.clone().add(direction.clone().multiply(ticks));
 
                 // Spawn a single, bright particle to create the beam
-                beamLoc.getWorld().spawnParticle(Particle.FIREWORK, beamLoc, 0, 0, 0, 0, 1);
+                beamLoc.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, beamLoc, 0, 0, 0, 0, 1);
                 beamLoc.getWorld().spawnParticle(Particle.END_ROD, beamLoc, 0, 0, 0, 0, 1);
 
                 // Check for entities to damage along the beam's path

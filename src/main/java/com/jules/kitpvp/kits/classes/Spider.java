@@ -26,7 +26,9 @@ import java.util.*;
 
 public class Spider extends MegaWallsClass {
 
-    private static final int LANDING_RADIUS = 3;
+    private static final double LANDING_RADIUS = 5.0;
+    private static final double BASE_DAMAGE_MULTIPLIER = 2.0;
+    private static final double DAMAGE_INCREASE_PER_LEVEL = 0.25;
     private static final Random random = new Random();
 
     public Spider() {
@@ -49,7 +51,15 @@ public class Spider extends MegaWallsClass {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
 
-        items.add(getAbilityItem());
+        ItemStack sword = new ItemStackCreator(Material.STONE_SWORD, "§8Spider Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
+        items.add(new ItemStackCreator(Material.COOKED_BEEF, "§8Spider Steak").setAmount(2 + (level > 1 ? 1 : 0) + (level > 3 ? 1 : 0) + (level > 4 ? 1 : 0)).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+
+        if (level > 2) sword.setType(Material.IRON_SWORD);
+        if (level > 1) sword.addEnchantment(Enchantment.DURABILITY, 1);
+        if (level > 3) sword.addEnchantment(Enchantment.DURABILITY, 2);
+        if (level > 4) sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+
+        items.add(0, sword);
 
         if (level > 4) items.add(new ItemStackCreator(Material.LEATHER_HELMET, "§8Spider Helmet").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
 
@@ -73,19 +83,21 @@ public class Spider extends MegaWallsClass {
     @Override
     public void onLand(Player p, float fallDistance) {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
-        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
-        double multiplier = level < 4 ? 2.0 : 2.5;
+        int upgradeLevel = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
 
-        p.getWorld().playSound(p.getLocation(), Sound.ENTITY_SPIDER_STEP, 0.5f, 1.2f);
-
+        // Apply damage and slowness to nearby enemies.
         p.getNearbyEntities(LANDING_RADIUS, LANDING_RADIUS, LANDING_RADIUS).forEach(entity -> {
-            if (entity instanceof Player && entity != p) {
+            if (entity instanceof Player && !entity.equals(p)) {
                 Player target = (Player) entity;
-                target.damage(fallDistance * multiplier, p);
+
+                double damageMultiplier = BASE_DAMAGE_MULTIPLIER + (upgradeLevel - 1) * DAMAGE_INCREASE_PER_LEVEL;
+                target.damage(fallDistance * damageMultiplier, p);
+
                 target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 1));
             }
         });
 
+        // --- Visual Effects ---
         Location center = p.getLocation();
         int cobwebCount = 6;
 
@@ -102,21 +114,28 @@ public class Spider extends MegaWallsClass {
             fallingCobweb.setHurtEntities(false);
 
             new BukkitRunnable() {
+                private int ticksLived = 0;
                 @Override
                 public void run() {
-                    if (fallingCobweb.isValid()) {
-                        Location landLoc = fallingCobweb.getLocation();
-                        if (landLoc.getBlock().getType() == Material.COBWEB) {
-                            landLoc.getBlock().setType(Material.AIR);
-                        }
+                    if (!fallingCobweb.isValid() || ticksLived > 40) {
                         fallingCobweb.remove();
+                        this.cancel();
+                        return;
                     }
+                    Location below = fallingCobweb.getLocation().subtract(0, 0.1, 0);
+                    if (below.getBlock().getType().isSolid()) {
+                        fallingCobweb.remove();
+                        this.cancel();
+                        return;
+                    }
+                    ticksLived++;
                 }
-            }.runTaskLater(KitPVP.getInstance(), 12L);
-
-            Location particleLoc = center.clone().add(xOffset, 0, zOffset);
-            particleLoc.getWorld().spawnParticle(Particle.SQUID_INK, particleLoc, 5, 0.5, 0.5, 0.5, 0);
+            }.runTaskTimer(KitPVP.getInstance(), 0L, 1L);
         }
+
+        center.getWorld().spawnParticle(Particle.SQUID_INK, center, 50, LANDING_RADIUS, 1.0, LANDING_RADIUS, 0);
+        center.getWorld().spawnParticle(Particle.CLOUD, center, 30, LANDING_RADIUS, 1.0, LANDING_RADIUS, 0);
+        center.getWorld().playSound(center, Sound.ENTITY_SPIDER_DEATH, 1.0F, 1.0F);
     }
 
     @Override

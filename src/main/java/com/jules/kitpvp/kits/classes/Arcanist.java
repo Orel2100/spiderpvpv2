@@ -43,7 +43,7 @@ public class Arcanist extends MegaWallsClass {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
 
-        items.add(getAbilityItem());
+        items.add(new ItemStackCreator(Material.STONE_SWORD, "§bArcanist Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
         return items;
     }
 

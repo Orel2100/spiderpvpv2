@@ -34,7 +34,7 @@ public class Pirate extends MegaWallsClass {
     @Override
     public List<ItemStack> getStartingItems(Player p) {
         List<ItemStack> items = new ArrayList<>();
-        items.add(getAbilityItem());
+        items.add(new ItemStackCreator(Material.IRON_SWORD, "§cPirate Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
         return items;
     }
 

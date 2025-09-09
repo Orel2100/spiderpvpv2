@@ -39,7 +39,21 @@ public class Skeleton extends MegaWallsClass {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
 
-        items.add(getAbilityItem());
+        ItemStack sword = new ItemStackCreator(Material.WOODEN_SWORD, "§fSkeleton Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
+        ItemStack bow = new ItemStackCreator(Material.BOW, "§fSkeleton Bow").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
+        items.add(new ItemStackCreator(Material.ARROW, "§fSkeleton Arrow").setAmount(16).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        items.add(new ItemStackCreator(Material.COOKED_BEEF, "§fSkeleton Steak").setAmount(2 + (level > 2 ? 1 : 0) + (level > 3 ? 1 : 0) + (level > 4 ? 1 : 0)).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+
+        if (level > 1) sword.setType(Material.STONE_SWORD);
+        if (level > 3) sword.setType(Material.IRON_SWORD);
+        if (level > 4) sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+
+        if (level > 2) bow.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
+        if (level > 3) bow.addEnchantment(Enchantment.ARROW_KNOCKBACK, 1);
+        if (level > 4) bow.addEnchantment(Enchantment.ARROW_DAMAGE, 2);
+
+        items.add(0, sword);
+        items.add(1, bow);
 
         return items;
     }

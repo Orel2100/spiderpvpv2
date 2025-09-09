@@ -6,73 +6,72 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-
-import java.util.Random;
 
 public class Tornado {
 
     private static final double PULL_STRENGTH = 0.4;
     private static final int RADIUS = 6;
-    private static final double MOVE_SPEED = 0.05; // Slower movement
+    private static final double DAMAGE_TICK_RATE = 0.25; // 0.25 seconds per tick
+    private static final int TICKS_PER_SECOND = 20;
 
-    public static void use(Player p, int level) {
-        Location tornadoCenter = p.getLocation();
+    public static void use(LivingEntity caster, int level) {
+        // The tornado is static at the caster's location when used.
+        final Location tornadoCenter = caster.getLocation().clone();
 
-        // Generate a random horizontal direction for the tornado to move
-        Random random = new Random();
-        double xDir = random.nextDouble() - 0.5;
-        double zDir = random.nextDouble() - 0.5;
-        final Vector moveDirection = new Vector(xDir, 0, zDir).normalize().multiply(MOVE_SPEED);
+        // Duration in ticks, based on the Canvas tier table.
+        double durationSeconds = 3.0 + (level * 0.5);
+        final int totalTicks = (int) (durationSeconds * TICKS_PER_SECOND);
+
+        // Damage per tick
+        double damagePerSecond = 1.0 + (level * 0.5);
+        final double damagePerTick = damagePerSecond / (1.0 / DAMAGE_TICK_RATE);
 
         new BukkitRunnable() {
             int ticks = 0;
-            double damage = 0.5 + (level * 0.1);
 
             @Override
             public void run() {
-                // Duration of 5 seconds
-                if (ticks > 100) {
+                // Cancel after the specified duration
+                if (ticks >= totalTicks) {
                     cancel();
+                    return;
                 }
 
-                // Move the tornado's center
-                tornadoCenter.add(moveDirection);
+                // Play sound effect
+                tornadoCenter.getWorld().playSound(tornadoCenter, Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 0.5f, 1.5f);
 
-                // --- Mechanics ---
-                tornadoCenter.getWorld().playSound(tornadoCenter, Sound.ITEM_ELYTRA_FLYING, 0.5f, 1.5f);
-
+                // Apply pull and damage to nearby entities
                 for (Entity e : tornadoCenter.getWorld().getNearbyEntities(tornadoCenter, RADIUS, RADIUS, RADIUS)) {
-                    if (e instanceof LivingEntity && e != p) {
-                        ((LivingEntity) e).damage(damage, p);
-                        Vector pullVector = tornadoCenter.toVector().subtract(e.getLocation().toVector()).normalize().multiply(PULL_STRENGTH);
+                    if (e instanceof LivingEntity && !e.equals(caster)) {
+                        LivingEntity target = (LivingEntity) e;
+
+                        // Apply damage every 5 ticks (0.25s) to match the Canvas.
+                        if (ticks % (TICKS_PER_SECOND * DAMAGE_TICK_RATE) == 0) {
+                            target.damage(damagePerTick, caster);
+                        }
+
+                        // Pull entity towards the center of the tornado
+                        Vector pullVector = tornadoCenter.toVector().subtract(target.getLocation().toVector()).normalize().multiply(PULL_STRENGTH);
+                        // Make the pull slightly upward to create a swirling effect
                         pullVector.setY(pullVector.getY() + 0.1);
-                        e.setVelocity(pullVector);
+                        target.setVelocity(pullVector);
                     }
                 }
 
-                // --- Visuals ---
-                for (int j = 0; j < 12; j++) {
-                    double angle = ticks * 0.5 + (j * Math.PI / 6); // Faster swirl
-                    double particleRadius = RADIUS * (1 - (ticks / 120.0));
+                // --- Visuals: Enhanced Tornado Shape ---
+                // Increase the size of the tornado as it progresses
+                double currentRadius = RADIUS * (1 - (double) ticks / totalTicks);
+                if (currentRadius < 1.0) currentRadius = 1.0;
 
-                    double x = tornadoCenter.getX() + particleRadius * Math.cos(angle);
-                    double z = tornadoCenter.getZ() + particleRadius * Math.sin(angle);
-                    double y = tornadoCenter.getY() + (ticks * 0.1); // Faster rise
-                    Location particleLoc = new Location(tornadoCenter.getWorld(), x, y, z);
-                    tornadoCenter.getWorld().spawnParticle(Particle.COMPOSTER, particleLoc, 0, 0, 0, 0, 1);
+                for (double y = 0; y < (totalTicks - ticks) * 0.1; y += 0.5) {
+                    double angle = ticks * 0.2 + (y * 2.5);
+                    double x = tornadoCenter.getX() + currentRadius * Math.cos(angle);
+                    double z = tornadoCenter.getZ() + currentRadius * Math.sin(angle);
 
-                    if (j % 2 == 0) {
-                        double airRadius = particleRadius * 0.5;
-                        double airAngle = ticks * -0.6 + (j * Math.PI / 6); // Faster opposite swirl
-                        double airX = tornadoCenter.getX() + airRadius * Math.cos(airAngle);
-                        double airZ = tornadoCenter.getZ() + airRadius * Math.sin(airAngle);
-                        double airY = tornadoCenter.getY() + (j * 0.4);
-                        Location airParticleLoc = new Location(tornadoCenter.getWorld(), airX, airY, airZ);
-                        tornadoCenter.getWorld().spawnParticle(Particle.CLOUD, airParticleLoc, 0, 0, 0, 0, 1);
-                    }
+                    tornadoCenter.getWorld().spawnParticle(Particle.CLOUD, new Location(tornadoCenter.getWorld(), x, tornadoCenter.getY() + y, z), 0, 0, 0, 0, 1);
+                    tornadoCenter.getWorld().spawnParticle(Particle.SWEEP_ATTACK, new Location(tornadoCenter.getWorld(), x, tornadoCenter.getY() + y, z), 0, 0, 0, 0, 1);
                 }
 
                 ticks++;

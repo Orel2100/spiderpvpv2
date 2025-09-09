@@ -14,8 +14,8 @@ import java.util.Random;
 public class Tornado {
 
     private static final double PULL_STRENGTH = 0.4;
-    private static final int RADIUS = 7; // Wider
-    private static final double MOVE_SPEED = 0.12; // Faster movement
+    private static final int RADIUS = 7;
+    private static final double MOVE_SPEED = 0.12;
     private static final double DAMAGE_TICK_RATE = 0.25;
     private static final int TICKS_PER_SECOND = 20;
     private static final Random random = new Random();
@@ -59,18 +59,18 @@ public class Tornado {
                     }
                 }
 
-                // --- Refined Visuals ---
-                double tornadoHeight = ticks * 0.3; // Faster rise
+                // --- More Delicate Visuals ---
+                double tornadoHeight = ticks * 0.3;
                 if (tornadoHeight > 9) tornadoHeight = 9;
 
-                for (double y = 0; y < tornadoHeight; y += 0.5) {
+                for (double y = 0; y < tornadoHeight; y += 0.75) { // Increased vertical spacing
                     double currentRadius = (y / tornadoHeight) * RADIUS;
                     if (currentRadius < 1.5) currentRadius = 1.5;
 
-                    int particleCount = (int)(currentRadius * 2); // Less particles for a delicate look
+                    int particleCount = (int)(currentRadius * 1.5); // Less particles for a delicate look
 
                     for (int i = 0; i < particleCount; i++) {
-                        double angle = (ticks * 0.5) + (y * 0.5) + (i * (2 * Math.PI / particleCount)); // Faster swirl
+                        double angle = (ticks * 0.5) + (y * 0.5) + (i * (2 * Math.PI / particleCount));
                         double x = tornadoCenter.getX() + currentRadius * Math.cos(angle);
                         double z = tornadoCenter.getZ() + currentRadius * Math.sin(angle);
                         Location particleLoc = new Location(tornadoCenter.getWorld(), x, tornadoCenter.getY() + y, z);

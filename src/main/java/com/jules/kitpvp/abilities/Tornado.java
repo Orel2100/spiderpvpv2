@@ -1,88 +1,70 @@
 package com.jules.kitpvp.abilities;
 
-import java.util.ArrayList;
-
-//import me.main.yoni.Main;
-//import me.main.yoni.API.ParticleEffect;
-//import me.main.yoni.TeamSystem.TeamManager;
-
+import com.jules.kitpvp.KitPVP;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-
 public class Tornado {
 
-    private static ArrayList<Vector> createCircle(double y, double radius) {
-        double amount = radius * 64;
-        double inc = (2 * Math.PI) / amount;
-        ArrayList<Vector> vecs = new ArrayList<Vector>();
-        for (int i = 0; i < amount; i++) {
-            double angle = i * inc;
-            double x = radius * Math.cos(angle);
-            double z = radius * Math.sin(angle);
-            Vector v = new Vector(x, y, z);
-            vecs.add(v);
-        }
-        return vecs;
-    }
+    public static void use(Player player, int level) {
+        new BukkitRunnable() {
+            final Location loc = player.getLocation();
+            double radius = 1;
+            double y = 0;
+            int ticks = 0;
 
-    public static void createTornado(Player player) {
-        final Location loc = player.getLocation();
-        //new BukkitRunnable() {
-        //    int i = 0;
-        //    public void run() {
-        //        Location l = loc.add(0, 0, 0);
-        //        Location t = l.clone().add(0, 0, 0);
-        //        double r = .30 * (2 * (2.35 / 5));
-        //        for (double y = 0; y < 4; y += .375) {
-        //            double fr = r * y;
-        //            if (fr > 2) {
-        //                fr = 2;
-        //            }
-        //            for (Vector v : createCircle(y, fr)) {
-        //                ParticleEffect.SNOW_SHOVEL.display(0, 0, 0, 0, 1, t.add(v), 100);
-        //                t.subtract(v);
-        //            }
-        //        }
-        //        i++;
-        //        if(i >= 20) cancel();
-        //    }
-        //}.runTaskTimer(Main.getPlugin(), 4, 4);
-    }
+            @Override
+            public void run() {
+                if (ticks > 100) { // 5 seconds
+                    this.cancel();
+                }
 
-    public static void use(final Player p, final int upgrade) {
-        final Location loc = p.getLocation();
-        createTornado(p);
-        //new BukkitRunnable() {
-        //
-        //    int i = 0;
-        //    @Override
-        //    public void run() {
-        //        double damage = 5.5;
-        //        for(int i = 0; i<upgrade; i++) {
-        //            damage+=0.5;
-        //        }
-        //        for(Entity ent : BurningSoul.getNearbyEntites(loc, 4)) {
-        //            if(ent instanceof LivingEntity) {
-        //                if(ent == p) continue;
-        //                if(TeamManager.getTeamByPlayer(p) != null) {
-        //                    if(TeamManager.getTeamByPlayer(p).getPlayers().contains(ent)) {
-        //                        continue;
-        //                    }
-        //                }
-        //                ((LivingEntity)ent).damage(damage,p);
-        //            }
-        //        }
-        //        i++;
-        //        if(i >= 5) {
-        //            cancel();
-        //        }
-        //    }
-        //}.runTaskTimer(Main.getPlugin(), 0, 20);
-    }
+                loc.add(0, y, 0);
+                for (int i = 0; i < 360; i += 20) {
+                    double angle = i * Math.PI / 180;
+                    double x = radius * Math.cos(angle);
+                    double z = radius * Math.sin(angle);
+                    loc.add(x, 0, z);
+                    player.getWorld().spawnParticle(Particle.CLOUD, loc, 0, 0, 0, 0, 1);
+                    loc.subtract(x, 0, z);
+                }
+                loc.subtract(0, y, 0);
 
+                for (Entity entity : player.getNearbyEntities(radius, 4, radius)) {
+                    if (entity instanceof LivingEntity && entity != player) {
+                        entity.setVelocity(new Vector(0, 0.5, 0));
+                    }
+                }
+
+                y += 0.1;
+                if (y > 4) {
+                    y = 0;
+                }
+                ticks++;
+            }
+        }.runTaskTimer(KitPVP.getInstance(), 0L, 1L);
+
+        new BukkitRunnable() {
+            int i = 0;
+            @Override
+            public void run() {
+                double damage = 1.0 + (level * 0.25);
+                for(Entity ent : player.getNearbyEntities(4, 4, 4)) {
+                    if(ent instanceof LivingEntity) {
+                        if(ent == player) continue;
+                        ((LivingEntity)ent).damage(damage, player);
+                    }
+                }
+                i++;
+                if(i >= 5) {
+                    cancel();
+                }
+            }
+        }.runTaskTimer(KitPVP.getInstance(), 0, 20);
+    }
 }

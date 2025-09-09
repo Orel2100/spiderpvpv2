@@ -1,48 +1,22 @@
 package com.jules.kitpvp.abilities;
 
-//import me.main.yoni.API.EffectUtils;
-//import me.main.yoni.API.Utils;
-//import me.main.yoni.TeamSystem.TeamManager;
-
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class SquidSplash {
 
-    public static void use(Player p,double precent) {
-        double total = 0;
-        for(Entity ent : p.getNearbyEntities(5, 5, 5)) {
-            if(ent instanceof LivingEntity && !ent.isDead() && ent instanceof Player) {
-                if(ent == p) continue;
-                //if(TeamManager.getTeamByPlayer(p) != null) {
-                //    if(TeamManager.getTeamByPlayer(p).getPlayers().contains(ent)) {
-                //        continue;
-                //    }
-                //}
-                //Utils.realDamage(ent, p, 3);
-                ((LivingEntity)ent).setVelocity(p.getLocation().toVector().subtract(ent.getLocation().toVector()).normalize().multiply(0.8));
-                //EffectUtils.createCircle(ent.getLocation(), 20*3,false);
-                total+=3;
+    public static void use(Player p, int level) {
+        p.playSound(p.getLocation(), Sound.ENTITY_SQUID_SQUIRT, 5, 5);
+        for (Entity entity : p.getNearbyEntities(5, 5, 5)) {
+            if (entity instanceof LivingEntity && entity != p) {
+                int duration = 20 * (2 + level);
+                int amplifier = level / 2;
+                ((LivingEntity) entity).addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, duration, amplifier));
             }
         }
-        double heal = total * precent / 100;
-        if(heal > 8) {
-            heal = 8;
-        }
-        p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_SPLASH, 5, 5);
-        for(Entity ent : p.getNearbyEntities(10, 10, 10)) {
-            if(ent == p) continue;
-            if(ent instanceof Player) {
-                Player enp = (Player)ent;
-                enp.playSound(p.getLocation(), Sound.ENTITY_PLAYER_SPLASH, 5, 5);
-            }
-        }
-        p.setHealth(p.getHealth() + heal >= p.getMaxHealth() ? p.getMaxHealth() : p.getHealth() + heal);
-        p.setLevel(0);
-        p.setExp(0);
     }
-
 }

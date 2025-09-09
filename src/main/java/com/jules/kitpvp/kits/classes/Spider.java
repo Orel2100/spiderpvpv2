@@ -7,7 +7,9 @@ import com.jules.kitpvp.player.MPlayer;
 import com.jules.kitpvp.util.ItemStackCreator;
 import com.jules.kitpvp.util.KitUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -21,6 +23,9 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.*;
 
 public class Spider extends MegaWallsClass {
+
+    private static final int LANDING_RADIUS = 3;
+    private static final Random random = new Random();
 
     public Spider() {
         super(
@@ -68,12 +73,34 @@ public class Spider extends MegaWallsClass {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
         double multiplier = level < 4 ? 2.0 : 2.5;
-        double radius = 2.0 + (level - 1) * 0.5;
-        p.getNearbyEntities(radius, radius, radius).forEach(entity -> {
+
+        // Damage entities
+        p.getNearbyEntities(LANDING_RADIUS, LANDING_RADIUS, LANDING_RADIUS).forEach(entity -> {
             if (entity instanceof Player && entity != p) {
                 ((Player) entity).damage(fallDistance * multiplier, p);
             }
         });
+
+        // Spawn falling cobwebs and particles
+        Location center = p.getLocation();
+        for (int x = -1; x <= 1; x++) { // 3x3 area
+            for (int z = -1; z <= 1; z++) {
+                Location blockLoc = center.clone().add(x, 0, z);
+
+                for (int y = blockLoc.getBlockY() + 1; y > 0; y--) {
+                    Location checkLoc = new Location(blockLoc.getWorld(), blockLoc.getX(), y, blockLoc.getZ());
+                    if (checkLoc.getBlock().getType().isSolid()) {
+                        Location cobwebLoc = checkLoc.add(0, 1, 0);
+                        if (cobwebLoc.getBlock().getType() == Material.AIR) {
+                            cobwebLoc.getBlock().setType(Material.COBWEB);
+                            cobwebLoc.getWorld().spawnParticle(Particle.SQUID_INK, cobwebLoc.clone().add(0.5, 0.5, 0.5), 10, 0.2, 0.2, 0.2, 0);
+                            cobwebLoc.getWorld().spawnParticle(Particle.BLOCK_DUST, cobwebLoc.clone().add(0.5, 0.5, 0.5), 5, 0.2, 0.2, 0.2, 0, Material.COBWEB.createBlockData());
+                        }
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     @Override

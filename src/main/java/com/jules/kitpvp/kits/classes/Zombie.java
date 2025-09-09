@@ -66,8 +66,7 @@ public class Zombie extends MegaWallsClass {
         if (!event.getAction().name().contains("RIGHT")) return;
         if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
         if (!p.getItemInHand().hasItemMeta() || !p.getItemInHand().getItemMeta().hasLore() || !p.getItemInHand().getItemMeta().getLore().contains(KitUtils.KIT_ITEM_LORE)) return;
-        if (p.getLevel() < 100) {
-            p.sendMessage(ChatColor.RED + "You don't have enough energy to use this ability!");
+        if (p.getLevel() < KitClass.ABILITY_XP_COST) {
             return;
         }
 

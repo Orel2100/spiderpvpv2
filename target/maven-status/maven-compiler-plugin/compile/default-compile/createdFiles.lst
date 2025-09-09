@@ -76,6 +76,7 @@ com/jules/kitpvp/abilities/ExplosiveArrow.class
 com/jules/kitpvp/listeners/PlayerMoveListener.class
 com/jules/kitpvp/listeners/EntityShootBowListener.class
 com/jules/kitpvp/abilities/Wrath.class
+com/jules/kitpvp/KitPVP$1.class
 com/jules/kitpvp/kits/classes/Enderman.class
 com/jules/kitpvp/abilities/Heal.class
 com/jules/kitpvp/abilities/Tornado.class

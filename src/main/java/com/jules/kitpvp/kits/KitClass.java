@@ -22,6 +22,8 @@ import java.util.Map;
 
 public abstract class KitClass {
 
+    public static final int ABILITY_XP_COST = 100;
+
     private String name;
     private List<String> description;
     private int price;

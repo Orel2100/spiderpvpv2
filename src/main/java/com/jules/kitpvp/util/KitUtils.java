@@ -14,6 +14,7 @@ public class KitUtils {
 
     public static void givePlayerKitItems(Player player, Kit kit) {
         player.getInventory().clear();
+        player.setLevel(100);
         try {
             for (ItemStack item : kit.getKitClass().newInstance().getStartingItems(player)) {
                 player.getInventory().addItem(item);

@@ -75,8 +75,7 @@ public class Skeleton extends MegaWallsClass {
             }
         }
 
-        if (p.getLevel() < 100) {
-            p.sendMessage(ChatColor.RED + "You don't have enough energy to use this ability!");
+        if (p.getLevel() < KitClass.ABILITY_XP_COST) {
             return;
         }
         int explosiveLevel = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.ABILITY).get(0));

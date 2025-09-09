@@ -9,9 +9,17 @@ import com.jules.kitpvp.commands.SetLobbyCommand;
 import com.jules.kitpvp.commands.UpgradeCommand;
 import com.jules.kitpvp.duel.DuelManager;
 import com.jules.kitpvp.listeners.*;
+import com.jules.kitpvp.player.MPlayer;
+import com.jules.kitpvp.kits.Upgrade;
+import com.jules.kitpvp.kits.UpgradeCategory;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class KitPVP extends JavaPlugin {
 
@@ -65,6 +73,25 @@ public class KitPVP extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerItemConsumeListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
+
+        final long ABILITY_READY_INTERVAL_TICKS = 140;
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    MPlayer mPlayer = MPlayer.getMPlayer(player.getUniqueId());
+                    if (mPlayer.getKitClass() != null && player.getLevel() >= com.jules.kitpvp.kits.KitClass.ABILITY_XP_COST) {
+                        List<Upgrade> abilityUpgrades = mPlayer.getKitClass().getUpgrades().get(UpgradeCategory.ABILITY);
+                        if (abilityUpgrades != null && !abilityUpgrades.isEmpty()) {
+                            String abilityName = abilityUpgrades.get(0).getName();
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a&lYour &6&l" + abilityName + " &a&lSkill is ready!"));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aRight Click with any sword to activate your skill!"));
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(this, 0, ABILITY_READY_INTERVAL_TICKS);
 
 
         getLogger().info("KitPVP has been enabled!");

@@ -16,7 +16,7 @@ public class Tornado {
 
     private static final double PULL_STRENGTH = 0.4;
     private static final int RADIUS = 6;
-    private static final double MOVE_SPEED = 0.1;
+    private static final double MOVE_SPEED = 0.05; // Slower movement
 
     public static void use(Player p, int level) {
         Location tornadoCenter = p.getLocation();
@@ -55,18 +55,18 @@ public class Tornado {
 
                 // --- Visuals ---
                 for (int j = 0; j < 12; j++) {
-                    double angle = ticks * 0.25 + (j * Math.PI / 6);
+                    double angle = ticks * 0.5 + (j * Math.PI / 6); // Faster swirl
                     double particleRadius = RADIUS * (1 - (ticks / 120.0));
 
                     double x = tornadoCenter.getX() + particleRadius * Math.cos(angle);
                     double z = tornadoCenter.getZ() + particleRadius * Math.sin(angle);
-                    double y = tornadoCenter.getY() + (ticks * 0.05);
+                    double y = tornadoCenter.getY() + (ticks * 0.1); // Faster rise
                     Location particleLoc = new Location(tornadoCenter.getWorld(), x, y, z);
                     tornadoCenter.getWorld().spawnParticle(Particle.COMPOSTER, particleLoc, 0, 0, 0, 0, 1);
 
                     if (j % 2 == 0) {
                         double airRadius = particleRadius * 0.5;
-                        double airAngle = ticks * -0.3 + (j * Math.PI / 6);
+                        double airAngle = ticks * -0.6 + (j * Math.PI / 6); // Faster opposite swirl
                         double airX = tornadoCenter.getX() + airRadius * Math.cos(airAngle);
                         double airZ = tornadoCenter.getZ() + airRadius * Math.sin(airAngle);
                         double airY = tornadoCenter.getY() + (j * 0.4);

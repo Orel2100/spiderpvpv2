@@ -76,6 +76,7 @@ com/jules/kitpvp/abilities/ExplosiveArrow.class
 com/jules/kitpvp/listeners/PlayerMoveListener.class
 com/jules/kitpvp/listeners/EntityShootBowListener.class
 com/jules/kitpvp/abilities/Wrath.class
+com/jules/kitpvp/abilities/Fireball.class
 com/jules/kitpvp/KitPVP$1.class
 com/jules/kitpvp/kits/classes/Enderman.class
 com/jules/kitpvp/abilities/Heal.class
@@ -88,6 +89,7 @@ com/jules/kitpvp/duel/DuelManager.class
 com/jules/kitpvp/arena/Arena.class
 com/jules/kitpvp/kits/Upgrade.class
 com/jules/kitpvp/listeners/HangingBreakListener.class
+com/jules/kitpvp/abilities/Tornado$2.class
 com/jules/kitpvp/kits/HitType.class
 com/jules/kitpvp/kits/classes/Spider.class
 com/jules/kitpvp/util/KitUtils.class
@@ -100,4 +102,5 @@ com/jules/kitpvp/listeners/EntityExplodeListener.class
 com/jules/kitpvp/kits/Kit.class
 com/jules/kitpvp/kits/classes/Hunter.class
 com/jules/kitpvp/abilities/Ability.class
+com/jules/kitpvp/abilities/Tornado$1.class
 com/jules/kitpvp/gui/ClassSelectorGUI.class

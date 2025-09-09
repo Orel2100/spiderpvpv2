@@ -82,7 +82,7 @@ public class Creeper extends MegaWallsClass {
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
                 new Upgrade("Detonate", "Explode, dealing damage to nearby enemies.", 5,
                         plugin.getConfig().getIntegerList("kits.creeper.upgrades.ability.costs"),
-                        Arrays.asList(Material.SULPHUR, Material.SULPHUR, Material.SULPHUR, Material.SULPHUR, Material.SULPHUR))
+                        Arrays.asList(Material.LEGACY_SULPHUR, Material.LEGACY_SULPHUR, Material.LEGACY_SULPHUR, Material.LEGACY_SULPHUR, Material.LEGACY_SULPHUR))
         ));
 
         return upgrades;

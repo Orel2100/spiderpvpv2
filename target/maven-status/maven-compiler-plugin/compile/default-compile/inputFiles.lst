@@ -19,6 +19,7 @@
 /app/src/main/java/com/jules/kitpvp/listeners/ItemListener.java
 /app/src/main/java/com/jules/kitpvp/kits/classes/Hunter.java
 /app/src/main/java/com/jules/kitpvp/arena/ArenaManager.java
+/app/src/main/java/com/jules/kitpvp/abilities/Fireball.java
 /app/src/main/java/com/jules/kitpvp/commands/LobbyCommand.java
 /app/src/main/java/com/jules/kitpvp/commands/BoosterCommand.java
 /app/src/main/java/com/jules/kitpvp/kits/classes/Herobrine.java

@@ -35,7 +35,7 @@ public class Squid extends MegaWallsClass {
     @Override
     public List<ItemStack> getStartingItems(Player p) {
         List<ItemStack> items = new ArrayList<>();
-        items.add(new ItemStackCreator(Material.STONE_SWORD, "§1Squid Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        items.add(getAbilityItem());
         return items;
     }
 

@@ -16,7 +16,7 @@ public class PlayerMoveListener implements Listener {
             Leap.leaping.remove(player);
             MPlayer mPlayer = MPlayer.getMPlayer(player.getUniqueId());
             if (mPlayer.getKitClass() != null) {
-                mPlayer.getKitClass().onLand(player);
+                mPlayer.getKitClass().onLand(player, player.getFallDistance());
             }
         }
     }

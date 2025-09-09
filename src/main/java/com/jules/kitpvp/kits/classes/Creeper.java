@@ -34,7 +34,7 @@ public class Creeper extends MegaWallsClass {
     @Override
     public List<ItemStack> getStartingItems(Player p) {
         List<ItemStack> items = new ArrayList<>();
-        items.add(new ItemStackCreator(Material.STONE_SWORD, "§2Creeper Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        items.add(getAbilityItem());
         return items;
     }
 

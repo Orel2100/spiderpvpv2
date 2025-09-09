@@ -38,7 +38,7 @@ public class Hunter extends MegaWallsClass {
     public List<ItemStack> getStartingItems(Player p) {
         List<ItemStack> items = new ArrayList<>();
         items.add(new ItemStackCreator(Material.STONE_SWORD, "§aHunter Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
-        items.add(new ItemStackCreator(Material.BOW, "§aHunter Bow").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        items.add(getAbilityItem());
         items.add(new ItemStackCreator(Material.ARROW, "§aHunter Arrow").setAmount(32).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
         items.add(new ItemStackCreator(Material.LEATHER_HELMET, "§aHunter Helmet").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
         items.add(new ItemStackCreator(Material.LEATHER_CHESTPLATE, "§aHunter Chestplate").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());

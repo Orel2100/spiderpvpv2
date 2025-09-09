@@ -58,7 +58,7 @@ public abstract class KitClass {
     public void onBowShoot(EntityShootBowEvent event) {}
     public void onBlockBreak(BlockBreakEvent event) {}
     public void onProjectileHit(ProjectileHitEvent event) {}
-    public void onLand(Player player) {}
+    public void onLand(Player player, float fallDistance) {}
     public void onHangingBreak(HangingBreakEvent event) {}
     public void onEntityExplode(EntityExplodeEvent event) {}
     public void onItemConsume(PlayerItemConsumeEvent event) {}

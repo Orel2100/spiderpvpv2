@@ -39,11 +39,7 @@ public class Blaze extends MegaWallsClass {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
 
-        ItemStack sword = new ItemStackCreator(Material.STONE_SWORD, "§6Blaze Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
-        if (level > 2) sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
-        if (level > 4) sword.setType(Material.IRON_SWORD);
-
-        items.add(sword);
+        items.add(getAbilityItem());
         items.add(new ItemStackCreator(Material.COOKED_BEEF, "§6Blaze Steak").setAmount(3 + (level > 1 ? 1 : 0) + (level > 3 ? 2 : 0)).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
         return items;
     }

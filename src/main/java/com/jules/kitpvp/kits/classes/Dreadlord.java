@@ -41,6 +41,7 @@ public class Dreadlord extends MegaWallsClass {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
 
+        items.add(getAbilityItem());
         switch (level) {
             case 1:
                 items.add(new ItemStackCreator(Material.STONE_SWORD, "§8Dreadlord Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());

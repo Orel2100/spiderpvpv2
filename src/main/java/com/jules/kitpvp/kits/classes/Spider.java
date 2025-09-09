@@ -42,15 +42,7 @@ public class Spider extends MegaWallsClass {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
 
-        ItemStack sword = new ItemStackCreator(Material.STONE_SWORD, "§8Spider Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
-        items.add(new ItemStackCreator(Material.COOKED_BEEF, "§8Spider Steak").setAmount(2 + (level > 1 ? 1 : 0) + (level > 3 ? 1 : 0) + (level > 4 ? 1 : 0)).setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
-
-        if (level > 2) sword.setType(Material.IRON_SWORD);
-        if (level > 1) sword.addEnchantment(Enchantment.DURABILITY, 1);
-        if (level > 3) sword.addEnchantment(Enchantment.DURABILITY, 2);
-        if (level > 4) sword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
-
-        items.add(0, sword);
+        items.add(getAbilityItem());
 
         if (level > 4) items.add(new ItemStackCreator(Material.LEATHER_HELMET, "§8Spider Helmet").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
 
@@ -72,14 +64,14 @@ public class Spider extends MegaWallsClass {
     }
 
     @Override
-    public void onLand(Player p) {
+    public void onLand(Player p, float fallDistance) {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
         double multiplier = level < 4 ? 2.0 : 2.5;
         double radius = 2.0 + (level - 1) * 0.5;
         p.getNearbyEntities(radius, radius, radius).forEach(entity -> {
             if (entity instanceof Player && entity != p) {
-                ((Player) entity).damage(4 * multiplier, p);
+                ((Player) entity).damage(fallDistance * multiplier, p);
             }
         });
     }

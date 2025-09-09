@@ -85,7 +85,6 @@ public class Spider extends MegaWallsClass {
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int upgradeLevel = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
 
-        // Apply damage and slowness to nearby enemies.
         p.getNearbyEntities(LANDING_RADIUS, LANDING_RADIUS, LANDING_RADIUS).forEach(entity -> {
             if (entity instanceof Player && !entity.equals(p)) {
                 Player target = (Player) entity;
@@ -97,9 +96,8 @@ public class Spider extends MegaWallsClass {
             }
         });
 
-        // --- Visual Effects ---
         Location center = p.getLocation();
-        int cobwebCount = 6;
+        int cobwebCount = 8;
 
         for (int i = 0; i < cobwebCount; i++) {
             double angle = random.nextDouble() * 2 * Math.PI;
@@ -108,29 +106,32 @@ public class Spider extends MegaWallsClass {
             double zOffset = distance * Math.sin(angle);
 
             Location spawnLoc = center.clone().add(xOffset, 2.5, zOffset);
+            Location landLoc = center.clone().add(xOffset, 0, zOffset);
+
+            for (int y = landLoc.getBlockY(); y > 0; y--) {
+                Location checkLoc = new Location(landLoc.getWorld(), landLoc.getX(), y, landLoc.getZ());
+                if (checkLoc.getBlock().getType().isSolid()) {
+                    landLoc.setY(y + 1);
+                    break;
+                }
+            }
 
             FallingBlock fallingCobweb = spawnLoc.getWorld().spawnFallingBlock(spawnLoc, Material.COBWEB.createBlockData());
             fallingCobweb.setDropItem(false);
             fallingCobweb.setHurtEntities(false);
 
+            final Location finalLandLoc = landLoc;
             new BukkitRunnable() {
-                private int ticksLived = 0;
                 @Override
                 public void run() {
-                    if (!fallingCobweb.isValid() || ticksLived > 40) {
-                        fallingCobweb.remove();
-                        this.cancel();
-                        return;
+                    if (finalLandLoc.getBlock().getType() == Material.COBWEB) {
+                        finalLandLoc.getBlock().setType(Material.AIR);
                     }
-                    Location below = fallingCobweb.getLocation().subtract(0, 0.1, 0);
-                    if (below.getBlock().getType().isSolid()) {
+                    if (fallingCobweb.isValid()) {
                         fallingCobweb.remove();
-                        this.cancel();
-                        return;
                     }
-                    ticksLived++;
                 }
-            }.runTaskTimer(KitPVP.getInstance(), 0L, 1L);
+            }.runTaskLater(KitPVP.getInstance(), 20L);
         }
 
         center.getWorld().spawnParticle(Particle.SQUID_INK, center, 50, LANDING_RADIUS, 1.0, LANDING_RADIUS, 0);

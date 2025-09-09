@@ -71,7 +71,7 @@ public class Tornado {
                         double airZ = tornadoCenter.getZ() + airRadius * Math.sin(airAngle);
                         double airY = tornadoCenter.getY() + (j * 0.4);
                         Location airParticleLoc = new Location(tornadoCenter.getWorld(), airX, airY, airZ);
-                        tornadoCenter.getWorld().spawnParticle(Particle.SPORE_BLOSSOM_AIR, airParticleLoc, 0, 0, 0, 0, 1);
+                        tornadoCenter.getWorld().spawnParticle(Particle.CLOUD, airParticleLoc, 0, 0, 0, 0, 1);
                     }
                 }
 

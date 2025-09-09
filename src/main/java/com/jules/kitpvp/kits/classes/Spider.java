@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
@@ -18,6 +19,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -70,23 +72,20 @@ public class Spider extends MegaWallsClass {
 
     @Override
     public void onLand(Player p, float fallDistance) {
-        // As per the new design, the Spider now takes its own fall damage.
-        // This is handled by vanilla mechanics since we no longer cancel the fall damage event.
-
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
         double multiplier = level < 4 ? 2.0 : 2.5;
 
-        // Damage and apply slowness to nearby enemies
+        p.getWorld().playSound(p.getLocation(), Sound.ENTITY_SPIDER_STEP, 0.5f, 1.2f);
+
         p.getNearbyEntities(LANDING_RADIUS, LANDING_RADIUS, LANDING_RADIUS).forEach(entity -> {
             if (entity instanceof Player && entity != p) {
                 Player target = (Player) entity;
                 target.damage(fallDistance * multiplier, p);
-                target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 1)); // 1 second of Slowness II
+                target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 1));
             }
         });
 
-        // Visual falling cobweb effect remains the same
         Location center = p.getLocation();
         int cobwebCount = 6;
 
@@ -96,7 +95,7 @@ public class Spider extends MegaWallsClass {
             double xOffset = distance * Math.cos(angle);
             double zOffset = distance * Math.sin(angle);
 
-            Location spawnLoc = center.clone().add(xOffset, 2, zOffset);
+            Location spawnLoc = center.clone().add(xOffset, 2.5, zOffset);
 
             FallingBlock fallingCobweb = spawnLoc.getWorld().spawnFallingBlock(spawnLoc, Material.COBWEB.createBlockData());
             fallingCobweb.setDropItem(false);
@@ -105,9 +104,15 @@ public class Spider extends MegaWallsClass {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    fallingCobweb.remove();
+                    if (fallingCobweb.isValid()) {
+                        Location landLoc = fallingCobweb.getLocation();
+                        if (landLoc.getBlock().getType() == Material.COBWEB) {
+                            landLoc.getBlock().setType(Material.AIR);
+                        }
+                        fallingCobweb.remove();
+                    }
                 }
-            }.runTaskLater(KitPVP.getInstance(), 15L);
+            }.runTaskLater(KitPVP.getInstance(), 12L);
 
             Location particleLoc = center.clone().add(xOffset, 0, zOffset);
             particleLoc.getWorld().spawnParticle(Particle.SQUID_INK, particleLoc, 5, 0.5, 0.5, 0.5, 0);

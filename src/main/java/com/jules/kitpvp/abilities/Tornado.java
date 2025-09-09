@@ -14,8 +14,8 @@ import java.util.Random;
 public class Tornado {
 
     private static final double PULL_STRENGTH = 0.4;
-    private static final int RADIUS = 6;
-    private static final double DAMAGE_TICK_RATE = 0.25; // 0.25 seconds per tick
+    private static final int RADIUS = 4; // Made smaller
+    private static final double DAMAGE_TICK_RATE = 0.25;
     private static final int TICKS_PER_SECOND = 20;
     private static final Random random = new Random();
 
@@ -38,7 +38,8 @@ public class Tornado {
                     return;
                 }
 
-                tornadoCenter.getWorld().playSound(tornadoCenter, Sound.ITEM_ELYTRA_FLYING, 0.6f, 1.0f);
+                // Reworked sound
+                tornadoCenter.getWorld().playSound(tornadoCenter, Sound.ENTITY_ENDER_DRAGON_FLAP, 0.3f, 1.9f);
 
                 for (Entity e : tornadoCenter.getWorld().getNearbyEntities(tornadoCenter, RADIUS, 10, RADIUS)) {
                     if (e instanceof LivingEntity && !e.equals(caster)) {
@@ -52,13 +53,13 @@ public class Tornado {
                     }
                 }
 
-                // --- Enhanced Visuals ---
+                // --- Polished Visuals ---
                 double tornadoHeight = ticks * 0.2;
-                if (tornadoHeight > 10) tornadoHeight = 10;
+                if (tornadoHeight > 8) tornadoHeight = 8; // Capped height since radius is smaller
 
                 for (double y = 0; y < tornadoHeight; y += 0.5) {
                     double currentRadius = (y / tornadoHeight) * RADIUS;
-                    if (currentRadius < 1.0) currentRadius = 1.0;
+                    if (currentRadius < 1.5) currentRadius = 1.5; // Wider base
 
                     int particleCount = (int)(currentRadius * 5);
 
@@ -69,15 +70,13 @@ public class Tornado {
                         Location particleLoc = new Location(tornadoCenter.getWorld(), x, tornadoCenter.getY() + y, z);
 
                         tornadoCenter.getWorld().spawnParticle(Particle.CLOUD, particleLoc, 0, 0, 0, 0, 0.1);
-                        if (random.nextInt(5) == 0) {
-                             tornadoCenter.getWorld().spawnParticle(Particle.SWEEP_ATTACK, particleLoc, 0);
-                        }
+                        // SWEEP_ATTACK particle removed
                     }
                 }
 
                 Material groundMaterial = tornadoCenter.clone().subtract(0, 1, 0).getBlock().getType();
                 if (groundMaterial.isSolid()) {
-                    tornadoCenter.getWorld().spawnParticle(Particle.BLOCK_DUST, tornadoCenter, 30, 1.0, 0.5, 1.0, 0, groundMaterial.createBlockData());
+                    tornadoCenter.getWorld().spawnParticle(Particle.BLOCK_DUST, tornadoCenter, 20, 1.0, 0.5, 1.0, 0, groundMaterial.createBlockData());
                 }
 
                 ticks++;

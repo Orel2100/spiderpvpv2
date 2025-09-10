@@ -20,6 +20,9 @@ public class IronPunch {
         // XP is handled in Golem.java
         EffectUtils.createCircle(p.getLocation(), 5, true);
         EffectUtils.createHelix(p.getLocation(), 5, 20*2);
+
+        p.getWorld().playSound(p.getEyeLocation(), Sound.ANVIL_LAND, 1, 2);
+
         for(int x = -2; x<4; x=x+2) {
             for(int z = -2; z<4; z=z+2) {
                 if(x == 0 && z == 0) continue;
@@ -52,9 +55,6 @@ public class IronPunch {
                 }
                 for(Entity ent : Utils.getNearbyEntities(p.getLocation(), 5)){
                     if(ent instanceof LivingEntity){
-                        if(ent instanceof Player) {
-                            ((Player)ent).playSound(p.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
-                        }
                         // Team check removed
                         if(ent == p) continue;
                         Utils.realDamage(ent, p, damage);
@@ -64,6 +64,10 @@ public class IronPunch {
                         }
                     }
                 }
+                p.getWorld().playSound(p.getLocation(), Sound.EXPLODE, 1, 1);
+                p.getWorld().playSound(p.getLocation(), Sound.EXPLODE, 1, 1);
+                p.getWorld().playSound(p.getLocation(), Sound.EXPLODE, 1, 0.7f);
+                p.getWorld().playSound(p.getLocation(), Sound.EXPLODE, 1, 0.7f);
             }
         }, 10);
     }

@@ -42,7 +42,7 @@ public class ItemListener implements Listener {
         } else if (itemType == Material.EMERALD && itemName.equals(ChatColor.GREEN + "Shop")) {
             new ShopGUI().open(player);
         } else if (itemType == Material.IRON_SWORD && itemName.equals(ChatColor.GREEN + "Kit Selector")) {
-            new ClassSelectorGUI(ClassType.NORMAL).open(player);
+            new ClassSelectorGUI(ClassType.NORMAL, player).open(player);
         }
     }
 }

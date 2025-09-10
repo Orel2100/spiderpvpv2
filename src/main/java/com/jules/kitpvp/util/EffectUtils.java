@@ -2,6 +2,7 @@ package com.jules.kitpvp.util;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 public class EffectUtils {
 

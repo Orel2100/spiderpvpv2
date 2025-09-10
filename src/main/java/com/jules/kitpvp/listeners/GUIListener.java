@@ -34,7 +34,9 @@ public class GUIListener implements Listener {
             MPlayer mPlayer = MPlayer.getMPlayer(player.getUniqueId());
             mPlayer.setKit(kit);
 
-            new UpgradeGUI(mPlayer).open(player);
+            player.closeInventory();
+            com.jules.kitpvp.util.KitUtils.givePlayerKitItems(player, kit);
+            player.sendMessage(ChatColor.GREEN + "You have selected the " + kit.getName() + " kit!");
         } else if (holder instanceof AbilityTestGUI) {
             event.setCancelled(true);
             if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR || !event.getCurrentItem().hasItemMeta() || !event.getCurrentItem().getItemMeta().hasLore()) {

@@ -22,10 +22,6 @@ public class Detonate {
             double damage = 1.25;
             @Override
             public void run() {
-                if(!KitPVP.getPlaying().contains(p.getName())) {
-                    cancel();
-                    return;
-                }
                 p.playSound(p.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 5, 5);
                 for(Entity ps : p.getNearbyEntities(10, 10, 10)) {
                     if(ps == p) continue;
@@ -56,13 +52,15 @@ public class Detonate {
                             if(ent instanceof Player) {
                                 Player enp = (Player)ent;
                                 MPlayer player = MPlayer.getMPlayer(enp.getUniqueId());
-                                if(player.getKit().getName().equalsIgnoreCase("Creeper")) {
-                                    Utils.realDamage(ent, p, damage/3);
-                                    continue;
-                                }
-                                if(player.getKit().getName().equalsIgnoreCase("Arcanist")) {
-                                    Utils.realDamage(ent, p, damage/2);
-                                    continue;
+                                if(player != null && player.getKit() != null) {
+                                    if(player.getKit().getName().equalsIgnoreCase("Creeper")) {
+                                        Utils.realDamage(ent, p, damage/3);
+                                        continue;
+                                    }
+                                    if(player.getKit().getName().equalsIgnoreCase("Arcanist")) {
+                                        Utils.realDamage(ent, p, damage/2);
+                                        continue;
+                                    }
                                 }
                             }
                             Utils.realDamage(ent, p, damage);

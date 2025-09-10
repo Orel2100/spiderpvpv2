@@ -45,8 +45,35 @@ public class Squid extends MegaWallsClass {
     @Override
     public List<ItemStack> getStartingItems(Player p) {
         List<ItemStack> items = new ArrayList<>();
-        items.add(new ItemStack(Material.STONE_SWORD));
-        items.add(new ItemStack(Material.DIAMOND_BOOTS));
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
+
+        ItemStack sword = new ItemStackCreator(Material.STONE_SWORD, "§1Squid Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
+        ItemStack boots = new ItemStackCreator(Material.LEATHER_BOOTS, "§1Squid Flippers").setLore(KitUtils.KIT_ITEM_LORE_LIST).build();
+
+        if (level >= 2) {
+            boots.addEnchantment(org.bukkit.enchantments.Enchantment.DEPTH_STRIDER, 1);
+        }
+        if (level >= 3) {
+            sword.setType(Material.IRON_SWORD);
+            boots.setType(Material.IRON_BOOTS);
+            boots.addEnchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 1);
+        }
+        if (level >= 4) {
+            sword.addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 5);
+            boots.setType(Material.DIAMOND_BOOTS);
+            boots.addEnchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+            boots.addEnchantment(org.bukkit.enchantments.Enchantment.DEPTH_STRIDER, 2);
+        }
+        if (level >= 5) {
+            sword.addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 10);
+            boots.addEnchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 3);
+            boots.addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 10);
+            items.add(new ItemStackCreator(Material.DIAMOND_PICKAXE, "§1Squid Pickaxe").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        }
+
+        items.add(sword);
+        items.add(boots);
         return items;
     }
 

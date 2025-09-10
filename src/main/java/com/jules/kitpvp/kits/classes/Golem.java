@@ -23,13 +23,48 @@ import java.util.*;
 
 public class Golem extends MegaWallsClass {
 
+    private final Map<UUID, Long> ironHeartCooldowns = new HashMap<>();
+
+    @Override
+    public void onKill(Player p, Player killed) {
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        int level = mPlayer.getUpgradeLevel("Iron Heart");
+
+        if (level > 0) {
+            long currentTime = System.currentTimeMillis();
+            long lastUsed = ironHeartCooldowns.getOrDefault(p.getUniqueId(), 0L);
+
+            if (currentTime - lastUsed > 45 * 1000) {
+                double duration = 2.0 + (level - 1) * 1.25;
+                p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, (int) (duration * 20), 1));
+                ironHeartCooldowns.put(p.getUniqueId(), currentTime);
+            }
+        }
+    }
+
+    @Override
+    public void onDamageByEntity(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof org.bukkit.entity.Arrow) {
+            if (event.getEntity() instanceof Player) {
+                Player p = (Player) event.getEntity();
+                MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+                int level = mPlayer.getUpgradeLevel("Iron Constitution");
+
+                if (level > 0) {
+                    double duration = 2.0 + (level - 1) * 1.0;
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (int) (duration * 20), 0));
+                }
+            }
+        }
+    }
+
     public Golem() {
         super(
                 "Golem",
                 new String[] {
-                        "A very tanky kit.",
-                        "Use your ability to deal",
-                        "damage to nearby enemies."
+                        "A powerful tank that can",
+                        "absorb damage and deal",
+                        "massive area damage."
                 },
                 KitPVP.getInstance().getConfig().getInt("kits.golem.cost", 3000),
                 new ItemStackCreator(Material.IRON_BLOCK, "§bGolem").build()
@@ -85,39 +120,10 @@ public class Golem extends MegaWallsClass {
         IronPunch.use(p, level);
     }
 
-    @Override
-    public void onDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player p = (Player) event.getEntity();
-            MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
-            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_1).get(0));
-            if (level > 0) {
-                double chance = 0.1 + (level - 1) * 0.05;
-                if (new Random().nextDouble() < chance) {
-                    int resistanceLevel = level < 4 ? 1 : 2;
-                    p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 3, resistanceLevel -1));
-                }
-            }
-        }
-        if(event.getDamager() instanceof Player){
-            Player p = (Player) event.getDamager();
-            MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
-            int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.PASSIVE_2).get(0));
-            if (level > 0) {
-                double chance = 0.05 + (level - 1) * 0.025;
-                if (new Random().nextDouble() < chance) {
-                    event.getEntity().setVelocity(p.getLocation().getDirection().multiply(2).add(new Vector(0, 0.5, 0)));
-                }
-            }
-        }
-    }
 
     @Override
     public List<PotionEffect> getPassiveEffects(Player p) {
-        List<PotionEffect> effects = new ArrayList<>();
-        effects.add(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0));
-        effects.add(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0));
-        return effects;
+        return new ArrayList<>();
     }
 
     @Override
@@ -136,27 +142,27 @@ public class Golem extends MegaWallsClass {
         KitPVP plugin = KitPVP.getInstance();
 
         upgrades.put(UpgradeCategory.KIT, Arrays.asList(
-                new Upgrade("Golem Kit", "Upgrade your starting kit.", 5,
+                new Upgrade("Golem Kit", "Upgrade your starting kit.", 9,
                         plugin.getConfig().getIntegerList("kits.golem.upgrades.kit.costs"),
-                        Arrays.asList(Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD))
+                        Arrays.asList(Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD, Material.IRON_SWORD))
         ));
 
         upgrades.put(UpgradeCategory.ABILITY, Arrays.asList(
-                new Upgrade("Iron Punch", "Deals damage and applies Slowness.", 5,
+                new Upgrade("Iron Punch", "Casts a hexagon causing damage in a 4.5 block radius.", 9,
                         plugin.getConfig().getIntegerList("kits.golem.upgrades.ability.costs"),
-                        Arrays.asList(Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK))
+                        Arrays.asList(Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK, Material.IRON_BLOCK))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_1, Arrays.asList(
-                new Upgrade("Iron Skin", "Chance to gain Resistance when hit.", 5,
+                new Upgrade("Iron Heart", "After killing a player you get Absorption 2 for X seconds (cooldown of 45s).", 9,
                         plugin.getConfig().getIntegerList("kits.golem.upgrades.passive1.costs"),
-                        Arrays.asList(Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT))
+                        Arrays.asList(Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT, Material.IRON_INGOT))
         ));
 
         upgrades.put(UpgradeCategory.PASSIVE_2, Arrays.asList(
-                new Upgrade("Stomper", "Chance to deal a knockback effect on hit.", 5,
+                new Upgrade("Iron Constitution", "When hit by an arrow you gain Resistance I for X seconds.", 9,
                         plugin.getConfig().getIntegerList("kits.golem.upgrades.passive2.costs"),
-                        Arrays.asList(Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON, Material.STICKY_PISTON))
+                        Arrays.asList(Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE, Material.IRON_CHESTPLATE))
         ));
 
         return upgrades;
@@ -169,15 +175,16 @@ public class Golem extends MegaWallsClass {
         lore.add("");
         switch (upgrade.getName()) {
             case "Iron Punch":
-                lore.add(ChatColor.GRAY + "Damage: " + ChatColor.RED + (2.5 + (level - 1) * 0.5));
-                lore.add(ChatColor.GRAY + "Slowness: " + ChatColor.AQUA + (level < 4 ? "II" : "III"));
+                double damage = 1.0 + (level - 1) * 0.5;
+                lore.add(ChatColor.GRAY + "Damage: " + ChatColor.RED + damage);
                 break;
-            case "Iron Skin":
-                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (10 + (level - 1) * 5) + "%");
-                lore.add(ChatColor.GRAY + "Resistance: " + ChatColor.AQUA + (level < 4 ? "I" : "II"));
+            case "Iron Heart":
+                double duration = 2.0 + (level - 1) * 1.25;
+                lore.add(ChatColor.GRAY + "Duration: " + ChatColor.AQUA + duration + "s");
                 break;
-            case "Stomper":
-                lore.add(ChatColor.GRAY + "Chance: " + ChatColor.GREEN + (5 + (level - 1) * 2.5) + "%");
+            case "Iron Constitution":
+                double resistanceDuration = 2.0 + (level - 1) * 1.0;
+                lore.add(ChatColor.GRAY + "Duration: " + ChatColor.AQUA + resistanceDuration + "s");
                 break;
         }
         return lore;

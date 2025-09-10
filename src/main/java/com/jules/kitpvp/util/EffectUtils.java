@@ -20,6 +20,25 @@ public class EffectUtils {
         }
     }
 
+    public static void createHexagon(Location center, double radius) {
+        for (int i = 0; i < 6; i++) {
+            double angle1 = 2 * Math.PI * i / 6;
+            double angle2 = 2 * Math.PI * (i + 1) / 6;
+            Location p1 = center.clone().add(radius * Math.cos(angle1), 0, radius * Math.sin(angle1));
+            Location p2 = center.clone().add(radius * Math.cos(angle2), 0, radius * Math.sin(angle2));
+            drawParticleLine(p1, p2, 0.5);
+        }
+    }
+
+    private static void drawParticleLine(Location from, Location to, double space) {
+        double distance = from.distance(to);
+        Vector vector = to.toVector().subtract(from.toVector()).normalize().multiply(space);
+        for (double i = 0; i < distance; i += space) {
+            from.add(vector);
+            from.getWorld().spawnParticle(org.bukkit.Particle.FLAME, from, 0, 0, 0, 0, 1);
+        }
+    }
+
     public static void playFirework(org.bukkit.World world, org.bukkit.Location location, org.bukkit.FireworkEffect fireworkEffect) {
         org.bukkit.entity.Firework fw = (org.bukkit.entity.Firework) world.spawn(location, org.bukkit.entity.Firework.class, firework -> {
             org.bukkit.inventory.meta.FireworkMeta fwm = firework.getFireworkMeta();

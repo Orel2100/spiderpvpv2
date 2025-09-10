@@ -34,6 +34,9 @@ public class PlayerDamageListener implements Listener {
                 MPlayer mDamager = MPlayer.getMPlayer(damager.getUniqueId());
                 if (mDamager.getKitClass() != null) {
                     mDamager.getKitClass().onDamageByEntity(e);
+                    if (mDamager.getKit() == com.jules.kitpvp.kits.Kit.GOLEM) {
+                        com.jules.kitpvp.util.Utils.addLevel((Player) damager, 12);
+                    }
                 }
             }
         }

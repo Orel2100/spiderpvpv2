@@ -60,15 +60,15 @@ public class Squid extends MegaWallsClass {
             boots.addEnchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 1);
         }
         if (level >= 4) {
-            sword.addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 5);
+            sword.addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 2);
             boots.setType(Material.DIAMOND_BOOTS);
             boots.addEnchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2);
             boots.addEnchantment(org.bukkit.enchantments.Enchantment.DEPTH_STRIDER, 2);
         }
         if (level >= 5) {
-            sword.addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 10);
+            sword.addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 3);
             boots.addEnchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 3);
-            boots.addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 10);
+            boots.addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 3);
             items.add(new ItemStackCreator(Material.DIAMOND_PICKAXE, "§1Squid Pickaxe").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
         }
 

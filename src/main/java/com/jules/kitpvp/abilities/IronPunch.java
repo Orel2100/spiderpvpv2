@@ -21,7 +21,7 @@ public class IronPunch {
         EffectUtils.createCircle(p.getLocation(), 5, true);
         EffectUtils.createHelix(p.getLocation(), 5, 20*2);
 
-        p.getWorld().playSound(p.getEyeLocation(), Sound.ANVIL_LAND, 1, 2);
+        p.getWorld().playSound(p.getEyeLocation(), Sound.BLOCK_ANVIL_LAND, 1, 2);
 
         for(int x = -2; x<4; x=x+2) {
             for(int z = -2; z<4; z=z+2) {
@@ -64,10 +64,10 @@ public class IronPunch {
                         }
                     }
                 }
-                p.getWorld().playSound(p.getLocation(), Sound.EXPLODE, 1, 1);
-                p.getWorld().playSound(p.getLocation(), Sound.EXPLODE, 1, 1);
-                p.getWorld().playSound(p.getLocation(), Sound.EXPLODE, 1, 0.7f);
-                p.getWorld().playSound(p.getLocation(), Sound.EXPLODE, 1, 0.7f);
+                p.getWorld().playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
+                p.getWorld().playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
+                p.getWorld().playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 0.7f);
+                p.getWorld().playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 0.7f);
             }
         }, 10);
     }

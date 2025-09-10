@@ -55,7 +55,7 @@ public class IronPunch {
             double z = 3 * Math.sin(rad);
 
             Location pt = loc.clone().add(x, 0, z);
-            FallingBlock block = world.spawnFallingBlock(pt, Material.IRON_BLOCK.createBlockData());
+            FallingBlock block = world.spawnFallingBlock(pt, Material.IRON_BLOCK, (byte) 0);
 
             block.setVelocity(vel);
             block.setDropItem(false);

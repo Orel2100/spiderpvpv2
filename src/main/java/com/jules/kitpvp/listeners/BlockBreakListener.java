@@ -17,7 +17,7 @@ public class BlockBreakListener implements Listener {
 
         FallingBlock block = (FallingBlock) event.getEntity();
 
-        if (block.getBlockData().getMaterial() == Material.IRON_BLOCK) {
+        if (block.getMaterial() == Material.IRON_BLOCK) {
             event.setCancelled(true);
         }
     }

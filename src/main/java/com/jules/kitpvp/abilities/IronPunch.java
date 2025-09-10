@@ -9,8 +9,11 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.Material;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class IronPunch {
@@ -20,6 +23,22 @@ public class IronPunch {
         p.setExp(0);
 
         EffectUtils.createHexagon(p.getLocation(), 4.5);
+
+        for (int x = -2; x < 4; x = x + 2) {
+            for (int z = -2; z < 4; z = z + 2) {
+                if (x == 0 && z == 0) continue;
+                final FallingBlock fb = p.getWorld().spawnFallingBlock(p.getLocation().add(x, 3, z), Material.IRON_BLOCK.createBlockData());
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (fb.getLocation().subtract(0, 1, 0).getBlock().getType() != Material.AIR) {
+                            fb.remove();
+                            cancel();
+                        }
+                    }
+                }.runTaskTimer(KitPVP.getInstance(), 0, 1);
+            }
+        }
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(KitPVP.getInstance(), () -> {
             double damage = 1.0 + (upgrade - 1) * 0.5;

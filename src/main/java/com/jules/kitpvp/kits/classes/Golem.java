@@ -116,7 +116,6 @@ public class Golem extends MegaWallsClass {
         if (!Utils.isUsingSword(p.getItemInHand())) return;
 
         if (p.getLevel() < KitClass.ABILITY_XP_COST) {
-            p.sendMessage(ChatColor.RED + "You don't have enough energy to use this ability!");
             return;
         }
 

@@ -60,7 +60,10 @@ public class Utils {
     }
 
     public static void addLevel(Player player, int level) {
-        player.setLevel(player.getLevel() + level);
+        int currentLevel = player.getLevel();
+        int newLevel = Math.min(100, currentLevel + level);
+        player.setLevel(newLevel);
+        player.setExp((float) newLevel / 100.0f);
     }
 
     public static double round(double value, int places) {

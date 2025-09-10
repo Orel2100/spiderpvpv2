@@ -24,7 +24,7 @@ public class PlayerInteractListener implements Listener {
 
             if (item.getType() == Material.IRON_SWORD && "Kit Selector".equals(displayName)) {
                 event.setCancelled(true);
-                new ClassSelectorGUI(ClassType.NORMAL).open(player);
+                new ClassSelectorGUI(ClassType.NORMAL, player).open(player);
                 return;
             }
 

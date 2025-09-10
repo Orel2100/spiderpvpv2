@@ -72,7 +72,7 @@ public class Utils {
         return (double) tmp / factor;
     }
 
-    public static List<Entity> getNearbyEntities(Location l, int size) {
+    public static List<Entity> getNearbyEntities(Location l, double size) {
         List<Entity> entities = new ArrayList<Entity>();
         for(Entity ent : l.getWorld().getEntities()) {
             if(!(ent instanceof LivingEntity)) continue;

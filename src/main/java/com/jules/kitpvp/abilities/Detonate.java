@@ -3,7 +3,7 @@ package com.jules.kitpvp.abilities;
 import com.jules.kitpvp.KitPVP;
 import com.jules.kitpvp.kits.Kit;
 import com.jules.kitpvp.player.MPlayer;
-import com.jules.kitpvp.team.TeamManager;
+//import com.jules.kitpvp.team.TeamManager;
 import com.jules.kitpvp.util.Utils;
 import net.md_5.bungee.api.ChatColor;
 
@@ -48,11 +48,11 @@ public class Detonate {
                     for(Entity ent : p.getNearbyEntities(3, 3, 3)) {
                         if(ent instanceof LivingEntity) {
                             if(ent == p) continue;
-                            if(TeamManager.getTeamByPlayer(p) != null) {
+                            /*if(TeamManager.getTeamByPlayer(p) != null) {
                                 if(TeamManager.getTeamByPlayer(p).getPlayers().contains(ent)) {
                                     continue;
                                 }
-                            }
+                            }*/
                             if(ent instanceof Player) {
                                 Player enp = (Player)ent;
                                 MPlayer player = MPlayer.getMPlayer(enp.getUniqueId());

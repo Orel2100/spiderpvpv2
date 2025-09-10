@@ -7,20 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
 
 public class BlockBreakListener implements Listener {
-
-    @EventHandler
-    public void onBlockChange(EntityChangeBlockEvent event) {
-        if (!(event.getEntity() instanceof FallingBlock)) return;
-
-        FallingBlock block = (FallingBlock) event.getEntity();
-
-        if (block.getMaterial() == Material.IRON_BLOCK) {
-            event.setCancelled(true);
-        }
-    }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {

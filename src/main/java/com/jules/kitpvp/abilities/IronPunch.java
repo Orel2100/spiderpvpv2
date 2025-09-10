@@ -18,7 +18,7 @@ public class IronPunch {
 
     public static void use(final Player p, final int upgrade) {
         // XP is handled in Golem.java
-        EffectUtils.createCircle(p.getLocation(), 5, 20*2);
+        EffectUtils.createCircle(p.getLocation(), 5, true);
         EffectUtils.createHelix(p.getLocation(), 5, 20*2);
         for(int x = -2; x<4; x=x+2) {
             for(int z = -2; z<4; z=z+2) {

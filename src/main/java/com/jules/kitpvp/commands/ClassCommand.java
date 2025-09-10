@@ -17,7 +17,7 @@ public class ClassCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        ClassSelectorGUI gui = new ClassSelectorGUI(ClassType.NORMAL);
+        ClassSelectorGUI gui = new ClassSelectorGUI(ClassType.NORMAL, player);
         gui.open(player);
 
         return true;

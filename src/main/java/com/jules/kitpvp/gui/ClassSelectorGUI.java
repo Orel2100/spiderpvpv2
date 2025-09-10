@@ -17,16 +17,17 @@ public class ClassSelectorGUI implements InventoryHolder {
 
     private final Inventory inventory;
 
-    public ClassSelectorGUI(ClassType type) {
+    public ClassSelectorGUI(ClassType type, Player player) {
         if (type == ClassType.NORMAL) {
             this.inventory = Bukkit.createInventory(this, 9 * 4, "Normal Kits");
         } else {
             this.inventory = Bukkit.createInventory(this, 9 * 4, "Hero Kits");
         }
-        initializeItems(type);
+        initializeItems(type, player);
     }
 
-    private void initializeItems(ClassType type) {
+    private void initializeItems(ClassType type, Player player) {
+        com.jules.kitpvp.player.MPlayer mPlayer = com.jules.kitpvp.player.MPlayer.getMPlayer(player.getUniqueId());
         for (Kit kit : Kit.values()) {
             if (kit.getClassType() == type) {
                 try {
@@ -37,7 +38,11 @@ public class ClassSelectorGUI implements InventoryHolder {
                     List<String> lore = new ArrayList<>();
                     lore.addAll(kitClass.getDescription());
                     lore.add(" ");
-                    lore.add("Price: " + kitClass.getPrice());
+                    if (mPlayer.hasKit(kit)) {
+                        lore.add("§aOwned");
+                    } else {
+                        lore.add("§ePrice: §6" + kitClass.getPrice());
+                    }
                     meta.setLore(lore);
                     item.setItemMeta(meta);
                     inventory.addItem(item);

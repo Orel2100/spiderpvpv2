@@ -7,6 +7,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerDataManager {
@@ -29,6 +31,12 @@ public class PlayerDataManager {
         config.set("coins", mPlayer.getCoins());
         config.set("upgrades", mPlayer.getUpgradeLevels());
 
+        List<String> kitNames = new ArrayList<>();
+        for (com.jules.kitpvp.kits.Kit kit : mPlayer.getOwnedKits()) {
+            kitNames.add(kit.name());
+        }
+        config.set("owned-kits", kitNames);
+
         try {
             config.save(playerFile);
         } catch (IOException e) {
@@ -48,6 +56,12 @@ public class PlayerDataManager {
         if (config.isConfigurationSection("upgrades")) {
             for (String upgradeName : config.getConfigurationSection("upgrades").getKeys(false)) {
                 mPlayer.setUpgradeLevel(upgradeName, config.getInt("upgrades." + upgradeName));
+            }
+        }
+
+        if (config.isList("owned-kits")) {
+            for (String kitName : config.getStringList("owned-kits")) {
+                mPlayer.addKit(com.jules.kitpvp.kits.Kit.valueOf(kitName));
             }
         }
     }

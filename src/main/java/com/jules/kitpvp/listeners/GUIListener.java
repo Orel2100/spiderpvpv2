@@ -32,11 +32,28 @@ public class GUIListener implements Listener {
             String kitName = event.getCurrentItem().getItemMeta().getDisplayName();
             Kit kit = Kit.valueOf(kitName.toUpperCase());
             MPlayer mPlayer = MPlayer.getMPlayer(player.getUniqueId());
-            mPlayer.setKit(kit);
 
-            player.closeInventory();
-            com.jules.kitpvp.util.KitUtils.givePlayerKitItems(player, kit);
-            player.sendMessage(ChatColor.GREEN + "You have selected the " + kit.getName() + " kit!");
+            if (mPlayer.hasKit(kit)) {
+                mPlayer.setKit(kit);
+                player.closeInventory();
+                com.jules.kitpvp.util.KitUtils.givePlayerKitItems(player, kit);
+                player.sendMessage(ChatColor.GREEN + "You have selected the " + kit.getName() + " kit!");
+            } else {
+                try {
+                    KitClass kitClass = kit.getKitClass().newInstance();
+                    int price = kitClass.getPrice();
+                    if (mPlayer.getCoins() >= price) {
+                        mPlayer.setCoins(mPlayer.getCoins() - price);
+                        mPlayer.addKit(kit);
+                        player.sendMessage(ChatColor.GREEN + "You have purchased the " + kit.getName() + " kit!");
+                        new ClassSelectorGUI(kit.getClassType(), player).open(player); // Refresh GUI
+                    } else {
+                        player.sendMessage(ChatColor.RED + "You cannot afford this kit!");
+                    }
+                } catch (InstantiationException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
         } else if (holder instanceof AbilityTestGUI) {
             event.setCancelled(true);
             if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR || !event.getCurrentItem().hasItemMeta() || !event.getCurrentItem().getItemMeta().hasLore()) {
@@ -67,6 +84,10 @@ public class GUIListener implements Listener {
                     Upgrade abilityUpgrade = kitInstance.getUpgrades().get(UpgradeCategory.ABILITY).get(0);
                     mPlayer.setUpgradeLevel(abilityUpgrade, 5);
                 }
+                if (kitInstance.getUpgrades().containsKey(UpgradeCategory.KIT)) {
+                    Upgrade kitUpgrade = kitInstance.getUpgrades().get(UpgradeCategory.KIT).get(0);
+                    mPlayer.setUpgradeLevel(kitUpgrade, 5);
+                }
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -82,8 +103,13 @@ public class GUIListener implements Listener {
             if (event.getCurrentItem().getType() == Material.GOLDEN_PICKAXE) {
                 new com.jules.kitpvp.gui.GatheringGUI(MPlayer.getMPlayer(player.getUniqueId())).open(player);
                 return;
+            } else if (event.getCurrentItem().getType() == Material.IRON_SWORD) {
+                new ClassSelectorGUI(com.jules.kitpvp.kits.ClassType.NORMAL, player).open(player);
+                return;
+            } else if (event.getCurrentItem().getType() == Material.DIAMOND_SWORD) {
+                new ClassSelectorGUI(com.jules.kitpvp.kits.ClassType.HERO, player).open(player);
+                return;
             }
-            // Handle other shop items if necessary
         } else if (holder instanceof UpgradeGUI) {
             event.setCancelled(true);
             if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {

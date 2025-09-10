@@ -6,7 +6,9 @@ import com.jules.kitpvp.kits.Upgrade;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,6 +21,7 @@ public class MPlayer {
     private KitClass kitClass;
     private int coins = 0;
     private Map<String, Integer> upgradeLevels = new HashMap<>();
+    private List<Kit> ownedKits = new ArrayList<>();
 
     public MPlayer(UUID uuid) {
         this.uuid = uuid;
@@ -93,4 +96,17 @@ public class MPlayer {
         this.coins = coins;
     }
 
+    public boolean hasKit(Kit kit) {
+        return ownedKits.contains(kit) || getPlayer().hasPermission("spiderpvp." + kit.name().toLowerCase());
+    }
+
+    public void addKit(Kit kit) {
+        if (!ownedKits.contains(kit)) {
+            ownedKits.add(kit);
+        }
+    }
+
+    public List<Kit> getOwnedKits() {
+        return ownedKits;
+    }
 }

@@ -44,7 +44,7 @@ public class IronPunch {
         Vector vel = new Vector(0, -1, 0);
         Location loc = player.getLocation();
 
-        loc.add(0, 6, 0);
+        loc.add(0, 3, 0);
         int theta = 30;
 
         for (int i = 0; i < 12; i++) {

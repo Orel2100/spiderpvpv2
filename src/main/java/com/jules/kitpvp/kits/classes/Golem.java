@@ -79,10 +79,14 @@ public class Golem extends MegaWallsClass {
         if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) return;
         if (!p.getItemInHand().hasItemMeta() || !p.getItemInHand().getItemMeta().hasLore() || !p.getItemInHand().getItemMeta().getLore().contains(KitUtils.KIT_ITEM_LORE)) return;
         if (!Utils.isUsingSword(p.getItemInHand())) return;
+        if (p.getLevel() < KitClass.ABILITY_XP_COST) {
+            return;
+        }
 
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.ABILITY).get(0));
         IronPunch.use(p, level);
+        p.setLevel(0);
     }
 
     @Override

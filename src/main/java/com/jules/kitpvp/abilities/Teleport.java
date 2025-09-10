@@ -22,8 +22,6 @@ import org.bukkit.util.BlockIterator;
 
 public class Teleport {
 
-    public static HashMap<Player, Integer> cd = new HashMap<>();
-
     public static Entity getTarget(Player p, int blocks) {
         Entity target;
         List<Entity> nearbyE = p.getNearbyEntities(blocks,blocks, blocks);
@@ -71,10 +69,6 @@ public class Teleport {
     }
 
     public static void use(final Player p, int upgrade) {
-        if(cd.containsKey(p)) {
-            p.sendMessage(ChatColor.RED + "Your teleport is still on cooldown for " + ChatColor.AQUA + cd.get(p) + ChatColor.RED + " seconds!");
-            return;
-        }
         Entity target;
         int damage = 10;
         for(int i = 1; i < upgrade; i++) {
@@ -108,7 +102,6 @@ public class Teleport {
             }
             p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,20*5,speed-1));
             //ParticleEffect.SPELL_WITCH.display(0, 0, 0, 1, 8, p.getLocation(), 50);
-            cd.put(p, 5);
             //new BukkitRunnable() {
             //
             //    @Override

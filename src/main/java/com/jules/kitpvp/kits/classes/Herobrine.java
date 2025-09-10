@@ -86,8 +86,9 @@ public class Herobrine extends MegaWallsClass {
 
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
         int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.ABILITY).get(0));
-        Wrath.use(p, level);
-        p.setLevel(0);
+        if (Wrath.use(p, level)) {
+            p.setLevel(0);
+        }
     }
 
     @Override

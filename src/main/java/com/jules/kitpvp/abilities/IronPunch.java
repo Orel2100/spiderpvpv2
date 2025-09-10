@@ -3,10 +3,7 @@ package com.jules.kitpvp.abilities;
 import com.jules.kitpvp.KitPVP;
 import com.jules.kitpvp.util.EffectUtils;
 import com.jules.kitpvp.util.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
@@ -23,28 +20,32 @@ public class IronPunch {
 
         p.getWorld().playSound(p.getEyeLocation(), Sound.BLOCK_ANVIL_LAND, 1, 2);
 
-        for(int x = -2; x<4; x=x+2) {
-            for(int z = -2; z<4; z=z+2) {
-                if(x == 0 && z == 0) continue;
-                final FallingBlock fb = p.getWorld().spawnFallingBlock(p.getLocation().add(x, 3, z), Material.IRON_BLOCK, (byte)0);
-                new BukkitRunnable() {
+        Location loc = p.getLocation().add(0, 3, 0);
+        int theta = 30;
 
-                    @Override
-                    public void run() {
-                        if(fb.getLocation().subtract(0, 1, 0).getBlock().getType() != Material.AIR) {
-                            for(Entity ent : fb.getNearbyEntities(15, 15, 15)) {
-                                if(ent instanceof Player) {
-                                    Player enp = (Player)ent;
-                                    enp.playEffect(fb.getLocation(), Effect.STEP_SOUND, Material.IRON_BLOCK);
-                                }
-                            }
-                            fb.remove();
-                            cancel();
-                        }
+        for (int i = 0; i < 12; i++) {
+            int deg = theta * i;
+            double rad = Math.toRadians(deg);
+
+            double x = 3 * Math.cos(rad);
+            double z = 3 * Math.sin(rad);
+
+            Location pt = loc.clone().add(x, 0, z);
+            final FallingBlock fb = p.getWorld().spawnFallingBlock(pt, Material.IRON_BLOCK, (byte)0);
+            fb.setDropItem(false);
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if(fb.isDead() || fb.getLocation().subtract(0, 1, 0).getBlock().getType() != Material.AIR) {
+                        fb.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, fb.getLocation(), 1);
+                        fb.remove();
+                        cancel();
                     }
-                }.runTaskTimer(KitPVP.getInstance(), 0, 1);
-            }
+                }
+            }.runTaskTimer(KitPVP.getInstance(), 0, 1);
         }
+
         Bukkit.getScheduler().scheduleSyncDelayedTask(KitPVP.getInstance(), new Runnable() {
 
             double damage = 0.5;

@@ -65,7 +65,12 @@ public class GUIListener implements Listener {
                 KitClass kitInstance = kit.getKitClass().newInstance();
                 if (kitInstance.getUpgrades().containsKey(UpgradeCategory.ABILITY)) {
                     Upgrade abilityUpgrade = kitInstance.getUpgrades().get(UpgradeCategory.ABILITY).get(0);
-                    mPlayer.setUpgradeLevel(abilityUpgrade, 5);
+                    mPlayer.setUpgradeLevel(abilityUpgrade, abilityUpgrade.getMaxLevel());
+                }
+                if (kitInstance.getUpgrades().containsKey(UpgradeCategory.KIT)) {
+                    for (Upgrade kitUpgrade : kitInstance.getUpgrades().get(UpgradeCategory.KIT)) {
+                        mPlayer.setUpgradeLevel(kitUpgrade, kitUpgrade.getMaxLevel());
+                    }
                 }
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();

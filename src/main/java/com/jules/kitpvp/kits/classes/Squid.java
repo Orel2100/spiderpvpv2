@@ -35,7 +35,23 @@ public class Squid extends MegaWallsClass {
     @Override
     public List<ItemStack> getStartingItems(Player p) {
         List<ItemStack> items = new ArrayList<>();
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
+
         items.add(new ItemStackCreator(Material.STONE_SWORD, "§1Squid Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+
+        if (level > 0) items.add(new ItemStackCreator(Material.LEATHER_HELMET, "§1Squid Cap").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        if (level > 1) items.add(new ItemStackCreator(Material.LEATHER_CHESTPLATE, "§1Squid Tunic").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        if (level > 2) items.add(new ItemStackCreator(Material.LEATHER_LEGGINGS, "§1Squid Pants").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        if (level > 3) items.add(new ItemStackCreator(Material.LEATHER_BOOTS, "§1Squid Flippers").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        if (level > 4) {
+            items.removeIf(item -> item.getType().toString().startsWith("LEATHER_"));
+            items.add(new ItemStackCreator(Material.IRON_HELMET, "§1Squid Cap").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+            items.add(new ItemStackCreator(Material.IRON_CHESTPLATE, "§1Squid Tunic").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+            items.add(new ItemStackCreator(Material.IRON_LEGGINGS, "§1Squid Pants").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+            items.add(new ItemStackCreator(Material.IRON_BOOTS, "§1Squid Flippers").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        }
+
         return items;
     }
 

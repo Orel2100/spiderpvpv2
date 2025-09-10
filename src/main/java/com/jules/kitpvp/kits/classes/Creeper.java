@@ -34,7 +34,31 @@ public class Creeper extends MegaWallsClass {
     @Override
     public List<ItemStack> getStartingItems(Player p) {
         List<ItemStack> items = new ArrayList<>();
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
+
         items.add(new ItemStackCreator(Material.STONE_SWORD, "§2Creeper Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+
+        if (level > 0) {
+            items.add(new ItemStackCreator(Material.LEATHER_HELMET, "§2Creeper Helmet").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        }
+        if (level > 1) {
+            items.add(new ItemStackCreator(Material.LEATHER_CHESTPLATE, "§2Creeper Chestplate").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        }
+        if (level > 2) {
+            items.add(new ItemStackCreator(Material.LEATHER_LEGGINGS, "§2Creeper Leggings").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        }
+        if (level > 3) {
+            items.add(new ItemStackCreator(Material.LEATHER_BOOTS, "§2Creeper Boots").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        }
+        if (level > 4) {
+            // Remove leather armor and add iron armor
+            items.removeIf(item -> item.getType().toString().startsWith("LEATHER_"));
+            items.add(new ItemStackCreator(Material.IRON_HELMET, "§2Creeper Helmet").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+            items.add(new ItemStackCreator(Material.IRON_CHESTPLATE, "§2Creeper Chestplate").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+            items.add(new ItemStackCreator(Material.IRON_LEGGINGS, "§2Creeper Leggings").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+            items.add(new ItemStackCreator(Material.IRON_BOOTS, "§2Creeper Boots").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        }
         return items;
     }
 

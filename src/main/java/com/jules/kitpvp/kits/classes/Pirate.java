@@ -34,7 +34,22 @@ public class Pirate extends MegaWallsClass {
     @Override
     public List<ItemStack> getStartingItems(Player p) {
         List<ItemStack> items = new ArrayList<>();
+        MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
+        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
+
         items.add(new ItemStackCreator(Material.IRON_SWORD, "§cPirate Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+
+        if (level > 0) items.add(new ItemStackCreator(Material.LEATHER_HELMET, "§cPirate Hat").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        if (level > 1) items.add(new ItemStackCreator(Material.LEATHER_CHESTPLATE, "§cPirate Tunic").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        if (level > 2) items.add(new ItemStackCreator(Material.LEATHER_LEGGINGS, "§cPirate Leggings").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        if (level > 3) items.add(new ItemStackCreator(Material.LEATHER_BOOTS, "§cPirate Boots").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        if (level > 4) {
+            items.removeIf(item -> item.getType().toString().startsWith("LEATHER_"));
+            items.add(new ItemStackCreator(Material.CHAINMAIL_HELMET, "§cPirate Hat").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+            items.add(new ItemStackCreator(Material.CHAINMAIL_CHESTPLATE, "§cPirate Tunic").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+            items.add(new ItemStackCreator(Material.CHAINMAIL_LEGGINGS, "§cPirate Leggings").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+            items.add(new ItemStackCreator(Material.CHAINMAIL_BOOTS, "§cPirate Boots").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        }
         return items;
     }
 

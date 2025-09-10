@@ -41,9 +41,25 @@ public class Arcanist extends MegaWallsClass {
     public List<ItemStack> getStartingItems(Player p) {
         List<ItemStack> items = new ArrayList<>();
         MPlayer mPlayer = MPlayer.getMPlayer(p.getUniqueId());
-        int level = mPlayer.getUpgradeLevel(getUpgrades().get(UpgradeCategory.KIT).get(0));
+        List<Upgrade> kitUpgrades = getUpgrades().get(UpgradeCategory.KIT);
 
         items.add(new ItemStackCreator(Material.STONE_SWORD, "§bArcanist Sword").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+
+        // Since we are in the test GUI, we assume all upgrades are maxed out.
+        // However, to be safe, we check the level of each upgrade.
+        if (mPlayer.getUpgradeLevel(kitUpgrades.get(0)) > 0) {
+            items.add(new ItemStackCreator(Material.LEATHER_HELMET, "§bWizard Hat").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        }
+        if (mPlayer.getUpgradeLevel(kitUpgrades.get(1)) > 0) {
+            items.add(new ItemStackCreator(Material.LEATHER_CHESTPLATE, "§bWizard Robes").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        }
+        if (mPlayer.getUpgradeLevel(kitUpgrades.get(2)) > 0) {
+            items.add(new ItemStackCreator(Material.LEATHER_LEGGINGS, "§bWizard Pants").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        }
+        if (mPlayer.getUpgradeLevel(kitUpgrades.get(3)) > 0) {
+            items.add(new ItemStackCreator(Material.LEATHER_BOOTS, "§bWizard Boots").setLore(KitUtils.KIT_ITEM_LORE_LIST).build());
+        }
+
         return items;
     }
 

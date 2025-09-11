@@ -44,7 +44,7 @@ public class Golem extends me.main.yoni.ClassSystem.Class {
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("The Golem class uses the","all mighty powers of the ","iron god.");
+		return Arrays.asList("A tanky class that can take a","lot of damage and deal it back.","Its Iron Punch ability smashes","the ground, damaging all nearby","enemies.");
 	}
 
 	@Override

@@ -43,7 +43,7 @@ public class Pigman extends me.main.yoni.ClassSystem.Class {
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("Half man, half pig, half..","Oh wait! Feel the power of","pork!");
+		return Arrays.asList("A resilient and powerful class","that gets stronger the more","damage it takes. Its Burning","Soul ability damages nearby","enemies and grants the Pigman a","strength boost.");
 	}
 
 	@Override

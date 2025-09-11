@@ -45,7 +45,7 @@ public class Dreadlord extends me.main.yoni.ClassSystem.Class {
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("The Dreadlord class uses","explosive abilities to","attack and steal health.");
+		return Arrays.asList("A master of dark magic that can","drain the life from its enemies.","Its Shadow Burst ability","launches a volley of wither","skulls that explode on impact,","damaging and weakening enemies.");
 	}
 
 	@Override

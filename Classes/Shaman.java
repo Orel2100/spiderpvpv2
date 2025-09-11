@@ -45,7 +45,7 @@ public class Shaman extends me.main.yoni.ClassSystem.Class{
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("The Shaman class uses","spiritual abilities to","attack and defend.");
+		return Arrays.asList("A mystical class that can","summon the forces of nature to","aid it in battle. Its Tornado","ability creates a vortex of","wind that damages and throws","around enemies.");
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class Pirate extends me.main.yoni.ClassSystem.Class{
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("Use your cunning and wit to","survive, or just blow","people up with your","parrots.");
+		return Arrays.asList("A cunning and explosive class","that can blow its enemies to","smithereens. Its Cannon Fire","ability launches a cannonball","that deals area-of-effect","damage on impact.");
 	}
 
 	@Override

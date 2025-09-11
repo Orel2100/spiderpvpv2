@@ -43,7 +43,7 @@ public class Squid extends me.main.yoni.ClassSystem.Class{
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("Splashing around, like a","Squid, because that what","Squids do. Splash.");
+		return Arrays.asList("A slippery and supportive class","that can disrupt enemies and","sustain itself. Its Squid Splash","ability damages enemies in an","area and heals the Squid for a","portion of the damage dealt.");
 	}
 
 	@Override

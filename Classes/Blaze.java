@@ -47,7 +47,7 @@ public class Blaze extends Class{
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("The Blaze class uses the","spirit of fire to enforce","flames.");
+		return Arrays.asList("A fiery and destructive class","that can incinerate its","enemies. Its Immolating Burst","ability launches a volley of","fireballs that explode on","impact, dealing area-of-effect","damage.");
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class ItemListener implements Listener {
                 player.teleport(arena.getSpawnPoints().get(0));
             }
         } else if (itemType == Material.EMERALD && itemName.equals(ChatColor.GREEN + "Shop")) {
-            new ShopGUI().open(player);
+            new ShopGUI(player).open(player);
         } else if (itemType == Material.IRON_SWORD && itemName.equals(ChatColor.GREEN + "Kit Selector")) {
             new ClassSelectorGUI(ClassType.NORMAL, player).open(player);
         }

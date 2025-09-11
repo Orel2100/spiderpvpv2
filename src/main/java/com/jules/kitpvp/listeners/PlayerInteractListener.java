@@ -30,7 +30,7 @@ public class PlayerInteractListener implements Listener {
 
             if (item.getType() == Material.EMERALD && "Shop".equals(displayName)) {
                 event.setCancelled(true);
-                new ShopGUI().open(player);
+                new ShopGUI(player).open(player);
                 return;
             }
 

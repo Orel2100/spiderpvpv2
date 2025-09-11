@@ -35,19 +35,38 @@ public class ClassSelectorGUI implements InventoryHolder {
                     KitClass kitClass = kit.getKitClass().newInstance();
                     ItemStack item = kitClass.getIcon();
                     ItemMeta meta = item.getItemMeta();
-                    meta.setDisplayName("§a" + kitClass.getName());
-                    List<String> lore = new ArrayList<>();
-                    lore.add("§7Difficulty: " + kitClass.getDifficulty());
-                    lore.add("§7Play Style: " + kitClass.getPlayStyle());
-                    lore.add(" ");
-                    lore.add(kitClass.getSkillName());
-                    lore.addAll(Arrays.asList(kitClass.getSkillDescription().split("\\\\n")));
-                    lore.add(" ");
-                    if (mPlayer.hasKit(kit)) {
-                        lore.add("§aOwned");
-                    } else {
-                        lore.add("§ePrice: §6" + kitClass.getPrice());
+
+                    // Set display name
+                    String displayName = "§a" + kitClass.getName();
+                    if (kitClass.getName().equalsIgnoreCase("arcanist")) {
+                        displayName += " §e- RECOMMENDED";
                     }
+                    meta.setDisplayName(displayName);
+
+                    List<String> lore = new ArrayList<>();
+                    lore.add("§fDifficulty: §a" + kitClass.getDifficulty());
+                    lore.add("§fPlay Styles: §a" + kitClass.getPlayStyle());
+                    lore.add(" ");
+                    lore.add("§6Skill - " + kitClass.getSkillName());
+
+                    // Split skill description and format it
+                    String[] skillDesc = kitClass.getSkillDescription().split("\\\\n");
+                    for(String line : skillDesc) {
+                        lore.add("§7" + line);
+                    }
+
+                    lore.add(" ");
+
+                    if (mPlayer.hasKit(kit)) {
+                        lore.add("§aUNLOCKED");
+                    } else {
+                        lore.add("§cLOCKED");
+                        lore.add("§7Unlock cost: §6" + kitClass.getPrice());
+                    }
+
+                    lore.add(" ");
+                    lore.add("§eClick to view more!");
+
                     meta.setLore(lore);
                     item.setItemMeta(meta);
                     inventory.addItem(item);

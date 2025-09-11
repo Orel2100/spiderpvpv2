@@ -5,8 +5,8 @@ com/jules/kitpvp/abilities/SquidSplash.class
 com/jules/kitpvp/abilities/Leap.class
 com/jules/kitpvp/player/PlayerManager.class
 com/jules/kitpvp/listeners/GUIListener.class
-com/jules/kitpvp/kits/classes/Pigman.class
 com/jules/kitpvp/listeners/PlayerDeathListener.class
+com/jules/kitpvp/kits/classes/Pigman.class
 com/jules/kitpvp/listeners/OneOnOneListener.class
 com/jules/kitpvp/KitPVP.class
 com/jules/kitpvp/listeners/AssistListener.class
@@ -16,11 +16,11 @@ com/jules/kitpvp/abilities/BurningSoul.class
 com/jules/kitpvp/arena/ArenaManager.class
 com/jules/kitpvp/abilities/ShadowBurst.class
 com/jules/kitpvp/kits/classes/Creeper.class
+com/jules/kitpvp/commands/BoosterCommand.class
 com/jules/kitpvp/kits/classes/Squid.class
 com/jules/kitpvp/abilities/Beam.class
-com/jules/kitpvp/commands/BoosterCommand.class
-com/jules/kitpvp/abilities/Teleport.class
 com/jules/kitpvp/listeners/PlayerDamageListener.class
+com/jules/kitpvp/abilities/Teleport.class
 com/jules/kitpvp/kits/classes/Arcanist.class
 com/jules/kitpvp/currency/CoinManager.class
 com/jules/kitpvp/listeners/PlayerInteractListener.class
@@ -29,10 +29,10 @@ com/jules/kitpvp/kits/classes/Blaze.class
 com/jules/kitpvp/kits/KitClass.class
 com/jules/kitpvp/abilities/Wrath.class
 com/jules/kitpvp/abilities/HomingTask.class
-com/jules/kitpvp/config/Configuration.class
 com/jules/kitpvp/commands/CoinCommand.class
-com/jules/kitpvp/kits/classes/Skeleton.class
+com/jules/kitpvp/config/Configuration.class
 com/jules/kitpvp/player/PlayerData.class
+com/jules/kitpvp/kits/classes/Skeleton.class
 com/jules/kitpvp/kits/classes/Enderman.class
 com/jules/kitpvp/abilities/Heal.class
 com/jules/kitpvp/abilities/Tornado.class
@@ -43,8 +43,8 @@ com/jules/kitpvp/duel/DuelManager.class
 com/jules/kitpvp/duel/Duel.class
 com/jules/kitpvp/arena/Arena.class
 com/jules/kitpvp/kits/Upgrade.class
-com/jules/kitpvp/kits/classes/Golem.class
 com/jules/kitpvp/kits/classes/Herobrine.class
+com/jules/kitpvp/kits/classes/Golem.class
 com/jules/kitpvp/kits/classes/Shaman.class
 com/jules/kitpvp/kits/classes/Spider.class
 com/jules/kitpvp/abilities/IronPunch.class
@@ -55,7 +55,7 @@ com/jules/kitpvp/currency/BoosterManager$1.class
 com/jules/kitpvp/kits/UpgradeManager.class
 com/jules/kitpvp/abilities/Detonate.class
 com/jules/kitpvp/listeners/TempBlocksListener.class
-com/jules/kitpvp/kits/classes/Pirate.class
 com/jules/kitpvp/kits/classes/Hunter.class
+com/jules/kitpvp/kits/classes/Pirate.class
 com/jules/kitpvp/abilities/Ability.class
 com/jules/kitpvp/gui/ClassSelectorGUI.class

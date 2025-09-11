@@ -19,7 +19,17 @@ public class ClassSelectorGUI implements InventoryHolder {
     }
 
     private void initializeItems() {
-        // This will be populated with the available classes
+        for (KitClass kit : classManager.getClasses()) {
+            ItemStack item = new ItemStack(kit.getIcon().getType());
+            item.setAmount(1);
+            org.bukkit.inventory.meta.ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(kit.getName());
+            List<String> lore = new ArrayList<>();
+            lore.add(kit.getDescription());
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+            inventory.addItem(item);
+        }
     }
 
     public void open(Player player) {

@@ -17,7 +17,7 @@ import java.util.List;
 public class Pigman extends KitClass {
 
     public Pigman() {
-        super("Pigman", "A resilient fighter that gets stronger in combat.", new ItemStack(Material.PORKCHOP),
+        super("Pigman", "A resilient and powerful class that gets stronger the more damage it takes. Its Burning Soul ability damages nearby enemies and grants the Pigman a strength boost.", new ItemStack(Material.PORKCHOP),
                 new ArrayList<>(Collections.singletonList(new BurningSoul())), new ArrayList<>());
     }
 

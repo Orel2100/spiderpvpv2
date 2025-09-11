@@ -15,7 +15,7 @@ import java.util.List;
 public class Arcanist extends KitClass {
 
     public Arcanist() {
-        super("Arcanist", "A powerful mage with a damaging beam.", new ItemStack(Material.ENCHANTING_TABLE),
+        super("Arcanist", "A powerful mage that can channel arcane energy to vanquish its foes. Its Arcane Beam ability fires a concentrated beam of energy that damages enemies from a distance.", new ItemStack(Material.ENCHANTING_TABLE),
                 new ArrayList<>(Collections.singletonList(new Beam())), new ArrayList<>());
     }
 

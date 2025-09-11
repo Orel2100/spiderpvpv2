@@ -17,7 +17,7 @@ import java.util.List;
 public class Zombie extends KitClass {
 
     public Zombie() {
-        super("Zombie", "A tanky class with regeneration.", new ItemStack(Material.ZOMBIE_HEAD),
+        super("Zombie", "A durable and supportive class that can withstand a lot of punishment and keep its allies in the fight. Its Circle of Healing ability heals the Zombie and any nearby teammates.", new ItemStack(Material.ZOMBIE_HEAD),
                 new ArrayList<>(Collections.singletonList(new Heal())), new ArrayList<>());
     }
 

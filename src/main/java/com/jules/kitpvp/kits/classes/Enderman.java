@@ -17,7 +17,7 @@ import java.util.List;
 public class Enderman extends KitClass {
 
     public Enderman() {
-        super("Enderman", "A mobile class that teleports to enemies.", new ItemStack(Material.ENDER_PEARL),
+        super("Enderman", "A mysterious and mobile class that can teleport across the battlefield. Its Teleport ability allows it to instantly close the distance to its enemies.", new ItemStack(Material.ENDER_PEARL),
                 new ArrayList<>(Collections.singletonList(new Teleport())), new ArrayList<>());
     }
 

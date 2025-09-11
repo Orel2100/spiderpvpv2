@@ -41,7 +41,7 @@ public class Hunter extends Class{
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("A master archer that can track","and eliminate its prey with","deadly accuracy. Its Eagle's Eye","ability makes its arrows home","in on enemies for a short","period.");
+		return Arrays.asList("This archery class powers","up with the thrill of the","hunt.");
 	}
 
 	@Override

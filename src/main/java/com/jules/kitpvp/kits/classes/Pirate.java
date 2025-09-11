@@ -17,7 +17,7 @@ import java.util.List;
 public class Pirate extends KitClass {
 
     public Pirate() {
-        super("Pirate", "A swashbuckling class with a cannon.", new ItemStack(Material.TNT),
+        super("Pirate", "A cunning and explosive class that can blow its enemies to smithereens. Its Cannon Fire ability launches a cannonball that deals area-of-effect damage on impact.", new ItemStack(Material.TNT),
                 new ArrayList<>(Collections.singletonList(new CannonFire())), new ArrayList<>());
     }
 

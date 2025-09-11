@@ -44,7 +44,7 @@ public class Skeleton extends me.main.yoni.ClassSystem.Class{
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("A long-ranged archer that","specializes in explosive","projectiles. Its Explosive Arrow","ability fires an arrow that","detonates on impact, damaging","all nearby enemies.");
+		return Arrays.asList("The Skeleton class makes","excellent use of ranged","abilities and weapons.");
 	}
 
 	@Override

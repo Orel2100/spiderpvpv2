@@ -38,7 +38,7 @@ public class Zombie extends Class{
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("A durable and supportive class","that can withstand a lot of","punishment and keep its allies","in the fight. Its Circle of","Healing ability heals the Zombie","and any nearby teammates.");
+		return Arrays.asList("The Zombie class focuses on","defensive gameplay and","boosts.");
 	}
 
 	@Override

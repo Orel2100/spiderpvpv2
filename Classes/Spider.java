@@ -41,7 +41,7 @@ public class Spider extends me.main.yoni.ClassSystem.Class {
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("An agile and nimble class that","can traverse the battlefield with","ease. Its Leap ability allows it","to jump long distances and slow","enemies upon landing.");
+		return Arrays.asList("The Spider class uses agile","paths for combat.");
 	}
 
 	@Override

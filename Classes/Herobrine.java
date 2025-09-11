@@ -37,7 +37,7 @@ public class Herobrine extends me.main.yoni.ClassSystem.Class{
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("A powerful and mysterious","class that can strike fear into","the hearts of its enemies. Its","Wrath ability damages all","nearby enemies.");
+		return Arrays.asList("The Herobrine class uses","supernatural abilities to","attack and destroy your","enemies.");
 	}
 
 	@Override

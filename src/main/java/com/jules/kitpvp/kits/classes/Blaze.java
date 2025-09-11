@@ -17,7 +17,7 @@ import java.util.List;
 public class Blaze extends KitClass {
 
     public Blaze() {
-        super("Blaze", "A fiery class with a fireball burst.", new ItemStack(Material.BLAZE_ROD),
+        super("Blaze", "A fiery and destructive class that can incinerate its enemies. Its Immolating Burst ability launches a volley of fireballs that explode on impact, dealing area-of-effect damage.", new ItemStack(Material.BLAZE_ROD),
                 new ArrayList<>(Collections.singletonList(new ImmolatingBurst())), new ArrayList<>());
     }
 

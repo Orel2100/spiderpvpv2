@@ -17,7 +17,7 @@ import java.util.List;
 public class Herobrine extends KitClass {
 
     public Herobrine() {
-        super("Herobrine", "A powerful being that gains strength from kills.", new ItemStack(Material.PLAYER_HEAD),
+        super("Herobrine", "A powerful and mysterious class that can strike fear into the hearts of its enemies. Its Wrath ability damages all nearby enemies.", new ItemStack(Material.PLAYER_HEAD),
                 new ArrayList<>(Collections.singletonList(new Wrath())), new ArrayList<>());
     }
 

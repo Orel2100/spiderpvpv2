@@ -45,7 +45,7 @@ public class Arcanist extends Class{
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("A powerful mage that can","channel arcane energy to","vanquish its foes. Its Arcane","Beam ability fires a","concentrated beam of energy","that damages enemies from a","distance.");
+		return Arrays.asList("The Arcanist class uses his","power to gain energy faster","than most");
 	}
 
 	@Override

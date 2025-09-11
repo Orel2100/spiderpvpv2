@@ -19,7 +19,7 @@ public class Shaman extends KitClass {
     private final Random random = new Random();
 
     public Shaman() {
-        super("Shaman", "A spiritual class that can summon a tornado and wolves.", new ItemStack(Material.TOTEM_OF_UNDYING),
+        super("Shaman", "A mystical class that can summon the forces of nature to aid it in battle. Its Tornado ability creates a vortex of wind that damages and throws around enemies.", new ItemStack(Material.TOTEM_OF_UNDYING),
                 new ArrayList<>(Collections.singletonList(new Tornado())), new ArrayList<>());
     }
 

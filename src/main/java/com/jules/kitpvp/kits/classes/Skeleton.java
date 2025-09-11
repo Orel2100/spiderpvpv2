@@ -15,7 +15,7 @@ import java.util.List;
 public class Skeleton extends KitClass {
 
     public Skeleton() {
-        super("Skeleton", "A ranged class with explosive arrows.", new ItemStack(Material.SKELETON_SKULL),
+        super("Skeleton", "A long-ranged archer that specializes in explosive projectiles. Its Explosive Arrow ability fires an arrow that detonates on impact, damaging all nearby enemies.", new ItemStack(Material.SKELETON_SKULL),
                 new ArrayList<>(Collections.singletonList(new ExplosiveArrow())), new ArrayList<>());
     }
 

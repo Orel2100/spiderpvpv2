@@ -45,7 +45,7 @@ public class Creeper extends Class{
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("A volatile and explosive class","that can detonate to deal","massive area-of-effect damage.","Its Detonate ability creates a","powerful explosion that","damages all nearby enemies.");
+		return Arrays.asList("The Creeper class uses","explosion based powers to","win. Energy is gained by","hitting players in melee","range.");
 	}
 
 	@Override

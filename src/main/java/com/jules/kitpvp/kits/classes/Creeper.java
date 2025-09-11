@@ -15,7 +15,7 @@ import java.util.List;
 public class Creeper extends KitClass {
 
     public Creeper() {
-        super("Creeper", "An explosive class that gets stronger at low health.", new ItemStack(Material.CREEPER_HEAD),
+        super("Creeper", "A volatile and explosive class that can detonate to deal massive area-of-effect damage. Its Detonate ability creates a powerful explosion that damages all nearby enemies.", new ItemStack(Material.CREEPER_HEAD),
                 new ArrayList<>(Collections.singletonList(new Detonate())), new ArrayList<>());
     }
 

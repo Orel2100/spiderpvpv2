@@ -38,7 +38,7 @@ public class Enderman extends Class{
 
 	@Override
 	public List<String> getDescription() {
-		return Arrays.asList("A mysterious and mobile class","that can teleport across the","battlefield. Its Teleport ability","allows it to instantly close the","distance to its enemies.");
+		return Arrays.asList("The Enderman class has","special teleportation","powers and endurance.");
 	}
 
 	@Override

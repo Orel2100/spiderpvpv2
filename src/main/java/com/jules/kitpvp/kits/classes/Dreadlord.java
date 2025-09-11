@@ -15,7 +15,7 @@ import java.util.List;
 public class Dreadlord extends KitClass {
 
     public Dreadlord() {
-        super("Dreadlord", "A shadowy class that heals on kill.", new ItemStack(Material.WITHER_SKELETON_SKULL),
+        super("Dreadlord", "A master of dark magic that can drain the life from its enemies. Its Shadow Burst ability launches a volley of wither skulls that explode on impact, damaging and weakening enemies.", new ItemStack(Material.WITHER_SKELETON_SKULL),
                 new ArrayList<>(Collections.singletonList(new ShadowBurst())), new ArrayList<>());
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
 public class Spider extends KitClass {
 
     public Spider() {
-        super("Spider", "An agile class that can leap and deal damage on landing.", new ItemStack(Material.SPIDER_EYE),
+        super("Spider", "An agile and nimble class that can traverse the battlefield with ease. Its Leap ability allows it to jump long distances and slow enemies upon landing.", new ItemStack(Material.SPIDER_EYE),
                 new ArrayList<>(Collections.singletonList(new Leap())), new ArrayList<>());
     }
 

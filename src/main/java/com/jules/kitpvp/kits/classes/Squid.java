@@ -17,7 +17,7 @@ import java.util.List;
 public class Squid extends KitClass {
 
     public Squid() {
-        super("Squid", "An aquatic class that can heal in water.", new ItemStack(Material.INK_SAC),
+        super("Squid", "A slippery and supportive class that can disrupt enemies and sustain itself. Its Squid Splash ability damages enemies in an area and heals the Squid for a portion of the damage dealt.", new ItemStack(Material.INK_SAC),
                 new ArrayList<>(Collections.singletonList(new SquidSplash())), new ArrayList<>());
     }
 

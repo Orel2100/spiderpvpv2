@@ -17,7 +17,7 @@ import java.util.List;
 public class Golem extends KitClass {
 
     public Golem() {
-        super("Golem", "A tanky class with a powerful punch.", new ItemStack(Material.IRON_BLOCK),
+        super("Golem", "A tanky class that can take a lot of damage and deal it back. Its Iron Punch ability smashes the ground, damaging all nearby enemies.", new ItemStack(Material.IRON_BLOCK),
                 new ArrayList<>(Collections.singletonList(new IronPunch())), new ArrayList<>());
     }
 

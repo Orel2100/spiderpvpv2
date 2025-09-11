@@ -20,7 +20,7 @@ public class Hunter extends KitClass {
     private final Random random = new Random();
 
     public Hunter() {
-        super("Hunter", "A skilled archer with homing arrows.", new ItemStack(Material.BOW),
+        super("Hunter", "A master archer that can track and eliminate its prey with deadly accuracy. Its Eagle's Eye ability makes its arrows home in on enemies for a short period.", new ItemStack(Material.BOW),
                 new ArrayList<>(Collections.singletonList(new HomingTask())), new ArrayList<>());
     }
 

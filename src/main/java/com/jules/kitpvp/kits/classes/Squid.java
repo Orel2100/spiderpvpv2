@@ -90,4 +90,29 @@ public class Squid extends MegaWallsClass {
 
         return upgrades;
     }
+
+    @Override
+    public List<String> getLoreForUpgrade(Upgrade upgrade, int level) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public String getDifficulty() {
+        return "";
+    }
+
+    @Override
+    public String getPlayStyle() {
+        return "";
+    }
+
+    @Override
+    public String getSkillName() {
+        return "";
+    }
+
+    @Override
+    public String getSkillDescription() {
+        return "";
+    }
 }

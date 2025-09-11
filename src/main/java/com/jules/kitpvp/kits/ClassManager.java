@@ -26,4 +26,8 @@ public class ClassManager {
     public KitClass getPlayerClass(Player player) {
         return playerClasses.get(player);
     }
+
+    public Map<String, KitClass> getClasses() {
+        return classes;
+    }
 }

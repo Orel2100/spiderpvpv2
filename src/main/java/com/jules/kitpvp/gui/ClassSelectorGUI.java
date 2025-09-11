@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ClassSelectorGUI implements InventoryHolder {
@@ -34,9 +35,13 @@ public class ClassSelectorGUI implements InventoryHolder {
                     KitClass kitClass = kit.getKitClass().newInstance();
                     ItemStack item = kitClass.getIcon();
                     ItemMeta meta = item.getItemMeta();
-                    meta.setDisplayName(kitClass.getName());
+                    meta.setDisplayName("§a" + kitClass.getName());
                     List<String> lore = new ArrayList<>();
-                    lore.addAll(kitClass.getDescription());
+                    lore.add("§7Difficulty: " + kitClass.getDifficulty());
+                    lore.add("§7Play Style: " + kitClass.getPlayStyle());
+                    lore.add(" ");
+                    lore.add(kitClass.getSkillName());
+                    lore.addAll(Arrays.asList(kitClass.getSkillDescription().split("\\\\n")));
                     lore.add(" ");
                     if (mPlayer.hasKit(kit)) {
                         lore.add("§aOwned");

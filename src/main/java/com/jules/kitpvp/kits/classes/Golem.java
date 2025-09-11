@@ -193,4 +193,24 @@ public class Golem extends MegaWallsClass {
         }
         return lore;
     }
+
+    @Override
+    public String getDifficulty() {
+        return "§c●●●";
+    }
+
+    @Override
+    public String getPlayStyle() {
+        return "§cTank";
+    }
+
+    @Override
+    public String getSkillName() {
+        return "§6Iron Punch";
+    }
+
+    @Override
+    public String getSkillDescription() {
+        return "Costs 100 Energy\\nKnocks back and deals damage to nearby enemies.\\nGrants temporary Resistance.";
+    }
 }

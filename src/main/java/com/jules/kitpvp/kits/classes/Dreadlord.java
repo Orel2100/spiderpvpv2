@@ -153,4 +153,29 @@ public class Dreadlord extends MegaWallsClass {
 
         return upgrades;
     }
+
+    @Override
+    public List<String> getLoreForUpgrade(Upgrade upgrade, int level) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public String getDifficulty() {
+        return "§c●●";
+    }
+
+    @Override
+    public String getPlayStyle() {
+        return "§cRusher";
+    }
+
+    @Override
+    public String getSkillName() {
+        return "§6Shadow Burst";
+    }
+
+    @Override
+    public String getSkillDescription() {
+        return "Costs 100 Energy\\nFires 3 wither skulls that deal damage to enemies.";
+    }
 }

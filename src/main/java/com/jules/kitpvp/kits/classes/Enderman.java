@@ -174,4 +174,24 @@ public class Enderman extends MegaWallsClass {
         }
         return lore;
     }
+
+    @Override
+    public String getDifficulty() {
+        return "§c●●●●";
+    }
+
+    @Override
+    public String getPlayStyle() {
+        return "§cRusher";
+    }
+
+    @Override
+    public String getSkillName() {
+        return "§6Blink";
+    }
+
+    @Override
+    public String getSkillDescription() {
+        return "Costs 100 Energy\\nTeleport to an enemy player.";
+    }
 }

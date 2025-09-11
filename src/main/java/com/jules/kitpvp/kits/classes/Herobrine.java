@@ -181,4 +181,24 @@ public class Herobrine extends MegaWallsClass {
         }
         return lore;
     }
+
+    @Override
+    public String getDifficulty() {
+        return "§c●●●●";
+    }
+
+    @Override
+    public String getPlayStyle() {
+        return "§cAssassin";
+    }
+
+    @Override
+    public String getSkillName() {
+        return "§6Wrath";
+    }
+
+    @Override
+    public String getSkillDescription() {
+        return "Costs 100 Energy\\nUnleash the wrath of Herobrine striking all nearby enemies for 4.5 damage.";
+    }
 }

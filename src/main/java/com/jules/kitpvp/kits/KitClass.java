@@ -49,6 +49,10 @@ public abstract class KitClass {
     public abstract List<ItemStack> getStartingItems(Player p);
     public abstract List<PotionEffect> getPassiveEffects(Player p);
     public abstract Kit getKit();
+    public abstract String getDifficulty();
+    public abstract String getPlayStyle();
+    public abstract String getSkillName();
+    public abstract String getSkillDescription();
 
     public void onDamage(EntityDamageEvent event) {}
     public void onDamageByEntity(EntityDamageByEntityEvent event) {}

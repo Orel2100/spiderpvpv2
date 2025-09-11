@@ -124,4 +124,24 @@ public class Arcanist extends MegaWallsClass {
 
         return upgrades;
     }
+
+    @Override
+    public String getDifficulty() {
+        return "§c●●●";
+    }
+
+    @Override
+    public String getPlayStyle() {
+        return "§cControl Fighter";
+    }
+
+    @Override
+    public String getSkillName() {
+        return "§6Arcane Beam";
+    }
+
+    @Override
+    public String getSkillDescription() {
+        return "Costs 100 Energy\\nCast a beam that hits players for 1.5 damage.\\nThis beam pierces through enemies and does splash damage.\\nBeams can hit enemies up to 34 blocks away.\\nOres may be mined with this beam.";
+    }
 }

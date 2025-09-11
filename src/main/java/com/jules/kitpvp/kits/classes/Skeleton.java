@@ -153,4 +153,29 @@ public class Skeleton extends MegaWallsClass {
 
         return upgrades;
     }
+
+    @Override
+    public List<String> getLoreForUpgrade(Upgrade upgrade, int level) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public String getDifficulty() {
+        return "§c●●●";
+    }
+
+    @Override
+    public String getPlayStyle() {
+        return "§cArcher";
+    }
+
+    @Override
+    public String getSkillName() {
+        return "§6Explosive Arrow";
+    }
+
+    @Override
+    public String getSkillDescription() {
+        return "Costs 100 Energy\\nFires an explosive arrow that damages and knocks back enemies.";
+    }
 }

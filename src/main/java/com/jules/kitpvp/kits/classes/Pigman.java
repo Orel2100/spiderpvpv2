@@ -191,4 +191,24 @@ public class Pigman extends MegaWallsClass {
         }
         return lore;
     }
+
+    @Override
+    public String getDifficulty() {
+        return "§c●●";
+    }
+
+    @Override
+    public String getPlayStyle() {
+        return "§cRusher";
+    }
+
+    @Override
+    public String getSkillName() {
+        return "§6Burning Soul";
+    }
+
+    @Override
+    public String getSkillDescription() {
+        return "Costs 100 Energy\\nSummon a fiery bubble that deals damage over time to enemies.\\nGrants temporary Strength.";
+    }
 }

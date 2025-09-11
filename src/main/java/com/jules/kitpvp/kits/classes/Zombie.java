@@ -147,4 +147,29 @@ public class Zombie extends MegaWallsClass {
 
         return upgrades;
     }
+
+    @Override
+    public List<String> getLoreForUpgrade(Upgrade upgrade, int level) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public String getDifficulty() {
+        return "§c●";
+    }
+
+    @Override
+    public String getPlayStyle() {
+        return "§cTank";
+    }
+
+    @Override
+    public String getSkillName() {
+        return "§6Circle of Healing";
+    }
+
+    @Override
+    public String getSkillDescription() {
+        return "Costs 100 Energy\\nHeals all nearby teammates.\\nCharge up by hitting people.";
+    }
 }

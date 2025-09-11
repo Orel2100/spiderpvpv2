@@ -197,4 +197,29 @@ public class Spider extends MegaWallsClass {
 
         return upgrades;
     }
+
+    @Override
+    public List<String> getLoreForUpgrade(Upgrade upgrade, int level) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public String getDifficulty() {
+        return "§c●●●";
+    }
+
+    @Override
+    public String getPlayStyle() {
+        return "§cMobility Assassin";
+    }
+
+    @Override
+    public String getSkillName() {
+        return "§6Leap";
+    }
+
+    @Override
+    public String getSkillDescription() {
+        return "Costs 100 Energy\\nLeap forward and deal damage to enemies upon landing.";
+    }
 }

@@ -43,4 +43,15 @@ public class Dreadlord extends KitClass {
     public void onDeath(Player player) {
         // No action on death
     }
+
+    @Override
+    public List<ItemStack> getStartingItems(Player player) {
+        List<ItemStack> items = new ArrayList<>();
+        items.add(new ItemStack(Material.IRON_AXE));
+        items.add(new ItemStack(Material.IRON_HELMET));
+        items.add(new ItemStack(Material.IRON_CHESTPLATE));
+        items.add(new ItemStack(Material.IRON_LEGGINGS));
+        items.add(new ItemStack(Material.IRON_BOOTS));
+        return items;
+    }
 }

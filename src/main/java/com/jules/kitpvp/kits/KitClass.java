@@ -26,6 +26,7 @@ public abstract class KitClass {
     public abstract void triggerAbility(Player player);
     public abstract void onKill(Player killer, Player victim);
     public abstract void onDeath(Player player);
+    public abstract List<ItemStack> getStartingItems(Player player);
 
     // Getters
     public String getName() {

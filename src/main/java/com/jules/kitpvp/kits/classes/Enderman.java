@@ -46,4 +46,15 @@ public class Enderman extends KitClass {
     public void onDeath(Player player) {
         // No action on death
     }
+
+    @Override
+    public List<ItemStack> getStartingItems(Player player) {
+        List<ItemStack> items = new ArrayList<>();
+        items.add(new ItemStack(Material.DIAMOND_SWORD));
+        items.add(new ItemStack(Material.DIAMOND_HELMET));
+        items.add(new ItemStack(Material.DIAMOND_CHESTPLATE));
+        items.add(new ItemStack(Material.DIAMOND_LEGGINGS));
+        items.add(new ItemStack(Material.DIAMOND_BOOTS));
+        return items;
+    }
 }

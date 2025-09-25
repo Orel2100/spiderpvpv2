@@ -44,4 +44,16 @@ public class Skeleton extends KitClass {
     public void onDeath(Player player) {
         // No action on death
     }
+
+    @Override
+    public List<ItemStack> getStartingItems(Player player) {
+        List<ItemStack> items = new ArrayList<>();
+        items.add(new ItemStack(Material.BOW));
+        items.add(new ItemStack(Material.ARROW, 64));
+        items.add(new ItemStack(Material.LEATHER_HELMET));
+        items.add(new ItemStack(Material.LEATHER_CHESTPLATE));
+        items.add(new ItemStack(Material.LEATHER_LEGGINGS));
+        items.add(new ItemStack(Material.LEATHER_BOOTS));
+        return items;
+    }
 }

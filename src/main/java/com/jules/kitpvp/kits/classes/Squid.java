@@ -51,4 +51,15 @@ public class Squid extends KitClass {
             player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 0));
         }
     }
+
+    @Override
+    public List<ItemStack> getStartingItems(Player player) {
+        List<ItemStack> items = new ArrayList<>();
+        items.add(new ItemStack(Material.IRON_SWORD));
+        items.add(new ItemStack(Material.LEATHER_HELMET));
+        items.add(new ItemStack(Material.LEATHER_CHESTPLATE));
+        items.add(new ItemStack(Material.LEATHER_LEGGINGS));
+        items.add(new ItemStack(Material.LEATHER_BOOTS));
+        return items;
+    }
 }

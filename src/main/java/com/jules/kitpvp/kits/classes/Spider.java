@@ -43,4 +43,15 @@ public class Spider extends KitClass {
     public void onDeath(Player player) {
         // No action on death
     }
+
+    @Override
+    public List<ItemStack> getStartingItems(Player player) {
+        List<ItemStack> items = new ArrayList<>();
+        items.add(new ItemStack(Material.IRON_SWORD));
+        items.add(new ItemStack(Material.CHAINMAIL_HELMET));
+        items.add(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
+        items.add(new ItemStack(Material.CHAINMAIL_LEGGINGS));
+        items.add(new ItemStack(Material.CHAINMAIL_BOOTS));
+        return items;
+    }
 }

@@ -53,4 +53,15 @@ public class Shaman extends KitClass {
             player.getWorld().spawnEntity(player.getLocation(), EntityType.WOLF);
         }
     }
+
+    @Override
+    public List<ItemStack> getStartingItems(Player player) {
+        List<ItemStack> items = new ArrayList<>();
+        items.add(new ItemStack(Material.VINE));
+        items.add(new ItemStack(Material.LEATHER_HELMET));
+        items.add(new ItemStack(Material.LEATHER_CHESTPLATE));
+        items.add(new ItemStack(Material.LEATHER_LEGGINGS));
+        items.add(new ItemStack(Material.LEATHER_BOOTS));
+        return items;
+    }
 }

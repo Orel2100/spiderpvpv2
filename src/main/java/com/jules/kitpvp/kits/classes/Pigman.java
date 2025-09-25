@@ -49,4 +49,15 @@ public class Pigman extends KitClass {
     public void passive(Player player) {
         player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 0));
     }
+
+    @Override
+    public List<ItemStack> getStartingItems(Player player) {
+        List<ItemStack> items = new ArrayList<>();
+        items.add(new ItemStack(Material.GOLDEN_SWORD));
+        items.add(new ItemStack(Material.GOLDEN_HELMET));
+        items.add(new ItemStack(Material.GOLDEN_CHESTPLATE));
+        items.add(new ItemStack(Material.GOLDEN_LEGGINGS));
+        items.add(new ItemStack(Material.GOLDEN_BOOTS));
+        return items;
+    }
 }
